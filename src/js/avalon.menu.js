@@ -1,6 +1,11 @@
 define(["avalon"],function(avalon){
 	function getMenuStr(HTML_OR_TPL){
-		return "<div ms-repeat='"+HTML_OR_TPL+"' ms-class='menu-item' ms-class-1='disabled:el.disabled' ms-visible='!el.isHide' ms-click='$itemClick($event,el)' ms-hover='menu-item-hover' ms-include-src='\"MENU_CONTENT_TPL\"'></div>" +
+		return "<div ms-repeat='"+HTML_OR_TPL+"' ms-class='menu-item' ms-class-1='disabled:el.disabled' ms-visible='!el.isHide' ms-click='$itemClick($event,el)' ms-hover='menu-item-hover'>"+
+			"<i ms-class='{{el.iconCls}}'></i>" +
+			"<span ms-class='menu-text' ms-class-1='menu-text-noch:!el.subMenu || !el.subMenu.length'>{{el.text}}</span>" +
+			"<span ms-if='el.subMenu && el.subMenu.length' class='menu-arrow'></span>" +
+			"<div ms-if='el.subMenu && el.subMenu.length' ms-include-src='\"MENU_TPL\"' class='menu'></div>" +
+		"</div>" +
 		"<div class='menu-line'></div>";
 	}
 	function findMenuItem(list,id,func){
@@ -16,16 +21,11 @@ define(["avalon"],function(avalon){
 		}
 	}
 	var widget = avalon.ui.menu = function(element, data, vmodels){
-		var options = data.menuOptions;
 		if(!avalon.templateCache["MENU_TPL"]){
 			avalon.templateCache["MENU_TPL"] = getMenuStr("el.subMenu");
-			avalon.templateCache["MENU_CONTENT_TPL"] = "<i ms-class='{{el.iconCls}}'></i>" +
-				"<span ms-class='menu-text' ms-class-1='menu-text-noch:!el.subMenu || !el.subMenu.length'>{{el.text}}</span>" +
-				"<span ms-if='el.subMenu && el.subMenu.length' class='menu-arrow'></span>" +
-				"<div ms-if='el.subMenu && el.subMenu.length' ms-include-src='\"MENU_TPL\"' class='menu'></div>";
 		}
 		var vmodel = avalon.define(data.menuId,function(vm){
-			avalon.mix(vm, options);
+			avalon.mix(vm, data.menuOptions);
 			vm.widgetElement = element;
 			vm.template = getMenuStr("menuList");
 			vm.$itemClick = function(e,el){
