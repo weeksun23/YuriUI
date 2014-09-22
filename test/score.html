@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="js/avalon.js"></script>
+</head>
+<body ms-controller="list">
+	<h1>成绩单</h1>
+	<p>
+		<input type='text' ms-duplex='id'/>
+		<input type='text' ms-duplex='name'/>
+		<input type='text' ms-duplex='score'/>
+		<button ms-click="add">add</button>
+	</p>
+	<table>
+		<thead><tr><th>序号</th><th>ID</th><th>姓名</th><th>分数</th><th>操作</th></tr></thead>
+		<tbody>
+			<tr ms-repeat='scoreList'>
+				<td>{{$index + 1}}</td><td>{{el.id}}</td>
+				<td>{{el.name}}</td><td>{{el.score}}</td>
+				<td><button ms-click="del($index)">删除</button></td>
+			</tr>
+		</tbody>
+	</table>
+	<p>
+		总分：{{sum}}
+		平均分：{{avg}}
+	</p>
+  <script>
+	  var listVm = avalon.define('list',function(vm){
+	  	vm.id = '';
+	  	vm.name = '';
+	  	vm.score = '';
+	  	vm.scoreList = [];
+	  	vm.del = function(i){
+	  		vm.scoreList.removeAt(i);
+	  	};
+	  	vm.add = function(){
+	  		vm.scoreList.push({
+	  			id : vm.id,
+	  			name : vm.name,
+	  			score : vm.score
+	  		});
+	  		vm.score = '';
+	  	};
+	  	vm.sum = '';
+	  	vm.avg = '';
+	  });
+	  listVm.$watch('score',function(newValue){
+	  	this.score = Number(newValue) || 0;
+	  });
+	  listVm.scoreList.$watch("length",function(newValue, oldValue){
+  		var sum = 0;
+  		this.forEach(function(el){
+  			sum += el.score;
+  		});
+  		listVm.sum = sum;
+  		listVm.avg = sum / newValue;
+  	});
+  </script>
+</body>
+</html>

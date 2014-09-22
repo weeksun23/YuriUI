@@ -1,0 +1,28 @@
+.menu{
+	border: 1px solid #DDDDDD;position: absolute;z-index: 9999;
+	padding:3px;margin: 0;background-color: #FFFFFF;
+}
+.menu div.menu{display: none;top:0;left: 100%;}
+.menu-item{
+	cursor: pointer;padding: 2px 0px;margin: 0;zoom:1;position: relative;
+	line-height: 18px;font-size: 0px;white-space: nowrap;border: 1px solid transparent;
+}
+.menu-item.disabled{
+	opacity:0.5;filter:alpha(opacity=50);cursor: not-allowed;
+}
+.menu-item:hover{background-color: #EAF2FF;border-color: #B7D2FF;z-index: 10;}
+.menu-item-hover>div.menu{display: block;}
+.menu-item.disabled.menu-item-hover>div.menu{display: none;}
+.menu-item.disabled:hover{background-color: transparent;border-color:transparent;z-index: 0;}
+.menu-item>i{
+	margin-left:1px;width: 16px;height: 16px;vertical-align: middle;display: inline-block;
+}
+
+.menu-text{vertical-align: middle;padding:0px 20px 0px 12px;font-size: 12px;}
+.menu-text-noch{padding-right: 12px;}
+.menu-arrow{
+	display: inline-block;border-width: 4px 0px 4px 5px;border-style: solid;height: 0;width: 0;
+	border-color: transparent transparent transparent #000;vertical-align: middle;position: absolute;
+	top:50%;margin-top: -4px;right: 1px;
+}
+.menu-line{position: absolute;width: 1px;background-color: #DDDDDD;left:26px;top:0px;bottom: 0;z-index: 1;}

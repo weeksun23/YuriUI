@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../src/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="../src/css/icon.css">
+	<script src="../src/js/avalon.js"></script>
+	<style type="text/css">
+		html,body{width: 100%;height: 100%;}
+		body{font-size: 12px;margin:0;}
+	</style>
+</head>
+<body ms-controller='test' oncontextmenu="return false;">
+  <div ms-widget="menu,testmenu,$testmenuOpts"></div>
+  <div style="height:300px;width:200px;border:1px solid #ccc;float:left;margin:0 5px;" ms-mousedown='down1'>
+      <h1>区域1</h1>
+  </div>
+  <div style="height:300px;width:200px;border:1px solid #ccc;float:left;" ms-mousedown='down2'>
+      <h1>区域2</h1>
+  </div>
+  <p>
+      <button onclick="changeText()">text</button>
+  </p>
+  <script>
+    function changeText(){
+        avalon.vmodels.testmenu.$updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
+    }
+  	require("avalon.menu", function() {
+      	avalon.define("test", function(vm) {
+            vm.down1 = function(e){
+                if(e.button === 2){
+                    avalon.vmodels.testmenu.$show(e.pageX,e.pageY);
+                    avalon.vmodels.testmenu.$updateAttr("zone1btn",{isHide : false});
+                    avalon.vmodels.testmenu.$updateAttr("zone2btn",{isHide : true});
+                    avalon.vmodels.testmenu.$updateAttr("zone1btn1",{disabled : false});
+                    avalon.vmodels.testmenu.$updateAttr("zone2btn1",{disabled : true});
+                }
+            };
+            vm.down2 = function(e){
+                if(e.button === 2){
+                    avalon.vmodels.testmenu.$show(e.pageX,e.pageY);
+                    avalon.vmodels.testmenu.$updateAttr("zone1btn",{isHide : true});
+                    avalon.vmodels.testmenu.$updateAttr("zone2btn",{isHide : false});
+                    avalon.vmodels.testmenu.$updateAttr("zone1btn1",{disabled : true});
+                    avalon.vmodels.testmenu.$updateAttr("zone2btn1",{disabled : false});
+                }
+            };
+        	vm.$testmenuOpts = {
+            	menuList : [{
+            		iconCls : "icon-ok",
+            		text : "test1111",
+                    isHide : false,
+                    click : function(item){
+                        avalon.vmodels.testmenu.$updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
+                    },
+            		subMenu : [{
+            			iconCls : "icon-ok",
+            			text : "test1",
+            			subMenu : [{
+	            			iconCls : "icon-ok",
+	            			text : "test123323",
+	            			subMenu : [{
+		            			iconCls : "icon-ok",
+		            			text : "test23231",
+                                click : function(item){
+                                    alert(item.text);
+                                }
+		            		}]
+	            		}]
+            		}]
+            	},{
+            		iconCls : "icon-ok",
+            		text : "test"
+            	},{
+                    iconCls : "icon-edit",
+                    isHide : false,
+                    text : "只在区域1显示",
+                    id : "zone1btn"
+                },{
+                    iconCls : "icon-edit",
+                    isHide : false,
+                    text : "只在区域2显示",
+                    id : "zone2btn"
+                },{
+                    iconCls : "icon-edit",
+                    text : "只在区域1启用",
+                    disabled : false,
+                    id : "zone1btn1"
+                },{
+                    iconCls : "icon-edit",
+                    text : "只在区域2启用",
+                    disabled : false,
+                    id : "zone2btn1"
+                }]
+        	};
+      	});
+      	avalon.scan();
+  	});
+  </script>
+</body>
+</html>
