@@ -49,6 +49,7 @@ define(["avalon"],function(avalon){
 		if(!avalon.templateCache["TREE_TPL"]){
 			avalon.templateCache["TREE_TPL"] = getTreeStr("el.children");
 		}
+		var curSelEl;
 		var vmodel = avalon.define(data.treeId,function(vm){
 			var options = data.treeOptions;
 			eachNode(options.treeList);
@@ -66,7 +67,15 @@ define(["avalon"],function(avalon){
 				element.innerHTML = element.textContent = "";
 			};
 			vm.$selectNode = function(el){
-				el.selected = !el.selected;
+				if(el === curSelEl){
+					return;
+				}
+				if(curSelEl){
+					curSelEl.selected = false;
+				}
+				el.selected = true;
+				curSelEl = el;
+				vmodel.$onSelect.call(this,el);
 			};
 			vm.$toggleOpenExpand = function(el){
 				if(!el.state) return;
@@ -101,6 +110,7 @@ define(["avalon"],function(avalon){
 	widget.defaults = {
 		treeList : [],
 		line : false,
-		icon : true
+		icon : true,
+		$onSelect : avalon.noop
 	};
 });

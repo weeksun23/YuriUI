@@ -18,6 +18,10 @@
             avalon.define("test", function(vm) {
                 vm.$testtreeOpts = {
                     line : true,
+                    $onSelect : function(){
+                        avalon.log(this);
+                        avalon.log(arguments);
+                    },
                     treeList : [{
                         text : "test1",
                         iconCls : "icon-ok",
