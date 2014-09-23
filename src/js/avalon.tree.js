@@ -5,6 +5,7 @@ define(["avalon"],function(avalon){
 		openIconCls : "",
 		text : "",
 		loading : false,
+		selected : false,
 		state : null
 		//children : []
 	};
@@ -27,8 +28,9 @@ define(["avalon"],function(avalon){
 	}
 	function getTreeStr(HTML_OR_TPL){
 		return "<li ms-repeat='"+HTML_OR_TPL+"' ms-class-1='tree-node' ms-class='tree-node-last:$last'>" + 
-			"<span>" +
+			"<span ms-class='tree-node-select:el.selected'>" +
 				"<i ms-class='tree-bg:el.state' ms-class-2='tree-collapsed:el.state===\"closed\"' ms-class-1='tree-expanded:el.state===\"open\"' ms-class-3='tree-indent' ms-class-4='tree-bg:line' ms-class-5='tree-join:line && !$last' ms-class-6='tree-joinbottom:line && $last' ms-click='$toggleOpenExpand(el)'></i>" +
+				"<span class='tree-node-content' ms-click='$selectNode(el)'>" +
 				"<i ms-if='icon && el.iconCls !== false' " +
 					"ms-class='{{el.iconCls}}:el.iconCls && (!el.state || el.state === \"closed\" || (el.state === \"open\" && !el.openIconCls))' "+
 					"ms-class-1='{{el.openIconCls}}:el.openIconCls && el.state === \"open\"' " +
@@ -38,6 +40,7 @@ define(["avalon"],function(avalon){
 					"ms-class-5='tree-file:!el.state && !el.iconCls' " +
 					"ms-class-6='tree-icon-loading:el.loading'></i>" +
 				"<span class='tree-title'>{{el.text}}</span>" +
+				"</span>" +
 			"</span>" +
 			"<ul ms-if='el.children&&el.children.length' ms-visible='el.state===\"open\"' ms-include-src='\"TREE_TPL\"'></ul>" +
 		"</li>";
@@ -61,6 +64,9 @@ define(["avalon"],function(avalon){
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
+			};
+			vm.$selectNode = function(el){
+				el.selected = !el.selected;
 			};
 			vm.$toggleOpenExpand = function(el){
 				if(!el.state) return;

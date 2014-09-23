@@ -6,8 +6,14 @@
 .tree-collapsed,
 .tree-indent,
 .tree-checkbox{width: 16px;height: 18px;display: inline-block;vertical-align: middle;}
-.tree-node>span{display: inline-block;padding-right: 2px;}
-.tree-node>span:hover{background-color: #e2e2e2;cursor: pointer;}
+.tree-expanded,
+.tree-collapsed,
+.tree-checkbox{cursor: pointer;}
+.tree-node>span{display: inline-block;}
+.tree-node-content{display: inline-block;padding-right: 2px;cursor: pointer;}
+.tree-node-content:hover{background-color: #e2e2e2;}
+.tree-node-select .tree-node-content{background-color: #3385FF;color: #fff;}
+
 .tree-expanded {background-position: -18px 0px;}
 .tree-folder {background-position:-208px 0;}
 .tree-folder-open {background-position:-224px 0;}
