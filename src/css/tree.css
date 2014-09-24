@@ -9,6 +9,9 @@
 .tree-expanded,
 .tree-collapsed,
 .tree-checkbox{cursor: pointer;}
+.tree-checkbox0 {background-position:-208px -18px;}
+.tree-checkbox1 {background-position:-224px -18px;}
+.tree-checkbox2 {background-position:-240px -18px;}
 .tree-node-content{display: inline-block;padding-right: 2px;cursor: pointer;}
 .tree-node-content:hover{background-color: #e2e2e2;}
 .tree-node-select{background-color: #3385FF;color: #fff;}

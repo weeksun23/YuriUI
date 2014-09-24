@@ -6,6 +6,8 @@ define(["avalon"],function(avalon){
 		text : "",
 		loading : false,
 		selected : false,
+		checked : 0,
+		//chLoaded : false,
 		state : null
 		//children : []
 	};
@@ -16,6 +18,8 @@ define(["avalon"],function(avalon){
 			if(!ch){
 				ch = item.children = [];
 			}
+			//是否已加载子节点标志
+			item.chLoaded = item.state === 'open';
 			for(var j in nodeAttr){
 				if(item[j] === undefined){
 					item[j] = nodeAttr[j];
@@ -47,8 +51,8 @@ define(["avalon"],function(avalon){
 	}
 	function getTreeStr(HTML_OR_TPL){
 		return "<li ms-repeat='"+HTML_OR_TPL+"' ms-class-1='tree-node' ms-class='tree-node-last:$last'>" + 
-			"<i ms-class='tree-bg:el.state || line' " + 
-				getClassStr([
+			"<i " + getClassStr([
+					'tree-bg:el.state || line',
 					'tree-collapsed:el.state===\"closed\"',
 					'tree-expanded:el.state===\"open\"',
 					'tree-indent:!el.state',
@@ -56,6 +60,7 @@ define(["avalon"],function(avalon){
 					'tree-joinbottom:line && $last'
 				]) +
 				" ms-click='$toggleOpenExpand(el)'></i>" +
+			"<i ms-if='checkbox' ms-click='$toggleCheck(el)' " + getClassStr(["tree-bg tree-checkbox tree-checkbox{{el.checked}}"]) +"></i>" +
 			"<span ms-class='tree-node-content' ms-class-1='tree-node-select:el.selected' ms-click='$selectNode(el)'>" +
 				"<i ms-if='icon && el.iconCls !== false' " +
 					getClassStr([
@@ -69,7 +74,7 @@ define(["avalon"],function(avalon){
 					]) + "></i>" +
 				"<span class='tree-title'>{{el.text}}</span>" +
 			"</span>" +
-			"<ul ms-if='el.children&&el.children.length' ms-visible='el.state===\"open\"' ms-include-src='\"TREE_TPL\"'></ul>" +
+			"<ul ms-if='el.chLoaded&&el.children&&el.children.length' ms-visible='el.state===\"open\"' ms-include-src='\"TREE_TPL\"'></ul>" +
 		"</li>";
 	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
@@ -110,6 +115,9 @@ define(["avalon"],function(avalon){
 				if(el.state === 'closed'){
 					if(el.children && el.children.length){
 						el.state = 'open';
+						if(!el.chLoaded){
+							el.chLoaded = true;
+						}
 					}else{
 						var me = this;
 						el.loading = true;
@@ -125,6 +133,9 @@ define(["avalon"],function(avalon){
 							}];
 							eachNode(ch);
 							el.children = ch;
+							if(!el.chLoaded){
+								el.chLoaded = true;
+							}
 						},1000);
 					}
 				}else{
@@ -134,6 +145,13 @@ define(["avalon"],function(avalon){
 			vm.$getSelected = function(){
 				return curSelEl;
 			};
+			vm.$toggleCheck = function(el){
+				el.checked = el.checked ? 0 : 1;
+			};
+			/*
+			移除指定节点
+			target : 节点id或节点监控对象
+			*/
 			vm.$removeNode = function(target){
 				findNode(vmodel.treeList,target,function(item,i,list){
 					if(item.loading) return;
@@ -143,24 +161,35 @@ define(["avalon"],function(avalon){
 					list.removeAt(i);
 				});
 			};
+			/*
+			增加节点
+			data : 节点数据数组
+			parent : 若不指定则默认添加到根节点，若为string或number则是节点id，若为object则是节点的监控对象
+			*/
 			vm.$appendNodes = function(data,parent){
-				var target;
+				var target,el;
 				if(parent){
 					if(typeof parent == 'object'){
-						target = parent;
+						el = parent;
 					}else{
 						findNode(vmodel.treeList,parent,function(item){
-							target = item;
+							el = item;
 						});
 					}
-					target.state = 'open';
-					target = target.children;
+					if(!el){
+						return avalon.log("找不到目标节点,appendNodes失败");
+					}
+					el.state = 'open';
+					target = el.children;
 				}else{
 					target = vmodel.treeList;
 				}
 				if(target){
 					eachNode(data);
 					target.pushArray(data);
+					if(el && !el.chLoaded){
+						el.chLoaded = true;
+					}
 				}
 			};
 			vm.$loadData = function(data){
@@ -174,6 +203,7 @@ define(["avalon"],function(avalon){
 		treeList : [],
 		line : false,
 		icon : true,
+		checkbox : false,
 		$onSelect : avalon.noop
 	};
 });

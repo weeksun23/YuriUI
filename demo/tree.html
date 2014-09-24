@@ -21,9 +21,10 @@
         <button ms-click='$loadData()'>加载大数据</button>
         <label><input type="radio" ms-duplex-text="dataNum" value='100'/>100个节点</label>
         <label><input type="radio" ms-duplex-text="dataNum" value='1000'/>1000个节点</label>
+        
+        <!-- 
         <br />
         <label><input type="radio" ms-duplex-text="dataNum" value='10000'/>10000个节点</label>
-        <!-- 
         <label><input type="radio" ms-duplex-text="dataNum" value='50000'/>50000个节点</label>
         <label><input type="radio" ms-duplex-text="dataNum" value='100000'/>100000个节点</label>
         -->
@@ -97,6 +98,7 @@
                         //avalon.log(this);
                         //avalon.log(arguments);
                     },
+                    checkbox : true,
                     treeList : [{
                         text : "test1",
                         iconCls : "icon-ok",

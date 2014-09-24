@@ -1,4 +1,5 @@
 html,body{width: 100%;height: 100%;}
 body{font-size: 12px;margin:0;}
 .fl{float: left;}
+.posr{position: relative;}
 .zone{border:1px solid #d2d2d2;margin: 2px;padding: 5px;}
