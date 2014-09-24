@@ -9,11 +9,11 @@
 .tree-expanded,
 .tree-collapsed,
 .tree-checkbox{cursor: pointer;}
-.tree-node>span{display: inline-block;}
 .tree-node-content{display: inline-block;padding-right: 2px;cursor: pointer;}
 .tree-node-content:hover{background-color: #e2e2e2;}
-.tree-node-select .tree-node-content{background-color: #3385FF;color: #fff;}
-
+.tree-node-select{background-color: #3385FF;color: #fff;}
+.tree-node-select:hover{background-color: #3385FF;}
+.tree-node-content>i{margin-right:2px;}
 .tree-expanded {background-position: -18px 0px;}
 .tree-folder {background-position:-208px 0;}
 .tree-folder-open {background-position:-224px 0;}
@@ -25,13 +25,12 @@
 .tree-line .tree-expanded:hover {background-position: -144px 0;}
 .tree-line .tree-collapsed{background-position: -128px 0;}
 .tree-line .tree-collapsed:hover{background-position: -128px 0;}
-.tree-line .tree-node-last>span .tree-expanded {background-position: -80px 0;}
-.tree-line .tree-node-last>span .tree-expanded:hover{background-position: -80px 0;}
-.tree-line .tree-node-last>span .tree-collapsed{background-position: -64px 0;}
-.tree-line .tree-node-last>span .tree-collapsed:hover{background-position: -64px 0;}
+.tree-line .tree-node-last>.tree-expanded {background-position: -80px 0;}
+.tree-line .tree-node-last>.tree-expanded:hover{background-position: -80px 0;}
+.tree-line .tree-node-last>.tree-collapsed{background-position: -64px 0;}
+.tree-line .tree-node-last>.tree-collapsed:hover{background-position: -64px 0;}
 .tree-line .tree-node-last>ul>li{background:none;}
 .tree-join {background-position:-192px 0;}
 .tree-joinbottom {background-position:-160px 0;}
-
 .tree .tree-icon-loading{background:url(img/loading.gif) no-repeat center center;}
 .tree-title{vertical-align: middle;}

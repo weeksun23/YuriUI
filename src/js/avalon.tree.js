@@ -26,11 +26,28 @@ define(["avalon"],function(avalon){
 			}
 		}
 	}
+	function findNode(list,target,func){
+		for(var i=0,ii=list.length;i<ii;i++){
+			var item = list[i];
+			if((typeof target == 'object' && target === item) || item.id === target){
+				func(item,i,list);
+				return false;
+			}
+			if(item.children && findNode(item.children,target,func) === false){
+				return false;
+			}
+		}
+	}
 	function getTreeStr(HTML_OR_TPL){
 		return "<li ms-repeat='"+HTML_OR_TPL+"' ms-class-1='tree-node' ms-class='tree-node-last:$last'>" + 
-			"<span ms-class='tree-node-select:el.selected'>" +
-				"<i ms-class='tree-bg:el.state' ms-class-2='tree-collapsed:el.state===\"closed\"' ms-class-1='tree-expanded:el.state===\"open\"' ms-class-3='tree-indent' ms-class-4='tree-bg:line' ms-class-5='tree-join:line && !$last' ms-class-6='tree-joinbottom:line && $last' ms-click='$toggleOpenExpand(el)'></i>" +
-				"<span class='tree-node-content' ms-click='$selectNode(el)'>" +
+			"<i ms-class='tree-bg:el.state || line' " +
+				"ms-class-1='tree-collapsed:el.state===\"closed\"' " +
+				"ms-class-2='tree-expanded:el.state===\"open\"' " +
+				"ms-class-3='tree-indent:!el.state' " +
+				"ms-class-5='tree-join:line && !$last' " +
+				"ms-class-6='tree-joinbottom:line && $last' " +
+				"ms-click='$toggleOpenExpand(el)'></i>" +
+			"<span ms-class='tree-node-content' ms-class-1='tree-node-select:el.selected' ms-click='$selectNode(el)'>" +
 				"<i ms-if='icon && el.iconCls !== false' " +
 					"ms-class='{{el.iconCls}}:el.iconCls && (!el.state || el.state === \"closed\" || (el.state === \"open\" && !el.openIconCls))' "+
 					"ms-class-1='{{el.openIconCls}}:el.openIconCls && el.state === \"open\"' " +
@@ -40,7 +57,6 @@ define(["avalon"],function(avalon){
 					"ms-class-5='tree-file:!el.state && !el.iconCls' " +
 					"ms-class-6='tree-icon-loading:el.loading'></i>" +
 				"<span class='tree-title'>{{el.text}}</span>" +
-				"</span>" +
 			"</span>" +
 			"<ul ms-if='el.children&&el.children.length' ms-visible='el.state===\"open\"' ms-include-src='\"TREE_TPL\"'></ul>" +
 		"</li>";
@@ -49,7 +65,7 @@ define(["avalon"],function(avalon){
 		if(!avalon.templateCache["TREE_TPL"]){
 			avalon.templateCache["TREE_TPL"] = getTreeStr("el.children");
 		}
-		var curSelEl;
+		var curSelEl = null;
 		var vmodel = avalon.define(data.treeId,function(vm){
 			var options = data.treeOptions;
 			eachNode(options.treeList);
@@ -59,7 +75,7 @@ define(["avalon"],function(avalon){
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass('tree');
-				vmodel.line && $el.addClass("tree-line");
+				$el.attr("ms-class","tree-line:line");
 				element.innerHTML = vmodel.template;
 				avalon.scan(element, vmodel);
 			};
@@ -102,6 +118,38 @@ define(["avalon"],function(avalon){
 					}
 				}else{
 					el.state = 'closed';
+				}
+			};
+			vm.$getSelected = function(){
+				return curSelEl;
+			};
+			vm.$removeNode = function(target){
+				findNode(vmodel.treeList,target,function(item,i,list){
+					if(item.loading) return;
+					if(item === curSelEl){
+						curSelEl = null;
+					}
+					list.removeAt(i);
+				});
+			};
+			vm.$appendNodes = function(data,parent){
+				var target;
+				if(parent){
+					if(typeof parent == 'object'){
+						target = parent;
+					}else{
+						findNode(vmodel.treeList,parent,function(item){
+							target = item;
+						});
+					}
+					target.state = 'open';
+					target = target.children;
+				}else{
+					target = vmodel.treeList;
+				}
+				if(target){
+					eachNode(data);
+					target.pushArray(data);
 				}
 			};
 		});

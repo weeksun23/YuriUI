@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../../src/css/tree.css">
+	<link rel="stylesheet" type="text/css" href="../../src/css/icon.css">
+    <link rel="stylesheet" type="text/css" href="../demo.css">
+	<script src="../../src/js/avalon.js"></script>
+</head>
+<body >
+    <div class='fl zone' ms-controller='test'>
+        <ul ms-widget="tree,testtree,$testtreeOpts"></ul>
+    </div>
+    <div class='fl zone' ms-controller='btnctrl'>
+        <button ms-click='$toggleLine()'>{{lineTxt}}</button><br />
+        <button ms-click='$delSelected()'>删除所选节点</button><br />
+        <button ms-click='$updateNode()'>更新所选节点</button><br />
+        <button ms-click='$addChildren()'>增加子节点</button><br />
+        <button ms-click='$addRoot()'>增加根节点</button><br />
+    </div>
+    <script>
+        var hasLine = true;
+        require("avalon.tree", function() {
+            avalon.define("btnctrl",function(vm){
+                vm.lineTxt = hasLine ? "不带根脉" : "带根脉";
+                vm.selectedInfo = "";
+                vm.$toggleLine = function(){
+                    var tree = avalon.vmodels.testtree;
+                    if(tree.line = !tree.line){
+                        vm.lineTxt = '不带根脉';
+                    }else{
+                        vm.lineTxt = '带根脉';
+                    }
+                };
+                vm.$delSelected = function(){
+                    var tree = avalon.vmodels.testtree;
+                    var sel = tree.$getSelected();
+                    sel && tree.$removeNode(sel);
+                };
+                vm.$updateNode = function(){
+                    var tree = avalon.vmodels.testtree;
+                    var sel = tree.$getSelected();
+                    if(!sel) return;
+                    sel.text = Math.random(0,1) * 10;
+                    sel.iconCls = "icon-redo";
+                };
+                vm.$addChildren = function(){
+                    var tree = avalon.vmodels.testtree;
+                    var sel = tree.$getSelected();
+                    if(!sel) return;
+                    tree.$appendNodes([{
+                        iconCls : "icon-undo",
+                        text : Math.random(0,1) * 1000
+                    }],sel);
+                };
+                vm.$addRoot = function(){
+                    var tree = avalon.vmodels.testtree;
+                    tree.$appendNodes([{
+                        iconCls : "icon-save",
+                        text : Math.random(0,1) * 1000
+                    }]);
+                };
+            });
+            avalon.define("test", function(vm) {
+                vm.$testtreeOpts = {
+                    line : hasLine,
+                    $onSelect : function(){
+                        //avalon.log(this);
+                        //avalon.log(arguments);
+                    },
+                    treeList : [{
+                        text : "test1",
+                        iconCls : "icon-ok",
+                        state : "closed",
+                        children : [{
+                            text : "test2",
+                            iconCls : "icon-ok"
+                        },{
+                            text : "test2",
+                            iconCls : "icon-ok"
+                        },{
+                            text : "test2",
+                            iconCls : "icon-ok",
+                            state : "open",
+                            children : [{
+                                text : "test2",
+                                iconCls : "icon-ok"
+                            }]
+                        }]
+                    },{
+                        text : "test1",
+                        iconCls : "icon-ok",
+                        state : "closed",
+                        children : [{
+                            text : "test2",
+                            iconCls : "icon-ok"
+                        },{
+                            text : "test1",
+                            iconCls : "icon-ok",
+                            state : "closed",
+                            children : [{
+                                text : "test2",
+                                iconCls : "icon-ok"
+                            }]
+                        }]
+                    },{
+                        text : "children",
+                        iconCls : "icon-reload",
+                        state : "closed"
+                    },{
+                        text : "children",
+                        iconCls : "icon-reload"
+                    }]
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>
