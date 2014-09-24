@@ -1,6 +1,6 @@
 .tree,.tree ul{list-style: none;margin: 0;padding: 0}
-.tree ul li{padding-left:16px;}
-.tree-line ul li{background:url(img/tree_line_conn.png) repeat-y 0 -1px;}
+.tree ul>li{padding-left:16px;}
+.tree-line ul>li{background:url(img/tree_line_conn.png) repeat-y 0 -1px;}
 .tree-bg{background-image: url(img/tree_icons.png);background-repeat: no-repeat;}
 .tree-expanded,
 .tree-collapsed,

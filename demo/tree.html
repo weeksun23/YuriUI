@@ -3,10 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="../../src/css/tree.css">
-	<link rel="stylesheet" type="text/css" href="../../src/css/icon.css">
-    <link rel="stylesheet" type="text/css" href="../demo.css">
-	<script src="../../src/js/avalon.js"></script>
+	<link rel="stylesheet" type="text/css" href="../src/css/tree.css">
+	<link rel="stylesheet" type="text/css" href="../src/css/icon.css">
+    <link rel="stylesheet" type="text/css" href="demo.css">
+	<script src="../src/js/avalon.js"></script>
 </head>
 <body >
     <div class='fl zone' ms-controller='test'>
@@ -18,6 +18,17 @@
         <button ms-click='$updateNode()'>更新所选节点</button><br />
         <button ms-click='$addChildren()'>增加子节点</button><br />
         <button ms-click='$addRoot()'>增加根节点</button><br />
+        <button ms-click='$loadData()'>加载大数据</button>
+        <label><input type="radio" ms-duplex-text="dataNum" value='100'/>100个节点</label>
+        <label><input type="radio" ms-duplex-text="dataNum" value='1000'/>1000个节点</label>
+        <br />
+        <label><input type="radio" ms-duplex-text="dataNum" value='10000'/>10000个节点</label>
+        <!-- 
+        <label><input type="radio" ms-duplex-text="dataNum" value='50000'/>50000个节点</label>
+        <label><input type="radio" ms-duplex-text="dataNum" value='100000'/>100000个节点</label>
+        -->
+        <br />
+
     </div>
     <script>
         var hasLine = true;
@@ -25,6 +36,7 @@
             avalon.define("btnctrl",function(vm){
                 vm.lineTxt = hasLine ? "不带根脉" : "带根脉";
                 vm.selectedInfo = "";
+                vm.dataNum = 100;
                 vm.$toggleLine = function(){
                     var tree = avalon.vmodels.testtree;
                     if(tree.line = !tree.line){
@@ -60,6 +72,22 @@
                         iconCls : "icon-save",
                         text : Math.random(0,1) * 1000
                     }]);
+                };
+                vm.$loadData = function(){
+                    var tree = avalon.vmodels.testtree;
+                    var dataNum = vm.dataNum;
+                    var data = [];
+                    var time1 = new Date().getTime();
+                    for(var i=0;i<dataNum;i++){
+                        data.push({
+                            text : Math.random(0,1) * 1000
+                        });
+                    }
+                    var time2 = new Date().getTime();
+                    tree.$loadData(data);
+                    var time3 = new Date().getTime();
+                    avalon.log("数据生成用时:" + (time2 - time1));
+                    avalon.log("结构生成用时:" + (time3 - time2));
                 };
             });
             avalon.define("test", function(vm) {

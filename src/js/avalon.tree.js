@@ -38,24 +38,35 @@ define(["avalon"],function(avalon){
 			}
 		}
 	}
+	function getClassStr(arr){
+		var result = [];
+		for(var i=0,ii=arr.length;i<ii;i++){
+			result.push("ms-class-" + i + "='"+arr[i]+"'");
+		}
+		return result.join(" ");
+	}
 	function getTreeStr(HTML_OR_TPL){
 		return "<li ms-repeat='"+HTML_OR_TPL+"' ms-class-1='tree-node' ms-class='tree-node-last:$last'>" + 
-			"<i ms-class='tree-bg:el.state || line' " +
-				"ms-class-1='tree-collapsed:el.state===\"closed\"' " +
-				"ms-class-2='tree-expanded:el.state===\"open\"' " +
-				"ms-class-3='tree-indent:!el.state' " +
-				"ms-class-5='tree-join:line && !$last' " +
-				"ms-class-6='tree-joinbottom:line && $last' " +
-				"ms-click='$toggleOpenExpand(el)'></i>" +
+			"<i ms-class='tree-bg:el.state || line' " + 
+				getClassStr([
+					'tree-collapsed:el.state===\"closed\"',
+					'tree-expanded:el.state===\"open\"',
+					'tree-indent:!el.state',
+					'tree-join:line && !$last',
+					'tree-joinbottom:line && $last'
+				]) +
+				" ms-click='$toggleOpenExpand(el)'></i>" +
 			"<span ms-class='tree-node-content' ms-class-1='tree-node-select:el.selected' ms-click='$selectNode(el)'>" +
 				"<i ms-if='icon && el.iconCls !== false' " +
-					"ms-class='{{el.iconCls}}:el.iconCls && (!el.state || el.state === \"closed\" || (el.state === \"open\" && !el.openIconCls))' "+
-					"ms-class-1='{{el.openIconCls}}:el.openIconCls && el.state === \"open\"' " +
-					"ms-class-3='tree-indent tree-bg:!el.iconCls' " +
-					"ms-class-2='tree-folder:!el.iconCls && el.state===\"closed\"' " +
-					"ms-class-4='tree-folder-open:!el.iconCls && el.state===\"open\"' " +
-					"ms-class-5='tree-file:!el.state && !el.iconCls' " +
-					"ms-class-6='tree-icon-loading:el.loading'></i>" +
+					getClassStr([
+						'{{el.iconCls}}:el.iconCls && (!el.state || el.state === \"closed\" || (el.state === \"open\" && !el.openIconCls))',
+						'{{el.openIconCls}}:el.openIconCls && el.state === \"open\"',
+						'tree-indent tree-bg:!el.iconCls',
+						'tree-folder:!el.iconCls && el.state===\"closed\"',
+						'tree-folder-open:!el.iconCls && el.state===\"open\"',
+						'tree-file:!el.state && !el.iconCls',
+						'tree-icon-loading:el.loading'
+					]) + "></i>" +
 				"<span class='tree-title'>{{el.text}}</span>" +
 			"</span>" +
 			"<ul ms-if='el.children&&el.children.length' ms-visible='el.state===\"open\"' ms-include-src='\"TREE_TPL\"'></ul>" +
@@ -151,6 +162,10 @@ define(["avalon"],function(avalon){
 					eachNode(data);
 					target.pushArray(data);
 				}
+			};
+			vm.$loadData = function(data){
+				eachNode(data);
+				vmodel.treeList = data;
 			};
 		});
 		return vmodel;
