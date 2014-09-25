@@ -1,5 +1,5 @@
 [class^="icon-"],[class*=" icon-"]{
-	background-image: url("img/icons.png");background-repeat: no-repeat;
+	background-image: url("images/icons.png");background-repeat: no-repeat;
 	display: inline-block;height: 16px;width: 16px;vertical-align: middle;
 }
 .icon-back{background-position: 0 0}

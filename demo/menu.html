@@ -3,10 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="../src/css/menu.css">
-	<link rel="stylesheet" type="text/css" href="../src/css/icon.css">
-    <link rel="stylesheet" type="text/css" href="demo.css">
-	<script src="../src/js/avalon.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/icon.css">
+  <link rel="stylesheet" type="text/css" href="css/demo.css">
+  <script src="../src/avalon.js"></script>
+	<link rel="stylesheet" type="text/css" href="../src/menu/avalon.menu.css">
 </head>
 <body ms-controller='test'>
   <div ms-widget="menu,testmenu,$testmenuOpts"></div>
@@ -27,7 +27,7 @@
     function changeText(){
         avalon.vmodels.testmenu.$updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
     }
-  	require("avalon.menu", function() {
+  	require("menu/avalon.menu", function() {
       	avalon.define("test", function(vm) {
             vm.down1 = function(e){
                 if(e.button === 2){

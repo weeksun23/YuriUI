@@ -1,6 +1,6 @@
 define(["avalon"],function(avalon){
 	var nodeAttr = {
-		id : null,
+		//id : null,
 		iconCls : "",
 		openIconCls : "",
 		text : "",

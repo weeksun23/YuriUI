@@ -1,7 +1,7 @@
 .tree,.tree ul{list-style: none;margin: 0;padding: 0}
 .tree ul>li{padding-left:16px;}
-.tree-line ul>li{background:url(img/tree_line_conn.png) repeat-y 0 -1px;}
-.tree-bg{background-image: url(img/tree_icons.png);background-repeat: no-repeat;}
+.tree-line ul>li{background:url(images/tree_line_conn.png) repeat-y 0 -1px;}
+.tree-bg{background-image: url(images/tree_icons.png);background-repeat: no-repeat;}
 .tree-expanded,
 .tree-collapsed,
 .tree-indent,
@@ -35,5 +35,5 @@
 .tree-line .tree-node-last>ul>li{background:none;}
 .tree-join {background-position:-192px 0;}
 .tree-joinbottom {background-position:-160px 0;}
-.tree .tree-icon-loading{background:url(img/loading.gif) no-repeat center center;}
+.tree .tree-icon-loading{background:url(images/loading.gif) no-repeat center center;}
 .tree-title{vertical-align: middle;}
