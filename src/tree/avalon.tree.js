@@ -31,12 +31,13 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		for(var i=0,ii=list.length;i<ii;i++){
 			var item = list[i];
 			if(func){
-				if(func(item) === false){
+				if(func(item,parent) === false){
 					return false;
 				}
 			}else{
 				initNodeAttr(item,parent);
 			}
+			avalon.log(item);
 			var ch = item.children;
 			if(ch.length > 0 && eachNode(ch,func,item) === false){
 				return false;
@@ -100,10 +101,6 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 				vmodel.$onSelect.call(this,el);
 			};
 			/*
-			$onBeforeLoad : avalon.noop,
-			$onLoadSuccess : avalon.noop,
-			$onLoadError : avalon.noop,
-			$onLoadComplete : avalon.noop
 			*/
 			vm.$toggleOpenExpand = function(el){
 				if(!el.state) return;
@@ -133,7 +130,15 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 							success : function(ch){
 								vmodel.$loadFilter.call(vmodel,ch,el);
 								el.state = 'open';
-								eachNode(ch,null,el);
+								if(vmodel.checkbox && vmodel.$cascadeCheck){
+									//如果存在勾选框且有级联检查
+									eachNode(ch,function(item,parent){
+										initNodeAttr(item,parent);
+										item.checked = el.checked === 2 ? 0 : el.checked;
+									},el);
+								}else{
+									eachNode(ch,null,el);
+								}
 								el.children = ch;
 								if(!el.chLoaded){
 									el.chLoaded = true;
@@ -174,20 +179,19 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 						//如果是勾选 则将所有父节点置为预选状态
 						getParents(el,function(p){
 							p.checked = 2;
+							avalon.log(p);
 						});
 					}else{
 						//如果是反选 则遍历所有父节点 查看其下所有子节点是否都没有勾选，若是则置为反选
 						getParents(el,function(p){
-							var flag = true;
+							var flag = 0;
 							eachNode(p.children,function(el){
 								if(el.checked === 1){
-									flag = false;
+									flag = 2;
 									return false;
 								}
 							});
-							if(flag){
-								p.checked = 0;
-							}
+							p.checked = flag;
 						});
 					}
 				}

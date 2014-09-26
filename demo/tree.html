@@ -120,54 +120,61 @@
                         //avalon.log(this);
                         avalon.log(el);
                     },
+                    $url : "../src/tree/data1.json",
+                    $onBeforeLoad : function(el,param){
+                        param.text = el.text;
+                    },
                     checkbox : true,
                     treeList : [{
-                        text : "test1",
+                        text : getRondom(),
                         iconCls : "icon-ok",
                         state : "closed",
                         children : [{
-                            text : "test2",
+                            text : getRondom(),
                             iconCls : "icon-ok"
                         },{
-                            text : "test2",
+                            text : getRondom(),
                             iconCls : "icon-ok"
                         },{
-                            text : "test2",
+                            text : getRondom(),
                             iconCls : "icon-ok",
                             state : "open",
                             children : [{
-                                text : "test2",
+                                text : getRondom(),
                                 iconCls : "icon-ok"
                             }]
                         }]
                     },{
-                        text : "test1",
+                        text : getRondom(),
                         iconCls : "icon-ok",
                         state : "closed",
                         children : [{
-                            text : "test2",
+                            text : getRondom(),
                             iconCls : "icon-ok"
                         },{
-                            text : "test1",
+                            text : getRondom(),
                             iconCls : "icon-ok",
                             state : "closed",
                             children : [{
-                                text : "test2",
+                                text : getRondom(),
                                 iconCls : "icon-ok"
                             }]
                         }]
                     },{
-                        text : "children",
+                        text : getRondom(),
                         iconCls : "icon-reload",
                         state : "closed"
                     },{
-                        text : "children",
+                        text : getRondom(),
                         iconCls : "icon-reload"
                     }]
                 };
             });
             avalon.scan();
         });
+        function getRondom(){
+            return Math.random(0,1) * 100;
+        }
     </script>
 </body>
 </html>
