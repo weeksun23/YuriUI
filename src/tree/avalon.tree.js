@@ -11,28 +11,33 @@ define(["avalon","text!./avalon.tree.html","avalon.live"],function(avalon,templa
 		state : null
 		//children : []
 	};
+	//初始化节点属性
+	function initNodeAttr(item,parent){
+		if(!item.children){
+			item.children = [];
+		}
+		//指向父节点
+		item.$parent = parent;
+		//是否已加载子节点标志
+		item.chLoaded = item.state === 'open';
+		for(var j in nodeAttr){
+			if(item[j] === undefined){
+				item[j] = nodeAttr[j];
+			}
+		}
+	}
 	//遍历list中的所有节点，若传入回调则执行回调，否则初始化节点属性
 	function eachNode(list,func,parent){
 		for(var i=0,ii=list.length;i<ii;i++){
 			var item = list[i];
-			var ch = item.children;
 			if(func){
 				if(func(item) === false){
 					return false;
 				}
 			}else{
-				item.$parent = parent;
-				if(!ch){
-					ch = item.children = [];
-				}
-				//是否已加载子节点标志
-				item.chLoaded = item.state === 'open';
-				for(var j in nodeAttr){
-					if(item[j] === undefined){
-						item[j] = nodeAttr[j];
-					}
-				}
+				initNodeAttr(item,parent);
 			}
+			var ch = item.children;
 			if(ch.length > 0 && eachNode(ch,func,item) === false){
 				return false;
 			}
