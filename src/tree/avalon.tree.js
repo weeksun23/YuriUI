@@ -1,4 +1,4 @@
-define(["avalon","text!./avalon.tree.html","avalon.live"],function(avalon,template){
+define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(avalon,template){
 	var nodeAttr = {
 		//id : null,
 		iconCls : "",
@@ -99,6 +99,12 @@ define(["avalon","text!./avalon.tree.html","avalon.live"],function(avalon,templa
 				curSelEl = el;
 				vmodel.$onSelect.call(this,el);
 			};
+			/*
+			$onBeforeLoad : avalon.noop,
+			$onLoadSuccess : avalon.noop,
+			$onLoadError : avalon.noop,
+			$onLoadComplete : avalon.noop
+			*/
 			vm.$toggleOpenExpand = function(el){
 				if(!el.state) return;
 				if(el.loading) return;
@@ -108,30 +114,42 @@ define(["avalon","text!./avalon.tree.html","avalon.live"],function(avalon,templa
 						if(!el.chLoaded){
 							el.chLoaded = true;
 						}
-					}else{
-						var me = this;
+					}else if(vmodel.$url){
 						el.loading = true;
-						setTimeout(function(){
-							el.loading = false;
-							el.state = 'open';
-							var ch = [{
-								text : "children",
-								state : "closed"
-							},{
-								text : "children",
-								state : "closed"
-							}];
-							eachNode(ch,null,el);
-							el.children = ch;
-							if(!el.chLoaded){
-								el.chLoaded = true;
+						var param = {id : el.id};
+						if(vmodel.$onBeforeLoad.call(vmodel,el,param) === false){
+							return;
+						}
+						avalon.ajax({
+							url : vmodel.$url,
+							type : vmodel.$method,
+							cache : false,
+							data : param,
+							dataType : 'json',
+							complete : function(promise,result){
+								el.loading = false;
+								vmodel.$onLoadComplete.call(vmodel,el,promise,result);
+							},
+							success : function(ch){
+								vmodel.$loadFilter.call(vmodel,ch,el);
+								el.state = 'open';
+								eachNode(ch,null,el);
+								el.children = ch;
+								if(!el.chLoaded){
+									el.chLoaded = true;
+								}
+								vmodel.$onLoadSuccess.call(vmodel,ch,el);
+							},
+							error : function(promise){
+								vmodel.$onLoadError.call(vmodel,el,promise);
 							}
-						},300);
+						});
 					}
 				}else{
 					el.state = 'closed';
 				}
 			};
+			//获取当前选中的节点
 			vm.$getSelected = function(){
 				return curSelEl;
 			};
@@ -230,7 +248,14 @@ define(["avalon","text!./avalon.tree.html","avalon.live"],function(avalon,templa
 		line : false,
 		icon : true,
 		checkbox : false,
+		$url : null,
+		$method : 'GET',
 		$cascadeCheck : true,
-		$onSelect : avalon.noop
+		$onSelect : avalon.noop,
+		$loadFilter : avalon.noop,
+		$onBeforeLoad : avalon.noop,
+		$onLoadSuccess : avalon.noop,
+		$onLoadError : avalon.noop,
+		$onLoadComplete : avalon.noop
 	};
 });
