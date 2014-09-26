@@ -12,6 +12,7 @@
 .tree-checkbox0 {background-position:-208px -18px;}
 .tree-checkbox1 {background-position:-224px -18px;}
 .tree-checkbox2 {background-position:-240px -18px;}
+.tree-node{font-size: 0;}
 .tree-node-content{display: inline-block;padding-right: 2px;cursor: pointer;}
 .tree-node-content:hover{background-color: #e2e2e2;}
 .tree-node-select{background-color: #3385FF;color: #fff;}
@@ -36,4 +37,4 @@
 .tree-join {background-position:-192px 0;}
 .tree-joinbottom {background-position:-160px 0;}
 .tree .tree-icon-loading{background:url(images/loading.gif) no-repeat center center;}
-.tree-title{vertical-align: middle;}
+.tree-title{vertical-align: middle;font-size: 12px;}

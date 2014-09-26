@@ -1,4 +1,4 @@
-define(["avalon"],function(avalon){
+define(["avalon","text!./avalon.tree.html","avalon.live"],function(avalon,template){
 	var nodeAttr = {
 		//id : null,
 		iconCls : "",
@@ -11,25 +11,34 @@ define(["avalon"],function(avalon){
 		state : null
 		//children : []
 	};
-	function eachNode(list){
+	//遍历list中的所有节点，若传入回调则执行回调，否则初始化节点属性
+	function eachNode(list,func,parent){
 		for(var i=0,ii=list.length;i<ii;i++){
 			var item = list[i];
 			var ch = item.children;
-			if(!ch){
-				ch = item.children = [];
-			}
-			//是否已加载子节点标志
-			item.chLoaded = item.state === 'open';
-			for(var j in nodeAttr){
-				if(item[j] === undefined){
-					item[j] = nodeAttr[j];
+			if(func){
+				if(func(item) === false){
+					return false;
+				}
+			}else{
+				item.$parent = parent;
+				if(!ch){
+					ch = item.children = [];
+				}
+				//是否已加载子节点标志
+				item.chLoaded = item.state === 'open';
+				for(var j in nodeAttr){
+					if(item[j] === undefined){
+						item[j] = nodeAttr[j];
+					}
 				}
 			}
-			if(ch.length > 0){
-				eachNode(ch);
+			if(ch.length > 0 && eachNode(ch,func,item) === false){
+				return false;
 			}
 		}
 	}
+	//查找指定节点并执行回调
 	function findNode(list,target,func){
 		for(var i=0,ii=list.length;i<ii;i++){
 			var item = list[i];
@@ -42,44 +51,20 @@ define(["avalon"],function(avalon){
 			}
 		}
 	}
-	function getClassStr(arr){
-		var result = [];
-		for(var i=0,ii=arr.length;i<ii;i++){
-			result.push("ms-class-" + i + "='"+arr[i]+"'");
+	//遍历并获取所有父节点
+	function getParents(target,func){
+		var pArr = [];
+		var parent = target.$parent;
+		while(parent){
+			func && func(parent);
+			pArr.push(parent);
+			parent = parent.$parent;
 		}
-		return result.join(" ");
-	}
-	function getTreeStr(HTML_OR_TPL){
-		return "<li ms-repeat='"+HTML_OR_TPL+"' ms-class-1='tree-node' ms-class='tree-node-last:$last'>" + 
-			"<i " + getClassStr([
-					'tree-bg:el.state || line',
-					'tree-collapsed:el.state===\"closed\"',
-					'tree-expanded:el.state===\"open\"',
-					'tree-indent:!el.state',
-					'tree-join:line && !$last',
-					'tree-joinbottom:line && $last'
-				]) +
-				" ms-click='$toggleOpenExpand(el)'></i>" +
-			"<i ms-if='checkbox' ms-click='$toggleCheck(el)' " + getClassStr(["tree-bg tree-checkbox tree-checkbox{{el.checked}}"]) +"></i>" +
-			"<span ms-class='tree-node-content' ms-class-1='tree-node-select:el.selected' ms-click='$selectNode(el)'>" +
-				"<i ms-if='icon && el.iconCls !== false' " +
-					getClassStr([
-						'{{el.iconCls}}:el.iconCls && (!el.state || el.state === \"closed\" || (el.state === \"open\" && !el.openIconCls))',
-						'{{el.openIconCls}}:el.openIconCls && el.state === \"open\"',
-						'tree-indent tree-bg:!el.iconCls',
-						'tree-folder:!el.iconCls && el.state===\"closed\"',
-						'tree-folder-open:!el.iconCls && el.state===\"open\"',
-						'tree-file:!el.state && !el.iconCls',
-						'tree-icon-loading:el.loading'
-					]) + "></i>" +
-				"<span class='tree-title'>{{el.text}}</span>" +
-			"</span>" +
-			"<ul ms-if='el.chLoaded&&el.children&&el.children.length' ms-visible='el.state===\"open\"' ms-include-src='\"TREE_TPL\"'></ul>" +
-		"</li>";
+		return pArr;
 	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		if(!avalon.templateCache["TREE_TPL"]){
-			avalon.templateCache["TREE_TPL"] = getTreeStr("el.children");
+			avalon.templateCache["TREE_TPL"] = template.replace("HTML_OR_TPL","el.children");
 		}
 		var curSelEl = null;
 		var vmodel = avalon.define(data.treeId,function(vm){
@@ -87,7 +72,7 @@ define(["avalon"],function(avalon){
 			eachNode(options.treeList);
 			avalon.mix(vm, options);
 			vm.widgetElement = element;
-			vm.template = getTreeStr("treeList");
+			vm.template = template.replace("HTML_OR_TPL","treeList");
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass('tree');
@@ -131,12 +116,12 @@ define(["avalon"],function(avalon){
 								text : "children",
 								state : "closed"
 							}];
-							eachNode(ch);
+							eachNode(ch,null,el);
 							el.children = ch;
 							if(!el.chLoaded){
 								el.chLoaded = true;
 							}
-						},1000);
+						},300);
 					}
 				}else{
 					el.state = 'closed';
@@ -145,8 +130,44 @@ define(["avalon"],function(avalon){
 			vm.$getSelected = function(){
 				return curSelEl;
 			};
+			/*
+			勾选或反选节点
+			*/
 			vm.$toggleCheck = function(el){
-				el.checked = el.checked ? 0 : 1;
+				var _checked = el.checked;
+				if(_checked === 1){
+					var checked = el.checked = 0;
+				}else{
+					checked = el.checked = 1;
+				}
+				if(vmodel.$cascadeCheck){
+					if(el.children.length){
+						//勾选或反选所有子节点
+						eachNode(el.children,function(item){
+							item.checked = checked;
+						});
+					}
+					if(checked === 1){
+						//如果是勾选 则将所有父节点置为预选状态
+						getParents(el,function(p){
+							p.checked = 2;
+						});
+					}else{
+						//如果是反选 则遍历所有父节点 查看其下所有子节点是否都没有勾选，若是则置为反选
+						getParents(el,function(p){
+							var flag = true;
+							eachNode(p.children,function(el){
+								if(el.checked === 1){
+									flag = false;
+									return false;
+								}
+							});
+							if(flag){
+								p.checked = 0;
+							}
+						});
+					}
+				}
 			};
 			/*
 			移除指定节点
@@ -185,7 +206,7 @@ define(["avalon"],function(avalon){
 					target = vmodel.treeList;
 				}
 				if(target){
-					eachNode(data);
+					eachNode(data,null,el);
 					target.pushArray(data);
 					if(el && !el.chLoaded){
 						el.chLoaded = true;
@@ -204,6 +225,7 @@ define(["avalon"],function(avalon){
 		line : false,
 		icon : true,
 		checkbox : false,
+		$cascadeCheck : true,
 		$onSelect : avalon.noop
 	};
 });
