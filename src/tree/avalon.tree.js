@@ -159,6 +159,14 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		el.state = 'closed';
 		vmodel.$onCollapse(el);
 	}
+	function toggleElState(vmodel,el,state){
+		if(!el.state) return;
+		if(state === 'open'){
+			el.state === 'closed' && expandNode(vmodel,el);
+		}else{
+			el.state === 'open' && collapseNode(vmodel,el);
+		}
+	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		var options = data.treeOptions;
 		template = template.replace("MS_OPTIONS_FORMATTER",options.$formatter);
@@ -266,18 +274,10 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			//展开或收缩
 			vm.$toggleState = function(state,el){
 				if(el){
-					if(state === 'open'){
-						expandNode(vmodel,el);
-					}else{
-						collapseNode(vmodel,el);
-					}
+					toggleElState(vmodel,el,state);
 				}else{
 					eachNode(vmodel.treeList,function(el){
-						if(state === 'open'){
-							expandNode(vmodel,el);
-						}else{
-							collapseNode(vmodel,el);
-						}
+						toggleElState(vmodel,el,state);
 					});
 				}
 			};
