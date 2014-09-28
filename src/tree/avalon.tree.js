@@ -84,23 +84,81 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			p.checked = flag;
 		});
 	}
+	function ajaxLoad(el,vmodel,func){
+		var callBackEl = el;
+		if(!el){
+			//如果节点为空 则说明树节点还没创建加载根数据
+			callBackEl = null;
+			el = {
+				id : null
+			};
+		}
+		el.loading = true;
+		var param = {id : el.id};
+		if(vmodel.$onBeforeLoad.call(vmodel,callBackEl,param) === false){
+			return;
+		}
+		avalon.ajax({
+			url : vmodel.$url,
+			type : vmodel.$method,
+			cache : false,
+			data : param,
+			dataType : 'json',
+			complete : function(promise,result){
+				el.loading = false;
+				vmodel.$onLoadComplete.call(vmodel,callBackEl,promise,result);
+			},
+			success : function(ch){
+				vmodel.$loadFilter.call(vmodel,ch,callBackEl);
+				if(callBackEl){
+					el.state = 'open';
+					if(vmodel.checkbox && vmodel.$cascadeCheck){
+						//如果存在勾选框且有级联检查
+						eachNode(ch,function(item){
+							initNodeAttr(item);
+							item.checked = el.checked === 2 ? 0 : el.checked;
+						},el);
+					}else{
+						eachNode(ch);
+					}
+					el.children = ch;
+					if(!el.chLoaded){
+						el.chLoaded = true;
+					}
+				}else{
+					eachNode(ch);
+					vmodel.treeList = ch
+					func && func();
+				}
+				vmodel.$onLoadSuccess.call(vmodel,ch,callBackEl);
+			},
+			error : function(promise){
+				vmodel.$onLoadError.call(vmodel,callBackEl,promise);
+			}
+		});
+	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
+		var options = data.treeOptions;
+		template = template.replace("MS_OPTIONS_FORMATTER",options.$formatter);
 		if(!avalon.templateCache["TREE_TPL"]){
 			avalon.templateCache["TREE_TPL"] = template.replace("HTML_OR_TPL","el.children");
 		}
 		var curSelEl = null;
+		eachNode(options.treeList);
 		var vmodel = avalon.define(data.treeId,function(vm){
-			var options = data.treeOptions;
-			eachNode(options.treeList);
 			avalon.mix(vm, options);
-			vm.widgetElement = element;
-			vm.template = template.replace("HTML_OR_TPL","treeList");
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass('tree');
 				$el.attr("ms-class","tree-line:line");
-				element.innerHTML = vmodel.template;
-				avalon.scan(element, vmodel);
+				element.innerHTML = template.replace("HTML_OR_TPL","treeList");
+				if(vmodel.$url){
+					ajaxLoad(null,vmodel,function(){
+						avalon.scan(element, vmodel);
+					});
+				}else{
+					avalon.scan(element, vmodel);
+				}
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
@@ -128,43 +186,7 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 							el.chLoaded = true;
 						}
 					}else if(vmodel.$url){
-						el.loading = true;
-						var param = {id : el.id};
-						if(vmodel.$onBeforeLoad.call(vmodel,el,param) === false){
-							return;
-						}
-						avalon.ajax({
-							url : vmodel.$url,
-							type : vmodel.$method,
-							cache : false,
-							data : param,
-							dataType : 'json',
-							complete : function(promise,result){
-								el.loading = false;
-								vmodel.$onLoadComplete.call(vmodel,el,promise,result);
-							},
-							success : function(ch){
-								vmodel.$loadFilter.call(vmodel,ch,el);
-								el.state = 'open';
-								if(vmodel.checkbox && vmodel.$cascadeCheck){
-									//如果存在勾选框且有级联检查
-									eachNode(ch,function(item){
-										initNodeAttr(item);
-										item.checked = el.checked === 2 ? 0 : el.checked;
-									},el);
-								}else{
-									eachNode(ch,null);
-								}
-								el.children = ch;
-								if(!el.chLoaded){
-									el.chLoaded = true;
-								}
-								vmodel.$onLoadSuccess.call(vmodel,ch,el);
-							},
-							error : function(promise){
-								vmodel.$onLoadError.call(vmodel,el,promise);
-							}
-						});
+						ajaxLoad(el,vmodel);
 					}
 				}else{
 					el.state = 'closed';
@@ -258,13 +280,22 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		return vmodel;
 	};
 	widget.defaults = {
+		//树数据
 		treeList : [],
+		//是否显示根脉
 		line : false,
+		//节点是否带图标
 		icon : true,
+		//节点是否带checkbox
 		checkbox : false,
+		//是否级联检查
+		$cascadeCheck : true,
+		//定义如何显示node text
+		$formatter : '{{el.text}}',
+		//异步获取数据的url，若被定义，则返回数据覆盖treeList属性
 		$url : null,
 		$method : 'GET',
-		$cascadeCheck : true,
+		//$loader : null
 		$onSelect : avalon.noop,
 		$loadFilter : avalon.noop,
 		$onBeforeLoad : avalon.noop,
@@ -272,4 +303,5 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		$onLoadError : avalon.noop,
 		$onLoadComplete : avalon.noop
 	};
+	widget.version = 1.0;
 });

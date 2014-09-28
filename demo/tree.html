@@ -121,9 +121,10 @@
                         //avalon.log(this);
                         avalon.log(el);
                     },
+                    $formatter : "{{el.text}}[{{el.iconCls}}]",
                     $url : "../src/tree/data1.json",
                     $onBeforeLoad : function(el,param){
-                        param.text = el.text;
+                        param.text = !el ? null : el.text;
                     },
                     checkbox : true,
                     treeList : [{
