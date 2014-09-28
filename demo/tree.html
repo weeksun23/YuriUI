@@ -135,6 +135,9 @@
                     $onBeforeExpand : function(){
 
                     },
+                    $onDbClick : function(el){
+                        avalon.log(el);
+                    },
                     $formatter : "{{el.text}}[{{el.iconCls}}]",
                     $queryParams : {param1 : "hello"},
                     $url : "../src/tree/data1.json",

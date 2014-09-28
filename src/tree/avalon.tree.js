@@ -206,6 +206,21 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			}
 		}
 	}
+	//往上查找节点 直到找到nodecontent 执行回调
+	function findNodeContent(target,func){
+		if(target.getAttribute("data-type") === "nodeContent"){
+			func(target.parentNode["data-el"]);
+		}else{
+			var pNode = target.parentNode;
+			while(pNode.tagName.toUpperCase() !== 'BODY'){
+				if(pNode.getAttribute("data-type") === "nodeContent"){
+					func(pNode.parentNode["data-el"]);
+					return;
+				}
+				pNode = pNode.parentNode;
+			}
+		}
+	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		var options = data.treeOptions;
 		template = template.replace("MS_OPTIONS_FORMATTER",options.$formatter);
@@ -232,6 +247,7 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 				$el.addClass('tree');
 				$el.attr("ms-class","tree-line:line");
 				$el.attr("ms-click","$rootClick()");
+				$el.attr("ms-dblclick","$rootDbClick()");
 				element.innerHTML = template.replace("HTML_OR_TPL","treeList");
 				if(vmodel.treeList){
 					avalon.scan(element, vmodel);
@@ -244,7 +260,6 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
 			};
-			//冒泡
 			vm.$rootClick = function(e){
 				var target = e.target;
 				switch(target.getAttribute("data-type")){
@@ -254,17 +269,16 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 					case "toggleCheck":
 						toggleCheck(vmodel,target.parentNode["data-el"]);
 					break;
-					case "nodeContent":selectNode(target.parentNode["data-el"]);break;
 					default : 
-						var pNode = target.parentNode;
-						while(pNode.tagName.toUpperCase() !== 'BODY'){
-							if(pNode.getAttribute("data-type") === "nodeContent"){
-								selectNode(pNode.parentNode["data-el"]);
-								return;
-							}
-							pNode = pNode.parentNode;
-						}
+						findNodeContent(target,function(el){
+							selectNode(el);
+						});
 				}
+			};
+			vm.$rootDbClick = function(e){
+				findNodeContent(e.target,function(el){
+					vmodel.$onDbClick(el,e);
+				});	
 			};
 			/****************************方法****************************/
 			vm.$loadData = function(data){
@@ -388,7 +402,8 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		$onBeforeLoad : avalon.noop,
 		$onLoadSuccess : avalon.noop,
 		$onLoadError : avalon.noop,
-		$onLoadComplete : avalon.noop
+		$onLoadComplete : avalon.noop,
+		$onDbClick : avalon.noop
 	};
 	widget.version = 1.0;
 });
