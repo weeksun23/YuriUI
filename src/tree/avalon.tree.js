@@ -143,7 +143,9 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			return;
 		}
 		if(el.children && el.children.length){
-			el.state = 'open';
+			if(el.state === 'closed'){
+				el.state = 'open';
+			}
 			if(!el.chLoaded){
 				el.chLoaded = true;
 			}
@@ -316,6 +318,14 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 						toggleElState(vmodel,el,state);
 					});
 				}
+			};
+			//展开到指定节点
+			vm.$expandTo = function(target){
+				var pArr = [];
+				getParents(vmodel.treeList,target,pArr);
+				avalon.each(pArr,function(i,el){
+					expandNode(vmodel,el);
+				});
 			};
 			//获取当前选中的节点
 			vm.$getSelected = function(){

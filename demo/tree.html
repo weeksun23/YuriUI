@@ -29,6 +29,8 @@
         <button ms-click='$reload()'>重新加载数据</button>
         <button ms-click='$expandAll()'>展开所有节点</button>
         <button ms-click='$collapseAll()'>收缩所有节点</button>
+        <br />
+        <button ms-click='$expandTo()'>展开到id为1的节点</button>
     </div>
     <div class='fl zone' ms-controller='myCtrl'>
         <button ms-click='loadData'>loadData</button>
@@ -125,6 +127,9 @@
                 vm.$collapseAll = function(){
                     avalon.vmodels.testtree.$toggleState("close");
                 };
+                vm.$expandTo = function(){
+                    avalon.vmodels.testtree.$expandTo(1);
+                };
             });
             avalon.define("treeCtrl", function(vm) {
                 vm.$testtreeOpts = {
@@ -186,7 +191,33 @@
                         state : "closed"
                     },{
                         text : getRondom(),
-                        iconCls : "icon-reload"
+                        iconCls : "icon-reload",
+                        state : "closed",
+                        children : [{
+                            text : "2234ree",
+                            iconCls : "icon-ok",
+                            state : "closed",
+                            children : [{
+                                text : getRondom(),
+                                iconCls : "icon-reload",
+                                state : "closed",
+                                children : [{
+                                    text : "2234ree",
+                                    iconCls : "icon-ok",
+                                    state : "closed",
+                                    children : [{
+                                        text : getRondom(),
+                                        iconCls : "icon-reload",
+                                        state : "closed",
+                                        children : [{
+                                            text : "2234ree",
+                                            id : 1,
+                                            iconCls : "icon-ok"
+                                        }]
+                                    }]
+                                }]
+                            }]
+                        }]
                     }]
                 };
             });
