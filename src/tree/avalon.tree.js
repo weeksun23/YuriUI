@@ -12,12 +12,10 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		//children : []
 	};
 	//初始化节点属性
-	function initNodeAttr(item,parent){
+	function initNodeAttr(item){
 		if(!item.children){
 			item.children = [];
 		}
-		//指向父节点
-		item.$parent = parent;
 		//是否已加载子节点标志
 		item.chLoaded = item.state === 'open';
 		for(var j in nodeAttr){
@@ -27,19 +25,18 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		}
 	}
 	//遍历list中的所有节点，若传入回调则执行回调，否则初始化节点属性
-	function eachNode(list,func,parent){
+	function eachNode(list,func){
 		for(var i=0,ii=list.length;i<ii;i++){
 			var item = list[i];
 			if(func){
-				if(func(item,parent) === false){
+				if(func(item) === false){
 					return false;
 				}
 			}else{
-				initNodeAttr(item,parent);
+				initNodeAttr(item);
 			}
-			avalon.log(item);
 			var ch = item.children;
-			if(ch.length > 0 && eachNode(ch,func,item) === false){
+			if(ch.length > 0 && eachNode(ch,func) === false){
 				return false;
 			}
 		}
@@ -57,16 +54,35 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			}
 		}
 	}
-	//遍历并获取所有父节点
-	function getParents(target,func){
-		var pArr = [];
-		var parent = target.$parent;
-		while(parent){
-			func && func(parent);
-			pArr.push(parent);
-			parent = parent.$parent;
+	//获取target的所有父节点
+	function getParents(list,target,pArr){
+		for(var i=0,ii=list.length;i<ii;i++){
+			var item = list[i];
+			if((typeof target == 'object' && target === item) || item.id === target){
+				return false;
+			}
+			var ch = item.children;
+			if(ch.length > 0){
+				pArr.push(item);
+				if(getParents(ch,target,pArr) === false){
+					return false;
+				}
+			}
 		}
-		return pArr;
+		pArr.pop();
+	}
+	//遍历所有父节点 查看其下所有子节点是否都没有勾选，若是则置为反选
+	function eachParentsUncheck(pArr){
+		avalon.each(pArr,function(i,p){
+			var flag = 0;
+			eachNode(p.children,function(el){
+				if(el.checked === 1){
+					flag = 2;
+					return false;
+				}
+			});
+			p.checked = flag;
+		});
 	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		if(!avalon.templateCache["TREE_TPL"]){
@@ -97,10 +113,10 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 					curSelEl.selected = false;
 				}
 				el.selected = true;
-				curSelEl = el;
-				vmodel.$onSelect.call(this,el);
+				vmodel.$onSelect.call(this,curSelEl = el);
 			};
 			/*
+			展开节点 如果节点的子节点数>0则直接展开，否则根据url异步加载数据
 			*/
 			vm.$toggleOpenExpand = function(el){
 				if(!el.state) return;
@@ -132,12 +148,12 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 								el.state = 'open';
 								if(vmodel.checkbox && vmodel.$cascadeCheck){
 									//如果存在勾选框且有级联检查
-									eachNode(ch,function(item,parent){
-										initNodeAttr(item,parent);
+									eachNode(ch,function(item){
+										initNodeAttr(item);
 										item.checked = el.checked === 2 ? 0 : el.checked;
 									},el);
 								}else{
-									eachNode(ch,null,el);
+									eachNode(ch,null);
 								}
 								el.children = ch;
 								if(!el.chLoaded){
@@ -175,24 +191,15 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 							item.checked = checked;
 						});
 					}
+					var pArr = [];
+					getParents(vmodel.treeList,el,pArr);
 					if(checked === 1){
 						//如果是勾选 则将所有父节点置为预选状态
-						getParents(el,function(p){
+						avalon.each(pArr,function(i,p){
 							p.checked = 2;
-							avalon.log(p);
 						});
 					}else{
-						//如果是反选 则遍历所有父节点 查看其下所有子节点是否都没有勾选，若是则置为反选
-						getParents(el,function(p){
-							var flag = 0;
-							eachNode(p.children,function(el){
-								if(el.checked === 1){
-									flag = 2;
-									return false;
-								}
-							});
-							p.checked = flag;
-						});
+						eachParentsUncheck(pArr);
 					}
 				}
 			};
@@ -203,10 +210,13 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			vm.$removeNode = function(target){
 				findNode(vmodel.treeList,target,function(item,i,list){
 					if(item.loading) return;
+					var pArr = [];
+					getParents(vmodel.treeList,item,pArr);
 					if(item === curSelEl){
 						curSelEl = null;
 					}
 					list.removeAt(i);
+					eachParentsUncheck(pArr);
 				});
 			};
 			/*
@@ -233,7 +243,7 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 					target = vmodel.treeList;
 				}
 				if(target){
-					eachNode(data,null,el);
+					eachNode(data,null);
 					target.pushArray(data);
 					if(el && !el.chLoaded){
 						el.chLoaded = true;

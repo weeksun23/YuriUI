@@ -1,7 +1,11 @@
 [{
-	"text" : "children",
+	"text" : "ajax1",
 	"state" : "closed"
 },{
-	"text" : "children",
-	"state" : "closed"
+	"text" : "ajax2",
+	"state" : "closed",
+	"children" : [{
+		"text" : "ajax3",
+		"state" : "closed"
+	}]
 }]
