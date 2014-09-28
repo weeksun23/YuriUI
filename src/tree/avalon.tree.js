@@ -167,6 +167,45 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			el.state === 'open' && collapseNode(vmodel,el);
 		}
 	}
+	/*
+	展开节点 如果节点的子节点数>0则直接展开，否则根据url异步加载数据
+	*/
+	function toggleOpenExpand(vmodel,el){
+		if(!el.state) return;
+		if(el.loading) return;
+		if(el.state === 'closed'){
+			expandNode(vmodel,el);
+		}else{
+			collapseNode(vmodel,el);
+		}
+	}
+	//勾选或反选节点
+	function toggleCheck(vmodel,el){
+		var _checked = el.checked;
+		if(_checked === 1){
+			var checked = el.checked = 0;
+		}else{
+			checked = el.checked = 1;
+		}
+		if(vmodel.$cascadeCheck){
+			if(el.children.length){
+				//勾选或反选所有子节点
+				eachNode(el.children,function(item){
+					item.checked = checked;
+				});
+			}
+			var pArr = [];
+			getParents(vmodel.treeList,el,pArr);
+			if(checked === 1){
+				//如果是勾选 则将所有父节点置为预选状态
+				avalon.each(pArr,function(i,p){
+					p.checked = 2;
+				});
+			}else{
+				eachParentsUncheck(pArr);
+			}
+		}
+	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		var options = data.treeOptions;
 		template = template.replace("MS_OPTIONS_FORMATTER",options.$formatter);
@@ -174,6 +213,17 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			avalon.templateCache["TREE_TPL"] = template.replace("HTML_OR_TPL","el.children");
 		}
 		var curSelEl = null;
+		//选择节点
+		function selectNode(el){
+			if(vmodel.$onBeforeSelect(el) === false || el === curSelEl){
+				return;
+			}
+			if(curSelEl){
+				curSelEl.selected = false;
+			}
+			el.selected = true;
+			vmodel.$onSelect(curSelEl = el);
+		}
 		eachNode(options.treeList);
 		var vmodel = avalon.define(data.treeId,function(vm){
 			avalon.mix(vm, options);
@@ -181,6 +231,7 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 				var $el = avalon(element);
 				$el.addClass('tree');
 				$el.attr("ms-class","tree-line:line");
+				$el.attr("ms-click","$rootClick()");
 				element.innerHTML = template.replace("HTML_OR_TPL","treeList");
 				if(vmodel.treeList){
 					avalon.scan(element, vmodel);
@@ -193,55 +244,26 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
 			};
-			vm.$selectNode = function(el){
-				if(vmodel.$onBeforeSelect(el) === false || el === curSelEl){
-					return;
-				}
-				if(curSelEl){
-					curSelEl.selected = false;
-				}
-				el.selected = true;
-				vmodel.$onSelect(curSelEl = el);
-			};
-			/*
-			展开节点 如果节点的子节点数>0则直接展开，否则根据url异步加载数据
-			*/
-			vm.$toggleOpenExpand = function(el){
-				if(!el.state) return;
-				if(el.loading) return;
-				if(el.state === 'closed'){
-					expandNode(vmodel,el);
-				}else{
-					collapseNode(vmodel,el);
-				}
-			};
-			/*
-			勾选或反选节点
-			*/
-			vm.$toggleCheck = function(el){
-				var _checked = el.checked;
-				if(_checked === 1){
-					var checked = el.checked = 0;
-				}else{
-					checked = el.checked = 1;
-				}
-				if(vmodel.$cascadeCheck){
-					if(el.children.length){
-						//勾选或反选所有子节点
-						eachNode(el.children,function(item){
-							item.checked = checked;
-						});
-					}
-					var pArr = [];
-					getParents(vmodel.treeList,el,pArr);
-					if(checked === 1){
-						//如果是勾选 则将所有父节点置为预选状态
-						avalon.each(pArr,function(i,p){
-							p.checked = 2;
-						});
-					}else{
-						eachParentsUncheck(pArr);
-					}
+			//冒泡
+			vm.$rootClick = function(e){
+				var target = e.target;
+				switch(target.getAttribute("data-type")){
+					case "toggleOpenExpand":
+						toggleOpenExpand(vmodel,target.parentNode["data-el"]);
+					break;
+					case "toggleCheck":
+						toggleCheck(vmodel,target.parentNode["data-el"]);
+					break;
+					case "nodeContent":selectNode(target.parentNode["data-el"]);break;
+					default : 
+						var pNode = target.parentNode;
+						while(pNode.tagName.toUpperCase() !== 'BODY'){
+							if(pNode.getAttribute("data-type") === "nodeContent"){
+								selectNode(pNode.parentNode["data-el"]);
+								return;
+							}
+							pNode = pNode.parentNode;
+						}
 				}
 			};
 			/****************************方法****************************/

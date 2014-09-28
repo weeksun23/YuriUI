@@ -1,16 +1,13 @@
-<li ms-repeat='HTML_OR_TPL' ms-class-1='tree-node' ms-class='tree-node-last:$last'>
-	<i ms-class='tree-bg:el.state || line' 
+<li ms-repeat='HTML_OR_TPL' ms-class-1='tree-node' ms-class='tree-node-last:$last' ms-data-el='el'>
+	<i data-type='toggleOpenExpand' ms-class='tree-bg:el.state || line' 
 		ms-class-1='tree-bg:el.state || line' 
 		ms-class-2="tree-collapsed:el.state==='closed'"
 		ms-class-3="tree-expanded:el.state==='open'"
 		ms-class-4="tree-indent:!el.state"
 		ms-class-5="tree-join:line && !$last"
-		ms-class-6="tree-joinbottom:line && $last"
-		ms-live-click='$toggleOpenExpand(el)'></i>
-	<i ms-if='checkbox' ms-live-click='$toggleCheck(el)' 
-		ms-class="tree-bg tree-checkbox tree-checkbox{{el.checked}}"></i>
-	<span ms-class='tree-node-content' 
-		ms-class-1='tree-node-select:el.selected' ms-live-click='$selectNode(el)'>
+		ms-class-6="tree-joinbottom:line && $last"></i>
+	<i data-type='toggleCheck' ms-if='checkbox' ms-class="tree-bg tree-checkbox tree-checkbox{{el.checked}}"></i>
+	<span data-type='nodeContent' ms-class='tree-node-content' ms-class-1='tree-node-select:el.selected'>
 		<i ms-if='icon && el.iconCls !== false' 
 			ms-class="{{el.iconCls}}:el.iconCls && (!el.state || el.state === 'closed' || (el.state === 'open' && !el.openIconCls))" 
 			ms-class-1="{{el.openIconCls}}:el.openIconCls && el.state === 'open'"
