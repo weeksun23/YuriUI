@@ -26,6 +26,9 @@
         <label><input type="radio" ms-duplex-text="dataNum" value='600'/>600个节点</label>
         <label><input type="radio" ms-duplex-text="dataNum" value='1000'/>1000个节点</label>
         <br />
+        <button ms-click='$reload()'>重新加载数据</button>
+        <button ms-click='$expandAll()'>展开所有节点</button>
+        <button ms-click='$collapseAll()'>收缩所有节点</button>
     </div>
     <div class='fl zone' ms-controller='myCtrl'>
         <button ms-click='loadData'>loadData</button>
@@ -113,15 +116,27 @@
                     avalon.log("数据生成用时:" + (time2 - time1));
                     avalon.log("结构生成用时:" + (time3 - time2));
                 };
+                vm.$reload = function(){
+                    avalon.vmodels.testtree.$reload();
+                };
+                vm.$expandAll = function(){
+                    avalon.vmodels.testtree.$toggleState("open");
+                };
+                vm.$collapseAll = function(){
+                    avalon.vmodels.testtree.$toggleState("close");
+                };
             });
             avalon.define("treeCtrl", function(vm) {
                 vm.$testtreeOpts = {
                     line : hasLine,
                     $onSelect : function(el){
-                        //avalon.log(this);
-                        avalon.log(el);
+                       avalon.log(this.$getParents(el));
+                    },
+                    $onBeforeExpand : function(){
+
                     },
                     $formatter : "{{el.text}}[{{el.iconCls}}]",
+                    $queryParams : {param1 : "hello"},
                     $url : "../src/tree/data1.json",
                     $onBeforeLoad : function(el,param){
                         param.text = !el ? null : el.text;

@@ -95,7 +95,8 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		}
 		el.loading = true;
 		var param = {id : el.id};
-		if(vmodel.$onBeforeLoad.call(vmodel,callBackEl,param) === false){
+		avalon.mix(param,vmodel.$queryParams);
+		if(vmodel.$onBeforeLoad(callBackEl,param) === false){
 			return;
 		}
 		avalon.ajax({
@@ -106,10 +107,10 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 			dataType : 'json',
 			complete : function(promise,result){
 				el.loading = false;
-				vmodel.$onLoadComplete.call(vmodel,callBackEl,promise,result);
+				vmodel.$onLoadComplete(callBackEl,promise,result);
 			},
 			success : function(ch){
-				vmodel.$loadFilter.call(vmodel,ch,callBackEl);
+				vmodel.$loadFilter(ch,callBackEl);
 				if(callBackEl){
 					el.state = 'open';
 					if(vmodel.checkbox && vmodel.$cascadeCheck){
@@ -130,12 +131,33 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 					vmodel.treeList = ch
 					func && func();
 				}
-				vmodel.$onLoadSuccess.call(vmodel,ch,callBackEl);
+				vmodel.$onLoadSuccess(ch,callBackEl);
 			},
 			error : function(promise){
-				vmodel.$onLoadError.call(vmodel,callBackEl,promise);
+				vmodel.$onLoadError(callBackEl,promise);
 			}
 		});
+	}
+	function expandNode(vmodel,el){
+		if(vmodel.$onBeforeExpand(el) === false){
+			return;
+		}
+		if(el.children && el.children.length){
+			el.state = 'open';
+			if(!el.chLoaded){
+				el.chLoaded = true;
+			}
+		}else if(vmodel.$url){
+			ajaxLoad(el,vmodel);
+		}
+		vmodel.$onExpand(el);
+	}
+	function collapseNode(vmodel,el){
+		if(vmodel.$onBeforeCollapse(el) === false){
+			return;
+		}
+		el.state = 'closed';
+		vmodel.$onCollapse(el);
 	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		var options = data.treeOptions;
@@ -152,26 +174,26 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 				$el.addClass('tree');
 				$el.attr("ms-class","tree-line:line");
 				element.innerHTML = template.replace("HTML_OR_TPL","treeList");
-				if(vmodel.$url){
+				if(vmodel.treeList){
+					avalon.scan(element, vmodel);
+				}else{
 					ajaxLoad(null,vmodel,function(){
 						avalon.scan(element, vmodel);
 					});
-				}else{
-					avalon.scan(element, vmodel);
 				}
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
 			};
 			vm.$selectNode = function(el){
-				if(el === curSelEl){
+				if(vmodel.$onBeforeSelect(el) === false || el === curSelEl){
 					return;
 				}
 				if(curSelEl){
 					curSelEl.selected = false;
 				}
 				el.selected = true;
-				vmodel.$onSelect.call(this,curSelEl = el);
+				vmodel.$onSelect(curSelEl = el);
 			};
 			/*
 			展开节点 如果节点的子节点数>0则直接展开，否则根据url异步加载数据
@@ -180,21 +202,10 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 				if(!el.state) return;
 				if(el.loading) return;
 				if(el.state === 'closed'){
-					if(el.children && el.children.length){
-						el.state = 'open';
-						if(!el.chLoaded){
-							el.chLoaded = true;
-						}
-					}else if(vmodel.$url){
-						ajaxLoad(el,vmodel);
-					}
+					expandNode(vmodel,el);
 				}else{
-					el.state = 'closed';
+					collapseNode(vmodel,el);
 				}
-			};
-			//获取当前选中的节点
-			vm.$getSelected = function(){
-				return curSelEl;
 			};
 			/*
 			勾选或反选节点
@@ -224,6 +235,55 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 						eachParentsUncheck(pArr);
 					}
 				}
+			};
+			/****************************方法****************************/
+			vm.$loadData = function(data){
+				eachNode(data);
+				vmodel.treeList = data;
+			};
+			vm.$getNode = function(target){
+				var result = null;
+				findNode(vmodel.treeList,target,function(item){
+					result = item;
+				});
+				return result;
+			};
+			vm.$reload = function(target){
+				if(!vmodel.$url) return;
+				if(target !== null && target !== undefined){
+					findNode(vmodel.treeList,target,function(item){
+						ajaxLoad(item,vmodel);
+					});
+				}else{
+					ajaxLoad(null,vmodel);
+				}
+			};
+			vm.$getParents = function(target){
+				var pArr = [];
+				getParents(vmodel.treeList,target,pArr);
+				return pArr;
+			};
+			//展开或收缩
+			vm.$toggleState = function(state,el){
+				if(el){
+					if(state === 'open'){
+						expandNode(vmodel,el);
+					}else{
+						collapseNode(vmodel,el);
+					}
+				}else{
+					eachNode(vmodel.treeList,function(el){
+						if(state === 'open'){
+							expandNode(vmodel,el);
+						}else{
+							collapseNode(vmodel,el);
+						}
+					});
+				}
+			};
+			//获取当前选中的节点
+			vm.$getSelected = function(){
+				return curSelEl;
 			};
 			/*
 			移除指定节点
@@ -272,14 +332,11 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 					}
 				}
 			};
-			vm.$loadData = function(data){
-				eachNode(data);
-				vmodel.treeList = data;
-			};
 		});
 		return vmodel;
 	};
 	widget.defaults = {
+		/****************************属性****************************/
 		//树数据
 		treeList : [],
 		//是否显示根脉
@@ -292,12 +349,20 @@ define(["avalon","text!./avalon.tree.html","avalon.live","mmRequest"],function(a
 		$cascadeCheck : true,
 		//定义如何显示node text
 		$formatter : '{{el.text}}',
-		//异步获取数据的url，若被定义，则返回数据覆盖treeList属性
+		$loadFilter : avalon.noop,
+		//异步获取数据的url
 		$url : null,
 		$method : 'GET',
+		$queryParams : {},
 		//$loader : null
+		/****************************事件****************************/
+		$onBeforeSelect : avalon.noop,
 		$onSelect : avalon.noop,
-		$loadFilter : avalon.noop,
+		$onBeforeExpand : avalon.noop,
+		$onExpand : avalon.noop,
+		$onBeforeCollapse : avalon.noop,
+		$onCollapse : avalon.noop,
+		$onBeforeCollapse : avalon.noop,
 		$onBeforeLoad : avalon.noop,
 		$onLoadSuccess : avalon.noop,
 		$onLoadError : avalon.noop,
