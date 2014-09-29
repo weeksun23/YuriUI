@@ -10,11 +10,14 @@
 .tab-header-nav{border-bottom: 1px solid #ddd}
 .tab-header-nav li{float: left;margin-left: 3px;}
 .tab-header-nav a{
-	display: block;font-size: 12px;padding: 5px 6px;border:1px solid #ddd;
-	margin-bottom: -1px;border-bottom-color:transparent; 
+	display: block;font-size: 0;padding: 5px 6px;border:1px solid #ddd;
+	margin-bottom: -1px;border-bottom-color:transparent;line-height: 16px;
 }
 .tab-header-nav a:hover{background-color: #E6E6E6}
 .tab-header-nav .active a{background-color: #fff;color: #000;border-bottom-color:#fff;*position: relative;cursor: default;}
 .tab-header-nav .active a:hover{background-color: #fff}
+.tab-header-title{font-size: 12px;vertical-align: middle;}
 .tab-header-icon{margin-right: 3px}
 
+.tab-content>div{display: none;}
+.tab-content>div.active{display: block;}

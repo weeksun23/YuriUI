@@ -10,6 +10,21 @@
     <link rel="stylesheet" type="text/css" href="../src/tab/avalon.tab.css">
 </head>
 <body ms-controller='tab'>
+    <div ms-widget="tab,testtab,$taboptions">
+        <ul>
+            <li data-closeable='true'>1111</li>
+            <li data-selected='true'>2222</li>
+            <li data-icon-cls='icon-save'>3333</li>
+            <li>4444</li>
+        </ul>
+        <div>
+            <div>aaaa</div>
+            <div>bbbb</div>
+            <div>cccc</div>
+            <div>dddd</div>
+        </div>
+    </div>
+    <!-- 
     <div class='tab' style='margin:5px;'>
         <div class='tab-header'>
             <ul class='tab-header-nav clearfix'>
@@ -42,10 +57,15 @@
             <div>a4</div>
         </div>
     </div>
+    -->
     <script>
-        avalon.define("tab",function(vm){
+        require("tab/avalon.tab",function(){
+            avalon.define("tab",function(vm){
 
+            });
+            avalon.scan();
         });
+        
     </script>
 </body>
 </html>

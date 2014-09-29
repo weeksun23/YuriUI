@@ -1,0 +1,15 @@
+<div class='tab-header'>
+	<ul class='tab-header-nav clearfix' ms-click='$clickTab()'>
+		<li ms-repeat="tabData" ms-class='active:curIndex === String($index)'>
+			<a ms-href='{{el.href}}' data-type='tabLink' ms-data-index='$index'>
+		        <i ms-if='el.iconCls' ms-class='tab-header-icon {{el.iconCls}}'></i>
+		        <span class='tab-header-title'>{{el.title}}</span>
+		        <i ms-if='el.closeable' ms-class='tab-header-tool tab-close'></i>
+		        <input type='radio' ms-duplex-text='curIndex' value='$index' class='hide'/>
+		    </a>
+		</li>
+	</ul>
+</div>
+<div class='tab-content'>
+	<div ms-repeat='panelData' ms-class='active:curIndex === String($index)'>{{el.content}}</div>
+</div>
