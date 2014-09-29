@@ -1,0 +1,20 @@
+.tab{background-color: #fff}
+.tab-header-tool{margin-left: 3px;cursor:pointer;}
+.tab-close{
+	background:url('images/tabs_icons.png') no-repeat -34px center;display: inline-block;vertical-align: middle;
+	height: 8px;width: 12px;
+}
+.tab-header-tool:hover{
+	opacity: 0.5;filter:alpha(opacity=50);
+}
+.tab-header-nav{border-bottom: 1px solid #ddd}
+.tab-header-nav li{float: left;margin-left: 3px;}
+.tab-header-nav a{
+	display: block;font-size: 12px;padding: 5px 6px;border:1px solid #ddd;
+	margin-bottom: -1px;border-bottom-color:transparent; 
+}
+.tab-header-nav a:hover{background-color: #E6E6E6}
+.tab-header-nav .active a{background-color: #fff;color: #000;border-bottom-color:#fff;*position: relative;cursor: default;}
+.tab-header-nav .active a:hover{background-color: #fff}
+.tab-header-icon{margin-right: 3px}
+

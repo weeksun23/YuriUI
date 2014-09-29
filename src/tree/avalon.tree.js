@@ -227,7 +227,7 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 		var options = data.treeOptions;
 		template = template.replace("MS_OPTIONS_FORMATTER",options.$formatter);
 		if(!avalon.templateCache["TREE_TPL"]){
-			avalon.templateCache["TREE_TPL"] = template.replace("HTML_OR_TPL","el.children");
+			avalon.templateCache["TREE_TPL"] = template.replace("MS_OPTIONS_NODELIST","el.children");
 		}
 		var curSelEl = null;
 		//选择节点
@@ -250,7 +250,7 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 				$el.attr("ms-class","tree-line:line");
 				$el.attr("ms-click","$rootClick()");
 				$el.attr("ms-dblclick","$rootDbClick()");
-				element.innerHTML = template.replace("HTML_OR_TPL","treeList");
+				element.innerHTML = template.replace("MS_OPTIONS_NODELIST","treeList");
 				if(vmodel.treeList){
 					avalon.scan(element, vmodel);
 				}else{

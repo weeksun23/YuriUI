@@ -1,4 +1,3 @@
-.tree,.tree ul{list-style: none;margin: 0;padding: 0}
 .tree ul>li{padding-left:16px;}
 .tree-line ul>li{background:url(images/tree_line_conn.png) repeat-y 0 -1px;}
 .tree-bg{background-image: url(images/tree_icons.png);background-repeat: no-repeat;}
