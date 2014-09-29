@@ -41,10 +41,6 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 	function doClickTab(vmodel,target){
 		var i = target.getAttribute("data-index");
 		vmodel.curIndex = i;
-		var ii = Number(i);
-		var el = vmodel.tabData[ii];
-		vmodel.onSelect(el.$init,ii);
-		el.$init = true;
 	}
 	//删除tab
 	function doCloseTab(vmodel,index){
@@ -87,6 +83,8 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				vmodel.border && $el.addClass("tab-border");
 				element.innerHTML = templete;
 				avalon.scan(element,vmodel);
+				//手动触发监控事件
+				vmodel.$fire("curIndex",vmodel.curIndex);
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
@@ -110,6 +108,12 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 					}
 				}
 			};
+		});
+		vmodel.$watch("curIndex",function(i){
+			var ii = Number(i);
+			var el = vmodel.tabData[ii];
+			vmodel.onSelect(el.$init,ii);
+			el.$init = true;
 		});
 		return vmodel;
 	};
