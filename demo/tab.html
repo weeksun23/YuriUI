@@ -10,58 +10,72 @@
     <link rel="stylesheet" type="text/css" href="../src/tab/avalon.tab.css">
 </head>
 <body ms-controller='tab'>
-    <div ms-widget="tab,testtab,$taboptions">
-        <ul>
-            <li data-closeable='true'>1111</li>
-            <li data-selected='true'>2222</li>
-            <li data-icon-cls='icon-save'>3333</li>
-            <li>4444</li>
-        </ul>
-        <div>
-            <div>aaaa</div>
-            <div>bbbb</div>
-            <div>cccc</div>
-            <div>dddd</div>
+    <div class='clearfix'>
+        <div class='zone fl height300'>
+            <div ms-widget="tab,testtab,$taboptions">
+                <ul>
+                    <li data-closeable='true'>1111</li>
+                    <li data-selected='true'>2222</li>
+                    <li data-icon-cls='icon-save'>3333</li>
+                    <li>4444</li>
+                </ul>
+                <div>
+                    <div>aaaa</div>
+                    <div>bbbb</div>
+                    <div>cccc</div>
+                    <div>dddd</div>
+                </div>
+            </div>
         </div>
+        <div class='zone fl'></div>
     </div>
-    <!-- 
-    <div class='tab' style='margin:5px;'>
-        <div class='tab-header'>
-            <ul class='tab-header-nav clearfix'>
-                <li class='active'>
-                    <a href='#'>
-                        <i class='tab-header-icon icon-save'></i>11111<i class='tab-header-tool tab-close'></i>
-                    </a>
-                </li>
-                <li>
-                    <a href='#'>
-                        <i class='tab-header-icon icon-save'></i>11111<i class='tab-header-tool tab-close'></i>
-                    </a>
-                </li>
-                <li>
-                    <a href='#'>
-                        <i class='tab-header-icon icon-save'></i>11111<i class='tab-header-tool tab-close'></i>
-                    </a>
-                </li>
-                <li>
-                    <a href='#'>
-                        <i class='tab-header-icon icon-save'></i>11111<i class='tab-header-tool tab-close'></i>
-                    </a>
-                </li>
-            </ul>
+    <div class='clearfix'>
+        <div class='zone fl height300'>
+            <div ms-widget="tab,mytab,$mytaboptions">
+                <div>
+                    <div>aaaaa</div>
+                    <div>bbbb</div>
+                    <div>cccc</div>
+                    <div>dddd</div>
+                </div>
+            </div>
         </div>
-        <div class='tab-content'>
-            <div>a1</div>
-            <div>a2</div>
-            <div>a3</div>
-            <div>a4</div>
-        </div>
+        <div class='zone fl'></div>
     </div>
-    -->
+    
     <script>
         require("tab/avalon.tab",function(){
             avalon.define("tab",function(vm){
-
+                vm.$taboptions = {
+                    fit : true,
+                    border : false
+                };
+                vm.$mytaboptions = {
+                    fit : true,
+                    border : false,
+                    tabData : [{
+                        title : "11111",
+                        iconCls : "icon-save",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-reload",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-ok",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-cancel",
+                        closeable : true
+                    }],
+                    onSelect : function(isInit,i){
+                        if(!isInit && i === 2){
+                            this.panelData[i].content = "<iframe class='wh100' scrolling='no' frameborder='0' src='tree.html'></iframe>";
+                        }
+                    }
+                };
             });
             avalon.scan();
         });

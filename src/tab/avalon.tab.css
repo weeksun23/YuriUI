@@ -1,4 +1,6 @@
 .tab{background-color: #fff}
+.tab-border{border:1px solid #ddd;}
+.tab-fit{height: 100%;width: 100%;}
 .tab-header-tool{margin-left: 3px;cursor:pointer;}
 .tab-close{
 	background:url('images/tabs_icons.png') no-repeat -34px center;display: inline-block;vertical-align: middle;
@@ -7,14 +9,17 @@
 .tab-header-tool:hover{
 	opacity: 0.5;filter:alpha(opacity=50);
 }
-.tab-header-nav{border-bottom: 1px solid #ddd}
+.tab-header-nav{border-bottom: 1px solid #ddd;padding:3px 3px 0 0;}
 .tab-header-nav li{float: left;margin-left: 3px;}
 .tab-header-nav a{
 	display: block;font-size: 0;padding: 5px 6px;border:1px solid #ddd;
 	margin-bottom: -1px;border-bottom-color:transparent;line-height: 16px;
 }
 .tab-header-nav a:hover{background-color: #E6E6E6}
-.tab-header-nav .active a{background-color: #fff;color: #000;border-bottom-color:#fff;*position: relative;cursor: default;}
+.tab-header-nav .active a{
+	background-color: #fff;color: #000;border-bottom-color:#fff;*position: relative;
+	cursor: default;font-weight: bolder;
+}
 .tab-header-nav .active a:hover{background-color: #fff}
 .tab-header-title{font-size: 12px;vertical-align: middle;}
 .tab-header-icon{margin-right: 3px}
