@@ -27,6 +27,5 @@
 .tab-fit .tab-content{position: absolute;left:0;right: 0;bottom:0;overflow: hidden;}
 .tab-fit .tab-iframe{position:absolute; top:0; left:0;}
 .tab-iframe{height:100%; width:100%; overflow:auto; }
-.tab-content{overflow: auto;}
 .tab-content>div{display: none;}
 .tab-content>div.active{display: block;}

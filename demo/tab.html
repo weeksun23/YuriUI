@@ -27,13 +27,17 @@
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                     </div>
-                    <div>bbbb</div>
+                    <div data-iframe-src='tree.html' data-height='100'></div>
                     <div>cccc</div>
                     <div>dddd</div>
                 </div>
             </div>
         </div>
-        <div class='demo-oper'></div>
+        <div class='demo-oper'>
+            <button ms-click='$removeByTitle()'>remove by title</button>
+            <button ms-click='$removeByIndex()'>remove by index</button>
+            <button ms-click='$addTab()'>add tab</button>
+        </div>
     </div>
     <div class='demo'>
         <div class='demo-title'>avalon.tab</div>
@@ -52,13 +56,30 @@
     <script>
         require("tab/avalon.tab",function(){
             avalon.define("tab",function(vm){
+                vm.$removeByTitle = function(){
+                    avalon.vmodels.testtab.removeTab('1111');
+                };
+                vm.$removeByIndex = function(){
+                    avalon.vmodels.testtab.removeTab(0);
+                };
+                vm.$addTab = function(){
+                    avalon.vmodels.testtab.addTab({
+                        tabData : [{
+                            title : "new tab"
+                        }],
+                        panelData : [{
+                            content : "new tab"
+                        }]
+                    });
+                };
                 vm.$taboptions = {
                     border : false
                 };
                 vm.$mytaboptions = {
                     fit : true,
                     border : false,
-                    curIndex : '2',
+                    isTriggerOnHover : true,
+                    curIndex : '0',
                     tabData : [{
                         title : "11111",
                         iconCls : "icon-save",
@@ -78,6 +99,9 @@
                     }],
                     onSelect : function(isInit,el){
                         
+                    },
+                    onClick : function(){
+
                     }
                 };
             });

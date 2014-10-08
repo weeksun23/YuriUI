@@ -1,37 +1,40 @@
 define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 	//扫描dom 获取配置数据
-	function getData(el,tagName,isHeader){
+	function getData(el,tagName){
 		var children = el.childNodes;
 		var result = [];
 		var num = 0;
 		var curIndex;
+		var isHeader = tagName === "li";
 		avalon.each(children,function(i,item){
 			if(item.tagName && item.tagName.toLowerCase() == tagName){
 				var options = avalon(item).data();
-				if(options.selected){
-					curIndex = String(num);
+				if(isHeader){
+					if(options.selected && curIndex === undefined){
+						curIndex = num;
+					}
+					result.push({
+						title : item.innerHTML.replace(/\s*$/,"") || options.title,
+						closeable : options.closeable ? true : false,
+						iconCls : options.iconCls || null,
+						selected : curIndex === num,
+						$init : false,
+						href : options.href || "javascript:void(0)"
+					});
+				}else{
+					result.push({
+						content : options.iframeSrc ? "" : item.innerHTML,
+						$iframeSrc : options.iframeSrc,
+						height : options.height ? Number(options.height) : null
+					});
 				}
-				result.push(isHeader ? {
-					title : item.innerHTML,
-					closeable : options.closeable ? true : false,
-					iconCls : options.iconCls || null,
-					$init : false,
-					href : options.href || "javascript:void(0)"
-				} : {
-					content : options.iframeSrc ? "" : item.innerHTML,
-					$iframeSrc : options.iframeSrc,
-					height : options.height ? Number(options.height) : null
-				});
  				num++;
 			}
 		});
-		return {
-			curIndex : curIndex,
-			result : result
-		};
+		return result;
 	}
 	//初始化监控属性
-	function initTabData(target,data){
+	function initData(target,data){
 		avalon.each(data,function(i,item){
 			for(var j in target){
 				if(item[j] === undefined){
@@ -40,48 +43,70 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			}
 		});
 	}
-	//点击标题事件处理
-	function doClickTab(vmodel,target){
-		var i = target.getAttribute("data-index");
-		vmodel.curIndex = i;
+	function initTabData(data){
+		initData({
+			title : '',
+			closeable : false,
+			iconCls : null,
+			$init : false,
+			selected : false,
+			href : 'javascript:void(0)'
+		},data);
 	}
-	//删除tab
-	function doCloseTab(vmodel,index){
-		if(vmodel.curIndex === index + ""){
-			if(index > 0){
-				vmodel.curIndex = String(index - 1);
-			}
-		}
-		vmodel.tabData.removeAt(index);
-		vmodel.panelData.removeAt(index);
+	function initPanelData(data){
+		initData({
+			content : "",
+			height : null,
+			$iframeSrc : null
+		},data);
 	}
 	var widget = avalon.ui.tab = function(element, data, vmodels){
 		var options = data.tabOptions;
 		if(options.tabData){
-			initTabData({
-				title : '',
-				closeable : false,
-				iconCls : null,
-				$init : false,
-				href : 'javascript:void(0)'
-			},options.tabData);
+			initTabData(options.tabData);
 		}else{
-			var tabResult = getData(element.getElementsByTagName("ul")[0],"li",true);
-			options.tabData = tabResult.result;
-			options.curIndex = tabResult.curIndex ? tabResult.curIndex : options.curIndex;
+			options.tabData = getData(element.getElementsByTagName("ul")[0],"li");
 		}
 		if(options.panelData){
-			initTabData({
-				content : "",
-				height : null,
-				$iframeSrc : null
-			},options.panelData);
+			initPanelData(options.panelData);
 		}else{
-			options.panelData = getData(element.getElementsByTagName("div")[0],"div",false).result;
+			options.panelData = getData(element.getElementsByTagName("div")[0],"div");
+		}
+		//点击标题事件处理
+		function doSelTab(vmodel,index){
+			var target = vmodel.tabData[index];
+			if(target !== doSelTab.curSelected){
+				target.selected = true;
+				doSelTab.curSelected.selected = false;
+				doSelTab.curSelected = target;
+				if(!target.$init){
+					var targetContent = vmodel.panelData[index];
+					if(targetContent.$iframeSrc){
+						targetContent.content = "<iframe class='tab-iframe' scrolling='no' frameborder='0' src='"+targetContent.$iframeSrc+"'></iframe>";
+					}
+					vmodel.onSelect.call(vmodel,false,target);
+					target.$init = true;
+				}else{
+					vmodel.onSelect.call(vmodel,true,target);
+				}
+			}
+			vmodel.onClick.call(vmodel,target);
+		}
+		//当前选中的选项卡对象
+		doSelTab.curSelected = {};
+		//删除tab
+		function doCloseTab(vmodel,index){
+			var target = vmodel.tabData[index];
+			if(doSelTab.curSelected === target && vmodel.tabData.length > 1){
+				doSelTab.curSelected = vmodel.tabData[index > 0 ? index - 1 : 1];
+				doSelTab.curSelected.selected = true;
+			}
+			vmodel.panelData.removeAt(index);
+			vmodel.tabData.removeAt(index);
 		}
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
-			vm.$skipArray = ["border","fit","onSelect"];
+			vm.$skipArray = ["border","fit","onSelect","onClick","isTriggerOnHover","addTab"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass("tab");
@@ -89,14 +114,23 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				vmodel.fit && $el.addClass("tab-fit");
 				vmodel.border && $el.addClass("tab-border");
 				element.innerHTML = templete;
+				var selIndex;
+				var tabData = vmodel.tabData;
+				avalon.each(tabData,function(i,item){
+					if(item.selected){
+						doSelTab(vmodel,selIndex = i);
+						return false;
+					}
+				});
+				if(selIndex === undefined && tabData.length > 0){
+					doSelTab(vmodel,0);
+				}
 				avalon.scan(element,vmodel);
 				if(vmodel.fit){
 					var divs = element.getElementsByTagName("div");
 					var h = avalon(divs[0]).outerHeight();
 					divs[1].style.top = h + 'px';
 				}
-				//手动触发监控事件
-				vmodel.$fire("curIndex",vmodel.curIndex);
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
@@ -105,7 +139,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				var target = e.target;
 				var type = target.getAttribute("data-type");
 				if(type === "tabLink"){
-					doClickTab(vmodel,target);
+					doSelTab(vmodel,Number(target.getAttribute("data-index")));
 				}else if(type === "tabClose"){
 					e.stopPropagation();
 					doCloseTab(vmodel,Number(target.parentNode.getAttribute("data-index")));
@@ -113,39 +147,64 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 					var pNode = target.parentNode;
 					while(pNode.tagName.toLowerCase() !== 'body'){
 						if(pNode.getAttribute("data-type") === "tabLink"){
-							doClickTab(vmodel,pNode);
+							doSelTab(vmodel,Number(pNode.getAttribute("data-index")));
 							return;
 						}
 						pNode = pNode.parentNode;
 					}
 				}
 			};
+			vm.$enterTab = function(index){
+				vmodel.isTriggerOnHover && doSelTab(vmodel,index);
+			};
+			/*******************************方法*******************************/
+			vm.addTab = function(obj){
+				var tabData = obj.tabData;
+				if(tabData && tabData.length > 0){
+					initTabData(tabData);
+					initPanelData(obj.panelData);
+					vmodel.tabData.pushArray(tabData);
+					vmodel.panelData.pushArray(obj.panelData);
+				}
+			};
+			vm.removeTab = function(target){
+				if(typeof target == 'string'){
+					avalon.each(vmodel.tabData,function(i,item){
+						if(item.title === target){
+							target = i;
+							return false;
+						}
+					});
+				}
+				if(typeof target == 'string') return;
+				doCloseTab(vmodel,target);
+			};
 		});
-		vmodel.$watch("curIndex",function(i){
+		/*vmodel.$watch("curIndex",function(i,oldIndex){
 			var ii = Number(i);
 			var el = vmodel.tabData[ii];
 			if(!el.$init){
 				var elContent = vmodel.panelData[ii];
 				if(elContent.$iframeSrc){
 					elContent.content = "<iframe class='tab-iframe' scrolling='no' frameborder='0' src='"+elContent.$iframeSrc+"'></iframe>";
-
 				}
-				vmodel.onSelect.call(vmodel,el.$init,el);
+				vmodel.onSelect.call(vmodel,false,el);
 				el.$init = true;
 			}else{
 				vmodel.onSelect.call(vmodel,true,el);
 			}
-		});
+		});*/
 		return vmodel;
 	};
 	widget.defaults = {
 		tabData : null,
 		panelData : null,
-		curIndex : '0',
 		border : true,
 		height : null,
 		width : null,
 		fit : false,
-		onSelect : avalon.noop
+		isTriggerOnHover : false,
+		onSelect : avalon.noop,
+		onClick : avalon.noop
 	};
 });
