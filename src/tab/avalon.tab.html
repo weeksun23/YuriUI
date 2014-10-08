@@ -11,5 +11,7 @@
 	</ul>
 </div>
 <div class='tab-content' ms-css-height="height">
-	<div ms-repeat='panelData' ms-class='active:curIndex === String($index)'>{{el.content | html}}</div>
+	<div ms-repeat='panelData' ms-css-height="el.height" ms-class='active:curIndex === String($index)' ms-class-1='abfit:!el.height && fit' ms-class-2='ofh:el.$iframeSrc && fit' ms-class-3='ofa:(!el.$iframeSrc && fit) || el.height'>
+		{{el.content | html}}
+	</div>
 </div>

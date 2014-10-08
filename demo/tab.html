@@ -10,8 +10,9 @@
     <link rel="stylesheet" type="text/css" href="../src/tab/avalon.tab.css">
 </head>
 <body ms-controller='tab'>
-    <div class='clearfix'>
-        <div class='zone fl height300'>
+    <div class='demo'>
+        <div class='demo-title'>avalon.tab</div>
+        <div class='demo-content'>
             <div ms-widget="tab,testtab,$taboptions">
                 <ul>
                     <li data-closeable='true'>1111</li>
@@ -20,34 +21,38 @@
                     <li>4444</li>
                 </ul>
                 <div>
-                    <div>aaaa</div>
+                    <div data-height='50'>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                    </div>
                     <div>bbbb</div>
                     <div>cccc</div>
                     <div>dddd</div>
                 </div>
             </div>
         </div>
-        <div class='zone fl'></div>
+        <div class='demo-oper'></div>
     </div>
-    <div class='clearfix'>
-        <div class='zone fl height300'>
+    <div class='demo'>
+        <div class='demo-title'>avalon.tab</div>
+        <div class='demo-content'>
             <div ms-widget="tab,mytab,$mytaboptions">
                 <div>
-                    <div>aaaaa</div>
+                    <div><div class='wh100'>dsfdfsdfsdf</div><div class='wh100'>dsfdfsdfsdf</div></div>
                     <div>bbbb</div>
-                    <div>cccc</div>
+                    <div data-iframe-src='tree.html'></div>
                     <div>dddd</div>
                 </div>
             </div>
         </div>
-        <div class='zone fl'></div>
+        <div class='demo-oper'></div>
     </div>
-    
     <script>
         require("tab/avalon.tab",function(){
             avalon.define("tab",function(vm){
                 vm.$taboptions = {
-                    fit : true,
                     border : false
                 };
                 vm.$mytaboptions = {
@@ -71,10 +76,8 @@
                         iconCls : "icon-cancel",
                         closeable : true
                     }],
-                    onSelect : function(isInit,i){
-                        if(!isInit && i === 2){
-                            this.panelData[i].content = "<iframe class='wh100' scrolling='no' frameborder='0' src='tree.html'></iframe>";
-                        }
+                    onSelect : function(isInit,el){
+                        
                     }
                 };
             });

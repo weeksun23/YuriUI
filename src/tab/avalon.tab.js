@@ -15,11 +15,14 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 					title : item.innerHTML,
 					closeable : options.closeable ? true : false,
 					iconCls : options.iconCls || null,
+					$init : false,
 					href : options.href || "javascript:void(0)"
 				} : {
-					content : item.innerHTML
+					content : options.iframeSrc ? "" : item.innerHTML,
+					$iframeSrc : options.iframeSrc,
+					height : options.height ? Number(options.height) : null
 				});
-				num++;
+ 				num++;
 			}
 		});
 		return {
@@ -59,6 +62,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				title : '',
 				closeable : false,
 				iconCls : null,
+				$init : false,
 				href : 'javascript:void(0)'
 			},options.tabData);
 		}else{
@@ -68,7 +72,9 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		}
 		if(options.panelData){
 			initTabData({
-				content : ""
+				content : "",
+				height : null,
+				$iframeSrc : null
 			},options.panelData);
 		}else{
 			options.panelData = getData(element.getElementsByTagName("div")[0],"div",false).result;
@@ -78,11 +84,17 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			vm.$skipArray = ["border","fit","onSelect"];
 			vm.$init = function(){
 				var $el = avalon(element);
+				$el.addClass("tab");
 				$el.attr("ms-css-width",vmodel.width);
 				vmodel.fit && $el.addClass("tab-fit");
 				vmodel.border && $el.addClass("tab-border");
 				element.innerHTML = templete;
 				avalon.scan(element,vmodel);
+				if(vmodel.fit){
+					var divs = element.getElementsByTagName("div");
+					var h = avalon(divs[0]).outerHeight();
+					divs[1].style.top = h + 'px';
+				}
 				//手动触发监控事件
 				vmodel.$fire("curIndex",vmodel.curIndex);
 			};
@@ -112,8 +124,17 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		vmodel.$watch("curIndex",function(i){
 			var ii = Number(i);
 			var el = vmodel.tabData[ii];
-			vmodel.onSelect(el.$init,ii);
-			el.$init = true;
+			if(!el.$init){
+				var elContent = vmodel.panelData[ii];
+				if(elContent.$iframeSrc){
+					elContent.content = "<iframe class='tab-iframe' scrolling='no' frameborder='0' src='"+elContent.$iframeSrc+"'></iframe>";
+
+				}
+				vmodel.onSelect.call(vmodel,el.$init,el);
+				el.$init = true;
+			}else{
+				vmodel.onSelect.call(vmodel,true,el);
+			}
 		});
 		return vmodel;
 	};

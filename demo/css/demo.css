@@ -1,5 +1,6 @@
 html,body{width: 100%;height: 100%;}
-body{font-size: 12px;margin:0;}
+html{overflow:hidden;}
+body{font-size: 12px;margin:0;overflow:auto;*position:relative;}
 .fl{float: left;}
 .posr{position: relative;}
 .mg5{margin:5px;}
@@ -7,3 +8,7 @@ body{font-size: 12px;margin:0;}
 .ball{border:1px solid #d2d2d2;}
 .wh100{height:100%;width: 100%;}
 .zone{border:1px solid #d2d2d2;margin: 2px;}
+.demo{width: 800px;height:200px;position: relative;margin:5px auto;border:1px solid #d2d2d2;}
+.demo-title{font-size: 20px;font-weight: bolder;height: 30px;line-height: 30px;border-bottom:1px solid #d2d2d2;}
+.demo-content{position: absolute;top:31px;left:0;right: 150px;bottom: 0;}
+.demo-oper{position:absolute;top: 31px;right: 0;bottom: 0;width: 149px;border-left: 1px solid #d2d2d2}
