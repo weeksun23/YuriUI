@@ -9,6 +9,8 @@ a:focus {
 }
 .clearfix{*zoom:1;}
 .clearfix:after {visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
+.ib{display:inline-block;*display:inline;*zoom:1;}
+.nosel{user-select:none;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;}
 .abfit{position: absolute;top:0;left: 0;right: 0;bottom: 0}
 .hide{display: none;}
 .ofh{overflow: hidden;}

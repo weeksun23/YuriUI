@@ -1,13 +1,13 @@
 define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 	//扫描dom 获取配置数据
 	function getData(el,tagName){
-		var children = el.childNodes;
+		var children = el.children;
 		var result = [];
 		var num = 0;
 		var curIndex;
 		var isHeader = tagName === "li";
 		avalon.each(children,function(i,item){
-			if(item.tagName && item.tagName.toLowerCase() == tagName){
+			if(item.tagName.toLowerCase() == tagName){
 				var options = avalon(item).data();
 				if(isHeader){
 					if(options.selected && curIndex === undefined){
@@ -60,6 +60,15 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			$iframeSrc : null
 		},data);
 	}
+	function showScroll(header){
+		var $ul = avalon(header.getElementsByTagName("ul")[0]);
+		var $header = avalon(header);
+		if($ul.width() > $header.width()){
+			$header.addClass("tab-header-scroll");
+		}else{
+			$header.removeClass("tab-header-scroll");
+		}
+	}
 	var widget = avalon.ui.tab = function(element, data, vmodels){
 		var options = data.tabOptions;
 		if(options.tabData){
@@ -96,13 +105,18 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		doSelTab.curSelected = {};
 		//删除tab
 		function doCloseTab(vmodel,index){
-			var target = vmodel.tabData[index];
-			if(doSelTab.curSelected === target && vmodel.tabData.length > 1){
-				doSelTab.curSelected = vmodel.tabData[index > 0 ? index - 1 : 1];
-				doSelTab.curSelected.selected = true;
+			var tabData = vmodel.tabData;
+			var target = tabData[index];
+			if(doSelTab.curSelected === target){
+				if(tabData.length > 1){
+					doSelTab.curSelected = tabData[index > 0 ? index - 1 : 1];
+					doSelTab.curSelected.selected = true;
+				}else{
+					doSelTab.curSelected = {};
+				}
 			}
 			vmodel.panelData.removeAt(index);
-			vmodel.tabData.removeAt(index);
+			tabData.removeAt(index);
 		}
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
@@ -126,11 +140,13 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 					doSelTab(vmodel,0);
 				}
 				avalon.scan(element,vmodel);
+				var chs = element.children;
+				var header = chs[0];
 				if(vmodel.fit){
-					var divs = element.getElementsByTagName("div");
-					var h = avalon(divs[0]).outerHeight();
-					divs[1].style.top = h + 'px';
+					var h = avalon(header).outerHeight();
+					chs[1].style.top = h + 'px';
 				}
+				showScroll(header);
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
@@ -157,14 +173,33 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			vm.$enterTab = function(index){
 				vmodel.isTriggerOnHover && doSelTab(vmodel,index);
 			};
+			vm.$doScroll = function(distance){
+				var $wrap = avalon(this.parentNode.children[0]);
+				var scroll = $wrap.scrollLeft();
+				scroll += distance;
+				$wrap.scrollLeft(scroll);
+			};
 			/*******************************方法*******************************/
 			vm.addTab = function(obj){
 				var tabData = obj.tabData;
 				if(tabData && tabData.length > 0){
+					var sel;
+					avalon.each(tabData,function(i,item){
+						if(item.selected){
+							item.selected = false;
+							if(sel === undefined){
+								sel = i;
+							}
+						}
+					});
 					initTabData(tabData);
 					initPanelData(obj.panelData);
+					if(sel !== undefined){
+						sel += vmodel.tabData.length;
+					}
 					vmodel.tabData.pushArray(tabData);
 					vmodel.panelData.pushArray(obj.panelData);
+					sel !== undefined && doSelTab(vmodel,sel);
 				}
 			};
 			vm.removeTab = function(target){
@@ -180,20 +215,9 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				doCloseTab(vmodel,target);
 			};
 		});
-		/*vmodel.$watch("curIndex",function(i,oldIndex){
-			var ii = Number(i);
-			var el = vmodel.tabData[ii];
-			if(!el.$init){
-				var elContent = vmodel.panelData[ii];
-				if(elContent.$iframeSrc){
-					elContent.content = "<iframe class='tab-iframe' scrolling='no' frameborder='0' src='"+elContent.$iframeSrc+"'></iframe>";
-				}
-				vmodel.onSelect.call(vmodel,false,el);
-				el.$init = true;
-			}else{
-				vmodel.onSelect.call(vmodel,true,el);
-			}
-		});*/
+		vmodel.tabData.$watch("length",function(){
+			showScroll(element.children[0]);
+		});
 		return vmodel;
 	};
 	widget.defaults = {
