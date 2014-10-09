@@ -63,7 +63,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 	function showScroll(header){
 		var $ul = avalon(header.getElementsByTagName("ul")[0]);
 		var $header = avalon(header);
-		if($ul.width() > $header.width()){
+		if($ul.width() > avalon(header.children[0]).width()){
 			$header.addClass("tab-header-scroll");
 		}else{
 			$header.removeClass("tab-header-scroll");
@@ -120,7 +120,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		}
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
-			vm.$skipArray = ["border","fit","onSelect","onClick","isTriggerOnHover","addTab"];
+			vm.$skipArray = ["border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass("tab");
@@ -179,7 +179,13 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				scroll += distance;
 				$wrap.scrollLeft(scroll);
 			};
+			vm.$toolClick = function(el){
+				el.click && el.click.call(vmodel,el);
+			};
 			/*******************************方法*******************************/
+			vm.resize = function(){
+				showScroll(element.children[0]);
+			};
 			vm.addTab = function(obj){
 				var tabData = obj.tabData;
 				if(tabData && tabData.length > 0){
@@ -227,6 +233,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		height : null,
 		width : null,
 		fit : false,
+		tools : [],
 		isTriggerOnHover : false,
 		onSelect : avalon.noop,
 		onClick : avalon.noop

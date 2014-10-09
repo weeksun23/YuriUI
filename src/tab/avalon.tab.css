@@ -4,23 +4,32 @@
 	background:url('images/tabs_icons.png') no-repeat -34px center;display: inline-block;vertical-align: middle;
 	height: 8px;width: 12px;
 }
-.tab-header{position: relative;border-bottom: 1px solid #ddd;padding:3px 3px 0 0;}
+.tab-header{position: relative;padding:3px 3px 0 0;}
+.tab-header-line{height: 1px;background-color: #ddd;position: absolute;left:0;right: 0;bottom: 0;z-index: 1;}
+.tab-header-bar{
+	position: absolute;right: 0;top: 0;bottom: 0;background-color: #fff;border-left: 1px solid #ddd;
+	padding: 5px 2px 0;z-index: 3;border-bottom: 1px solid #ddd;
+}
+.tab-header-bar a{padding: 2px;display: inline-block;}
+.tab-header-bar a:hover{background-color: #E6E6E6}
+.tab-header-scroll .tab-header-bar{right: 19px;}
 .tab-header-scroll .tab-header-btn{display: block;}
 .tab-header-scroll .tab-header-nav{margin: 0 19px;}
 .tab-header-btn{
-	position: absolute;top: 0;bottom: 0;background-image: url('images/tabs_icons.png');
+	position: absolute;top: 0;bottom: 0;background-image: url('images/tabs_icons.png');z-index: 3;
 	background-repeat: no-repeat;width: 18px;background-color: #fff;cursor: pointer;display: none;
+	border-bottom: 1px solid #ddd;
 }
 .tab-header-btn:hover{background-color: #E6E6E6}
 .tab-header-l{background-position: 1px center;border-right: 1px solid #ddd;left: 0}
 .tab-header-r{background-position: -15px center;border-left: 1px solid #ddd;right: 0}
-.tab-header-wrap{overflow: hidden;}
+.tab-header-wrap{overflow: hidden;z-index: 2;position: relative;}
 .tab-header-tool{margin-left: 3px;cursor:pointer;}
 .tab-header-tool:hover{
 	opacity: 0.5;filter:alpha(opacity=50);
 }
 .tab-header-nav{
-	white-space: nowrap;
+	white-space: nowrap;border-bottom: 1px solid #ddd;
 }
 .tab-header-nav li{margin-left: 3px;vertical-align: bottom;}
 .tab-header-nav a{

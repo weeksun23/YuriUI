@@ -1,5 +1,5 @@
 <div class='tab-header'>
-	<div class='tab-header-wrap'>
+	<div class='tab-header-wrap' ms-css-margin-right="{{tools.length * 20 + 4}}px">
 		<ul class='ib tab-header-nav clearfix' ms-click='$clickTab()'>
 			<li ms-repeat="tabData" class='ib' ms-class='active:el.selected' ms-mouseenter="$enterTab($index)">
 				<a ms-href='{{el.href}}' data-type='tabLink' ms-data-index='$index'>
@@ -10,8 +10,14 @@
 			</li>
 		</ul>
 	</div>
+	<div class='tab-header-bar' ms-if="tools && tools.length > 0">
+		<a ms-repeat='tools' href="javascript:void(0)" ms-click='$toolClick(el)'>
+			<span ms-class="{{el.iconCls}}"></span>
+		</a>
+	</div>
 	<div class='tab-header-btn tab-header-l nosel' onselectstart='return false' ms-click='$doScroll(-50)'></div>
 	<div class='tab-header-btn tab-header-r nosel' onselectstart='return false' ms-click='$doScroll(50)'></div>
+	<div class='tab-header-line'></div>
 </div>
 <div class='tab-content' ms-css-height="height">
 	<div ms-repeat='panelData' ms-css-height="el.height" 
