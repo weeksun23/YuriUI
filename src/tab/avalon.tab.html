@@ -1,11 +1,15 @@
-<div class='tab-header'>
-	<div class='tab-header-wrap' ms-css-margin-right="{{tools.length * 20 + 4}}px">
-		<ul class='ib tab-header-nav clearfix' ms-click='$clickTab()'>
-			<li ms-repeat="tabData" class='ib' ms-class='active:el.selected' ms-mouseenter="$enterTab($index)">
+<div class='tab-header' ms-css-width="{{position === 'top' ? 'auto' : headerWidth}}">
+	<div class='tab-header-wrap'>
+		<ul class='tab-header-nav' 
+			ms-class="ib clearfix:position === 'top'" ms-click='$clickTab()'>
+			<li ms-repeat="tabData" 
+				ms-class="ib:position === 'top'" 
+				ms-class-1='active:el.selected' 
+				ms-mouseenter="$enterTab($index)">
 				<a ms-href='{{el.href}}' data-type='tabLink' ms-data-index='$index'>
 			        <i ms-if='el.iconCls' ms-class='tab-header-icon {{el.iconCls}}'></i>
 			        <span class='tab-header-title'>{{el.title}}</span>
-			        <i ms-if='el.closeable' data-type='tabClose' ms-class='tab-header-tool tab-close'></i>
+			        <i ms-if='el.closeable' data-type='tabClose' ms-class='tab-header-tool tab-header-close'></i>
 			    </a>
 			</li>
 		</ul>
@@ -15,8 +19,8 @@
 			<span ms-class="{{el.iconCls}}"></span>
 		</a>
 	</div>
-	<div class='tab-header-btn tab-header-l nosel' onselectstart='return false' ms-click='$doScroll(-50)'></div>
-	<div class='tab-header-btn tab-header-r nosel' onselectstart='return false' ms-click='$doScroll(50)'></div>
+	<div class='tab-header-btn tab-header-l nosel' onselectstart='return false' ms-click='$doScroll(-50)'><div></div></div>
+	<div class='tab-header-btn tab-header-r nosel' onselectstart='return false' ms-click='$doScroll(50)'><div></div></div>
 	<div class='tab-header-line'></div>
 </div>
 <div class='tab-content' ms-css-height="height">
@@ -28,3 +32,4 @@
 		{{el.content | html}}
 	</div>
 </div>
+

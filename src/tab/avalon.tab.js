@@ -60,10 +60,11 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			$iframeSrc : null
 		},data);
 	}
-	function showScroll(header){
+	function showScroll(header,position){
 		var $ul = avalon(header.getElementsByTagName("ul")[0]);
 		var $header = avalon(header);
-		if($ul.width() > avalon(header.children[0]).width()){
+		var method = position === "top" ? "width" : "height";
+		if($ul[method]() > avalon(header.children[0])[method]()){
 			$header.addClass("tab-header-scroll");
 		}else{
 			$header.removeClass("tab-header-scroll");
@@ -118,14 +119,20 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			vmodel.panelData.removeAt(index);
 			tabData.removeAt(index);
 		}
+		var resizer;
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
-			vm.$skipArray = ["border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab"];
+			vm.$skipArray = ["autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab"];
 			vm.$init = function(){
 				var $el = avalon(element);
-				$el.addClass("tab");
-				$el.attr("ms-css-width",vmodel.width);
-				vmodel.fit && $el.addClass("tab-fit");
+				var position = vmodel.position;
+				$el.addClass("tab tab-" + position);
+				if(position === 'top'){
+					$el.attr("ms-css-width",vmodel.width);
+				}else{
+					$el.attr("ms-css-height",vmodel.height);
+				}
+				vmodel.fit && $el.addClass("tab-fit abfit");
 				vmodel.border && $el.addClass("tab-border");
 				element.innerHTML = templete;
 				var selIndex;
@@ -143,12 +150,39 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				var chs = element.children;
 				var header = chs[0];
 				if(vmodel.fit){
-					var h = avalon(header).outerHeight();
-					chs[1].style.top = h + 'px';
+					if(position === 'top'){
+						chs[1].style.top = avalon(header).outerHeight() + 'px';
+					}else{
+						chs[1].style.left = avalon(header).outerWidth() + 'px';
+					}
 				}
-				showScroll(header);
+				chs = header.children;
+				var wrap = chs[0];
+				var tool = chs[1];
+				if(position === 'top'){
+					wrap.style.marginRight = avalon(tool).outerWidth() + "px";
+				}else{
+					wrap.style.marginBottom = avalon(tool).outerHeight() + "px";
+				}
+				showScroll(header,position);
+				if(vmodel.autoResize){
+					var t;
+					resizer = avalon.bind(window,"resize",function(){
+						//分流
+						if(t){
+							clearTimeout(t);
+						}
+						t = setTimeout(function(){
+							showScroll(header,position);
+						},100);
+					});
+				}
 			};
 			vm.$remove = function(){
+				if(resizer){
+					avalon.unbind(window,"resize",resizer);
+					resizer = null;
+				}
 				element.innerHTML = element.textContent = "";
 			};
 			vm.$clickTab = function(e){
@@ -175,16 +209,17 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			};
 			vm.$doScroll = function(distance){
 				var $wrap = avalon(this.parentNode.children[0]);
-				var scroll = $wrap.scrollLeft();
+				var target = vmodel.position === "top" ? "scrollLeft" : "scrollTop";
+				var scroll = $wrap[target]();
 				scroll += distance;
-				$wrap.scrollLeft(scroll);
+				$wrap[target](scroll);
 			};
 			vm.$toolClick = function(el){
 				el.click && el.click.call(vmodel,el);
 			};
 			/*******************************方法*******************************/
 			vm.resize = function(){
-				showScroll(element.children[0]);
+				showScroll(element.children[0],vmodel.position);
 			};
 			vm.addTab = function(obj){
 				var tabData = obj.tabData;
@@ -222,16 +257,22 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 			};
 		});
 		vmodel.tabData.$watch("length",function(){
-			showScroll(element.children[0]);
+			showScroll(element.children[0],vmodel.position);
 		});
 		return vmodel;
 	};
 	widget.defaults = {
+		position : 'top',
+		autoResize : true,
 		tabData : null,
 		panelData : null,
 		border : true,
+		//position为top，内容高度；position为left，整个tab高度
 		height : null,
+		//position为top，整个tab宽度；position为left，内容宽度
 		width : null,
+		//postion为非top时生效，标题宽度
+		headerWidth : 100,
 		fit : false,
 		tools : [],
 		isTriggerOnHover : false,

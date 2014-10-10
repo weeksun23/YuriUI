@@ -12,7 +12,7 @@
 <body ms-controller='tab'>
     <div ms-class-1='demo:!max' ms-class='abfit:max' style='z-index:10;background-color:#fff'>
         <div class='demo-title'>avalon.tab</div>
-        <div class='demo-content'>
+        <div class='demo-content' id='demo1'>
             <div ms-widget="tab,testtab,$taboptions">
                 <ul>
                     <li data-closeable='true'>1111</li>
@@ -27,7 +27,7 @@
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                     </div>
-                    <div data-iframe-src='tree.html'></div>
+                    <div>5555</div>
                     <div>cccc</div>
                     <div>dddd</div>
                 </div>
@@ -46,7 +46,7 @@
                 <div>
                     <div><div class='wh100'>dsfdfsdfsdf</div><div class='wh100'>dsfdfsdfsdf</div></div>
                     <div>bbbb</div>
-                    <div data-iframe-src='tree.html'></div>
+                    <div>eewrwer</div>
                     <div>dddd</div>
                 </div>
             </div>
@@ -59,6 +59,7 @@
                 vm.max = false;
                 vm.$removeByTitle = function(){
                     avalon.vmodels.testtab.removeTab('1111');
+                    document.getElementById("demo1").innerHTML = "";
                 };
                 vm.$removeByIndex = function(){
                     avalon.vmodels.testtab.removeTab(0);
@@ -78,12 +79,21 @@
                 vm.$taboptions = {
                     border : false,
                     fit:true,
+                    position : "top",
                     tools : [{
                         iconCls : "icon-reload",
                         click : function(el){
                             vm.max = !vm.max;
                             this.resize();
                         }
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
                     },{
                         iconCls : "icon-reload"
                     }]
