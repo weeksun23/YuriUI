@@ -23,12 +23,13 @@
 	<div class='tab-header-btn tab-header-r nosel' onselectstart='return false' ms-click='$doScroll(50)'><div></div></div>
 	<div class='tab-header-line'></div>
 </div>
-<div class='tab-content' ms-css-height="height">
+<div class='tab-content' 
+	ms-css-height="{{position === 'top' ? height : null}}px">
 	<div ms-repeat='panelData' ms-css-height="el.height" 
+		ms-css-width = "el.width"
 		ms-class='active:tabData[$index].selected' 
-		ms-class-1='abfit:!el.height && fit' 
-		ms-class-2='ofh:el.$iframeSrc && fit' 
-		ms-class-3='ofa:!el.$iframeSrc && (fit || el.height)'>
+		ms-class-1='abfit:!el.height && !el.width' 
+		ms-class-2='ofh:el.$iframeSrc'>
 		{{el.content | html}}
 	</div>
 </div>

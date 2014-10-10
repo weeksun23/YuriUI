@@ -25,6 +25,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 					result.push({
 						content : options.iframeSrc ? "" : item.innerHTML,
 						$iframeSrc : options.iframeSrc,
+						width : options.width ? Number(options.width) : null,
 						height : options.height ? Number(options.height) : null
 					});
 				}
@@ -57,6 +58,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		initData({
 			content : "",
 			height : null,
+			width : null,
 			$iframeSrc : null
 		},data);
 	}
@@ -92,7 +94,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				if(!target.$init){
 					var targetContent = vmodel.panelData[index];
 					if(targetContent.$iframeSrc){
-						targetContent.content = "<iframe class='tab-iframe' scrolling='no' frameborder='0' src='"+targetContent.$iframeSrc+"'></iframe>";
+						targetContent.content = "<iframe class='tab-iframe' ms-class='tab-iframe-fit:fit || position===\"left\"'  scrolling='no' frameborder='0' src='"+targetContent.$iframeSrc+"'></iframe>";
 					}
 					vmodel.onSelect.call(vmodel,false,target);
 					target.$init = true;
@@ -122,7 +124,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		var resizer;
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
-			vm.$skipArray = ["autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab"];
+			vm.$skipArray = ["position","autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				var position = vmodel.position;
@@ -149,7 +151,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				avalon.scan(element,vmodel);
 				var chs = element.children;
 				var header = chs[0];
-				if(vmodel.fit){
+				if(vmodel.fit || position === 'left'){
 					if(position === 'top'){
 						chs[1].style.top = avalon(header).outerHeight() + 'px';
 					}else{
@@ -165,7 +167,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 					wrap.style.marginBottom = avalon(tool).outerHeight() + "px";
 				}
 				showScroll(header,position);
-				if(vmodel.autoResize){
+				if(vmodel.autoResize && vmodel.fit){
 					var t;
 					resizer = avalon.bind(window,"resize",function(){
 						//分流
@@ -272,7 +274,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		//position为top，整个tab宽度；position为left，内容宽度
 		width : null,
 		//postion为非top时生效，标题宽度
-		headerWidth : 100,
+		headerWidth : 80,
 		fit : false,
 		tools : [],
 		isTriggerOnHover : false,

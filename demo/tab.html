@@ -22,14 +22,14 @@
                 </ul>
                 <div>
                     <div>
-                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>22222222222222222222222222222222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                         <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
                     </div>
                     <div>5555</div>
                     <div>cccc</div>
-                    <div>dddd</div>
+                    <div data-iframe-src='tree.html'></div>
                 </div>
             </div>
         </div>
@@ -37,12 +37,28 @@
             <button ms-click='$removeByTitle()'>remove by title</button>
             <button ms-click='$removeByIndex()'>remove by index</button>
             <button ms-click='$addTab()'>add tab</button>
+            <button ms-click="$toggleHover()">toggleHover</button>
         </div>
     </div>
     <div class='demo'>
         <div class='demo-title'>avalon.tab</div>
         <div class='demo-content'>
             <div ms-widget="tab,mytab,$mytaboptions">
+                <div>
+                    <div data-height='100'><div class='wh100'>dsfdfsdfsdf</div><div class='wh100'>dsfdfsdfsdf</div></div>
+                    <div data-height='200'>bbbb</div>
+                    <div data-height='300'>eewrwer</div>
+                    <div data-height='400'>dddd</div>
+                </div>
+            </div>
+        </div>
+        <div class='demo-oper'>
+        </div>
+    </div>
+    <div class='demo'>
+        <div class='demo-title'>avalon.tab</div>
+        <div class='demo-content'>
+            <div ms-widget="tab,mytab1,$mytaboptions1">
                 <div>
                     <div><div class='wh100'>dsfdfsdfsdf</div><div class='wh100'>dsfdfsdfsdf</div></div>
                     <div>bbbb</div>
@@ -51,7 +67,9 @@
                 </div>
             </div>
         </div>
-        <div class='demo-oper'></div>
+        <div class='demo-oper'>
+            <button ms-click='$addTab1()'>add tab</button>
+        </div>
     </div>
     <script>
         require("tab/avalon.tab",function(){
@@ -67,14 +85,18 @@
                 vm.$addTab = function(){
                     avalon.vmodels.testtab.addTab({
                         tabData : [{
-                            title : "new tab",
+                            title : "测试测试",
                             selected : true,
                             closeable : true
                         }],
                         panelData : [{
-                            content : "new tab"
+                            content : "测试测试"
                         }]
                     });
+                };
+                vm.$toggleHover = function(){
+                    var model = avalon.vmodels.testtab;
+                    model.isTriggerOnHover = !model.isTriggerOnHover;
                 };
                 vm.$taboptions = {
                     border : false,
@@ -99,10 +121,8 @@
                     }]
                 };
                 vm.$mytaboptions = {
-                    fit : true,
-                    border : false,
-                    isTriggerOnHover : true,
-                    curIndex : '0',
+                    fit : false,
+                    border : true,
                     tabData : [{
                         title : "11111",
                         iconCls : "icon-save",
@@ -126,6 +146,40 @@
                     onClick : function(){
 
                     }
+                };
+                vm.$mytaboptions1 = {
+                    fit : true,
+                    position : "left",
+                    border : false,
+                    tabData : [{
+                        title : "11111",
+                        iconCls : "icon-save",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-reload",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-ok",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-cancel",
+                        closeable : true
+                    }]
+                };
+                vm.$addTab1 = function(){
+                    avalon.vmodels.mytab1.addTab({
+                        tabData : [{
+                            title : "测试测试",
+                            selected : true,
+                            closeable : true
+                        }],
+                        panelData : [{
+                            content : "测试测试"
+                        }]
+                    });
                 };
             });
             avalon.scan();
