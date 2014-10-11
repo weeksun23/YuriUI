@@ -26,6 +26,7 @@ define(["avalon"],function(avalon){
 		}
 		var vmodel = avalon.define(data.menuId,function(vm){
 			avalon.mix(vm, data.menuOptions);
+			vm.$skipArray = ["show","updateAttr"];
 			vm.widgetElement = element;
 			vm.template = getMenuStr("menuList");
 			vm.$itemClick = function(e,el){
@@ -35,12 +36,12 @@ define(["avalon"],function(avalon){
 				if(pp.hasClass("menu-item")){
 					pp.removeClass("menu-item-hover");
 				}else{
-					vm.isShow = false;
+					vmodel.isShow = false;
 				}
 				el.click && el.click.call(this,el);
 			};
 			vm.$mouseleave = function(){
-				vm.isShow = false;
+				vmodel.isShow = false;
 			};
 			vm.$init = function(){
 				var $el = avalon(element);
@@ -55,19 +56,20 @@ define(["avalon"],function(avalon){
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
 			};
-			vm.$show = function(x,y){
+			/*******************************方法*******************************/
+			vm.show = function(x,y){
 				var oncontextmenu = document.oncontextmenu;
 				document.oncontextmenu = function(){
 					oncontextmenu && oncontextmenu.apply(this,arguments);
-					vm.isShow = true;
-					vm.left = x - 1;
-					vm.top = y - 1;
+					vmodel.isShow = true;
+					vmodel.left = x - 1;
+					vmodel.top = y - 1;
 					document.oncontextmenu = oncontextmenu;
 					return false;
 				};
 			};
-			vm.$updateAttr = function(id,attr){
-				findMenuItem(vm.menuList,id,function(el){
+			vm.updateAttr = function(id,attr){
+				findMenuItem(vmodel.menuList,id,function(el){
 					avalon.mix(el,attr);
 				});
 			};

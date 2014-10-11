@@ -8,6 +8,7 @@
 	<script src="../src/avalon.js"></script>
     <link rel="stylesheet" type="text/css" href="../src/base.css">
     <link rel="stylesheet" type="text/css" href="../src/tab/avalon.tab.css">
+    <link rel="stylesheet" type="text/css" href="../src/menu/avalon.menu.css">
 </head>
 <body ms-controller='tab'>
     <div ms-class-1='demo:!max' ms-class='abfit:max' style='z-index:10;background-color:#fff'>
@@ -71,8 +72,9 @@
             <button ms-click='$addTab1()'>add tab</button>
         </div>
     </div>
+    <div ms-widget="menu,testmenu,$testmenuOpts"></div>
     <script>
-        require("tab/avalon.tab",function(){
+        require(["tab/avalon.tab","menu/avalon.menu"],function(){
             avalon.define("tab",function(vm){
                 vm.max = false;
                 vm.$removeByTitle = function(){
@@ -102,6 +104,9 @@
                     border : false,
                     fit:true,
                     position : "top",
+                    onContextMenu : function(e){
+                        avalon.vmodels.testmenu.show(e.pageX,e.pageY);
+                    },
                     tools : [{
                         iconCls : "icon-reload",
                         click : function(el){
@@ -180,6 +185,54 @@
                             content : "测试测试"
                         }]
                     });
+                };
+                vm.$testmenuOpts = {
+                    menuList : [{
+                        iconCls : "icon-ok",
+                        text : "test1111",
+                        isHide : false,
+                        click : function(item){
+                            avalon.vmodels.testmenu.updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
+                        },
+                        subMenu : [{
+                            iconCls : "icon-ok",
+                            text : "test1",
+                            subMenu : [{
+                                iconCls : "icon-ok",
+                                text : "test123323",
+                                subMenu : [{
+                                    iconCls : "icon-ok",
+                                    text : "test23231",
+                                    click : function(item){
+                                        alert(item.text);
+                                    }
+                                }]
+                            }]
+                        }]
+                    },{
+                        iconCls : "icon-ok",
+                        text : "test"
+                    },{
+                        iconCls : "icon-edit",
+                        isHide : false,
+                        text : "只在区域1显示",
+                        id : "zone1btn"
+                    },{
+                        iconCls : "icon-edit",
+                        isHide : false,
+                        text : "只在区域2显示",
+                        id : "zone2btn"
+                    },{
+                        iconCls : "icon-edit",
+                        text : "只在区域1启用",
+                        disabled : false,
+                        id : "zone1btn1"
+                    },{
+                        iconCls : "icon-edit",
+                        text : "只在区域2启用",
+                        disabled : false,
+                        id : "zone2btn1"
+                    }]
                 };
             });
             avalon.scan();

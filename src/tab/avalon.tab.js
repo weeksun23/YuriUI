@@ -1,4 +1,4 @@
-define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
+define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base){
 	//扫描dom 获取配置数据
 	function getData(el,tagName){
 		var children = el.children;
@@ -124,7 +124,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		var resizer;
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
-			vm.$skipArray = ["position","autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab"];
+			vm.$skipArray = ["position","autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab","onContextMenu"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				var position = vmodel.position;
@@ -188,22 +188,23 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 				element.innerHTML = element.textContent = "";
 			};
 			vm.$clickTab = function(e){
-				var target = e.target;
-				var type = target.getAttribute("data-type");
-				if(type === "tabLink"){
-					doSelTab(vmodel,Number(target.getAttribute("data-index")));
-				}else if(type === "tabClose"){
-					e.stopPropagation();
-					doCloseTab(vmodel,Number(target.parentNode.getAttribute("data-index")));
-				}else{
-					var pNode = target.parentNode;
-					while(pNode.tagName.toLowerCase() !== 'body'){
-						if(pNode.getAttribute("data-type") === "tabLink"){
-							doSelTab(vmodel,Number(pNode.getAttribute("data-index")));
-							return;
-						}
-						pNode = pNode.parentNode;
+				base.propagation.call(this,{
+					tabLink : function(){
+						doSelTab(vmodel,Number(this.getAttribute("data-index")));
+					},
+					tabClose : function(e){
+						e.stopPropagation();
+						doCloseTab(vmodel,Number(this.parentNode.getAttribute("data-index")));
 					}
+				},e);
+			};
+			vm.$mousedownTab = function(e){
+				if(e.button === 2){
+					base.propagation.call(this,{
+						tabLink : function(e){
+							vmodel.onContextMenu.call(this,e);
+						}
+					},e);
 				}
 			};
 			vm.$enterTab = function(index){
@@ -279,6 +280,7 @@ define(["avalon","text!./avalon.tab.html"],function(avalon,templete){
 		tools : [],
 		isTriggerOnHover : false,
 		onSelect : avalon.noop,
-		onClick : avalon.noop
+		onClick : avalon.noop,
+		onContextMenu : avalon.noop
 	};
 });

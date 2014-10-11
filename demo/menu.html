@@ -26,26 +26,26 @@
   </p>
   <script>
     function changeText(){
-        avalon.vmodels.testmenu.$updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
+        avalon.vmodels.testmenu.updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
     }
   	require("menu/avalon.menu", function() {
       	avalon.define("test", function(vm) {
             vm.down1 = function(e){
                 if(e.button === 2){
-                    avalon.vmodels.testmenu.$show(e.pageX,e.pageY);
-                    avalon.vmodels.testmenu.$updateAttr("zone1btn",{isHide : false});
-                    avalon.vmodels.testmenu.$updateAttr("zone2btn",{isHide : true});
-                    avalon.vmodels.testmenu.$updateAttr("zone1btn1",{disabled : false});
-                    avalon.vmodels.testmenu.$updateAttr("zone2btn1",{disabled : true});
+                    avalon.vmodels.testmenu.show(e.pageX,e.pageY);
+                    avalon.vmodels.testmenu.updateAttr("zone1btn",{isHide : false});
+                    avalon.vmodels.testmenu.updateAttr("zone2btn",{isHide : true});
+                    avalon.vmodels.testmenu.updateAttr("zone1btn1",{disabled : false});
+                    avalon.vmodels.testmenu.updateAttr("zone2btn1",{disabled : true});
                 }
             };
             vm.down2 = function(e){
                 if(e.button === 2){
-                    avalon.vmodels.testmenu.$show(e.pageX,e.pageY);
-                    avalon.vmodels.testmenu.$updateAttr("zone1btn",{isHide : true});
-                    avalon.vmodels.testmenu.$updateAttr("zone2btn",{isHide : false});
-                    avalon.vmodels.testmenu.$updateAttr("zone1btn1",{disabled : true});
-                    avalon.vmodels.testmenu.$updateAttr("zone2btn1",{disabled : false});
+                    avalon.vmodels.testmenu.show(e.pageX,e.pageY);
+                    avalon.vmodels.testmenu.updateAttr("zone1btn",{isHide : true});
+                    avalon.vmodels.testmenu.updateAttr("zone2btn",{isHide : false});
+                    avalon.vmodels.testmenu.updateAttr("zone1btn1",{disabled : true});
+                    avalon.vmodels.testmenu.updateAttr("zone2btn1",{disabled : false});
                 }
             };
             var data = (function(){
@@ -68,7 +68,7 @@
             		text : "test1111",
                     isHide : false,
                     click : function(item){
-                        avalon.vmodels.testmenu.$updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
+                        avalon.vmodels.testmenu.updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
                     },
             		subMenu : [{
             			iconCls : "icon-ok",
