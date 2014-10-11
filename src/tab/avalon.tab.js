@@ -202,7 +202,7 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 				if(e.button === 2){
 					base.propagation.call(this,{
 						tabLink : function(e){
-							vmodel.onContextMenu.call(this,e);
+							vmodel.onContextMenu.call(this,e,Number(this.getAttribute("data-index")));
 						}
 					},e);
 				}

@@ -1,5 +1,6 @@
 define(function(){
 	var base = {
+		//模拟冒泡
 		propagation : function(obj,e){
 			var target = e.target;
 			var propType = "data-prop-type";

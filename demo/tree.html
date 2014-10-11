@@ -42,6 +42,27 @@
     </div>
     <script>
         require("tree/avalon.tree", function() {
+            var p = new Promise(function(resolve,reject) {
+                setTimeout(function(){
+                    
+                    resolve(500);
+                },1000);
+            });
+            p.then(function(a){
+                alert(a);
+            });
+            p.then(function(a){
+                alert(a);
+            });
+            /*var p = Promise.resolve(11);
+            p.then(function(a){
+                alert(a);
+            });
+            setTimeout(function(){
+
+            },1000);*/
+            //avalon.log(arguments);
+
             avalon.define("myCtrl",function(vm){
                 vm.list = [];
                 vm.loadData = function(){
