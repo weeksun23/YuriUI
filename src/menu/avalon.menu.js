@@ -1,7 +1,8 @@
 define(["avalon"],function(avalon){
 	function getMenuStr(HTML_OR_TPL){
 		return "<div ms-repeat='"+HTML_OR_TPL+"' ms-class='menu-item' ms-class-1='disabled:el.disabled' ms-visible='!el.isHide' ms-click='$itemClick($event,el)' ms-hover='menu-item-hover'>"+
-			"<i ms-class='{{el.iconCls}}'></i>" +
+			"<i ms-if='el.iconCls' ms-class='{{el.iconCls}}'></i>" +
+			"<i ms-if='!el.iconCls'></i>" +
 			"<span ms-class='menu-text' ms-class-1='menu-text-noch:!el.subMenu || !el.subMenu.length'>{{el.text}}</span>" +
 			"<span ms-if='el.subMenu && el.subMenu.length' class='menu-arrow'></span>" +
 			"<div ms-if='el.subMenu && el.subMenu.length' ms-include-src='\"MENU_TPL\"' class='menu'></div>" +
@@ -26,7 +27,7 @@ define(["avalon"],function(avalon){
 		}
 		var vmodel = avalon.define(data.menuId,function(vm){
 			avalon.mix(vm, data.menuOptions);
-			vm.$skipArray = ["show","updateAttr"];
+			vm.$skipArray = ["show","updateAttr","target"];
 			vm.widgetElement = element;
 			vm.template = getMenuStr("menuList");
 			vm.$itemClick = function(e,el){
@@ -38,7 +39,7 @@ define(["avalon"],function(avalon){
 				}else{
 					vmodel.isShow = false;
 				}
-				el.click && el.click.call(this,el);
+				el.click && el.click.call(el,vmodel.target);
 			};
 			vm.$mouseleave = function(){
 				vmodel.isShow = false;
@@ -56,11 +57,12 @@ define(["avalon"],function(avalon){
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
 			};
-			/*******************************鏂规硶*******************************/
-			vm.show = function(x,y){
+			/*******************************方法*******************************/
+			vm.show = function(x,y,target){
 				var oncontextmenu = document.oncontextmenu;
 				document.oncontextmenu = function(){
 					oncontextmenu && oncontextmenu.apply(this,arguments);
+					vmodel.target = target;
 					vmodel.isShow = true;
 					vmodel.left = x - 1;
 					vmodel.top = y - 1;
@@ -78,6 +80,8 @@ define(["avalon"],function(avalon){
 	};
 	widget.defaults = {
 		left : 0,
+		//menu当前指向的对象
+		target : null,
 		top : 0,
 		isShow : false,
 		menuList : []

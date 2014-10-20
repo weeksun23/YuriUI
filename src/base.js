@@ -1,6 +1,6 @@
 define(function(){
 	var base = {
-		//æ¨¡æ‹Ÿå†’æ³¡
+		//Ä£·ÂÃ°ÅÝ
 		propagation : function(obj,e){
 			var target = e.target;
 			var propType = "data-prop-type";
