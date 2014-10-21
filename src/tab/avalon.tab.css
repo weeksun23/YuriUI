@@ -44,6 +44,7 @@
 /*tab-fit*/
 .tab-fit .tab-content{position: absolute;right: 0;bottom:0;}
 /*tab-top*/
+.tab-top .tab-header{min-height: 28px;}
 .tab-top.tab-border .tab-header{border-bottom-width: 0}
 .tab-top.tab-border .tab-content{border-top-width: 0}
 .tab-top .tab-header{position: relative;padding:3px 3px 0 0;}

@@ -22,10 +22,12 @@
         <button ms-click='$loadData()'>加载大数据</button>
         <label><input type="radio" ms-duplex-text="dataNum" value='100'/>100个节点</label>
         <label><input type="radio" ms-duplex-text="dataNum" value='200'/>200个节点</label>
+        <!-- 
         <br />
         <label><input type="radio" ms-duplex-text="dataNum" value='400'/>400个节点</label>
         <label><input type="radio" ms-duplex-text="dataNum" value='600'/>600个节点</label>
         <label><input type="radio" ms-duplex-text="dataNum" value='1000'/>1000个节点</label>
+        -->
         <br />
         <button ms-click='$reload()'>重新加载数据</button>
         <button ms-click='$expandAll()'>展开所有节点</button>
@@ -42,25 +44,6 @@
     </div>
     <script>
         require("tree/avalon.tree", function() {
-            var p = new Promise(function(resolve,reject) {
-                setTimeout(function(){
-                    
-                    resolve(500);
-                },1000);
-            });
-            p.then(function(a){
-                alert(a);
-            });
-            p.then(function(a){
-                alert(a);
-            });
-            /*var p = Promise.resolve(11);
-            p.then(function(a){
-                alert(a);
-            });
-            setTimeout(function(){
-            },1000);*/
-            //avalon.log(arguments);
             avalon.define("myCtrl",function(vm){
                 vm.list = [];
                 vm.loadData = function(){

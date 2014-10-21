@@ -1,6 +1,7 @@
 define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base){
 	//扫描dom 获取配置数据
 	function getData(el,tagName){
+		if(!el) return [];
 		var children = el.children;
 		var result = [];
 		var num = 0;
@@ -72,6 +73,18 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 			$header.removeClass("tab-header-scroll");
 		}
 	}
+	function getIndex(vmodel,target){
+		if(typeof target == 'string'){
+			avalon.each(vmodel.tabData,function(i,item){
+				if(item.title === target){
+					target = i;
+					return false;
+				}
+			});
+		}
+		if(typeof target == 'string') return false;
+		return target;
+	}
 	var widget = avalon.ui.tab = function(element, data, vmodels){
 		var options = data.tabOptions;
 		if(options.tabData){
@@ -124,7 +137,7 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 		var resizer;
 		var vmodel = avalon.define(data.tabId,function(vm){
 			avalon.mix(vm, options);
-			vm.$skipArray = ["position","autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab","onContextMenu"];
+			vm.$skipArray = ["position","autoResize","border","fit","onSelect","onClick","isTriggerOnHover","addTab","removeTab","onContextMenu","exsits"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				var position = vmodel.position;
@@ -221,8 +234,24 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 				el.click && el.click.call(vmodel,el);
 			};
 			/*******************************方法*******************************/
+			vm.select = function(target){
+				target = getIndex(vmodel,target);
+				if(target !== false){
+					doSelTab(vmodel,target);
+				}
+			};
 			vm.resize = function(){
 				showScroll(element.children[0],vmodel.position);
+			};
+			vm.exists = function(title){
+				var result = false;
+				avalon.each(vmodel.tabData,function(i,item){
+					if(item.title === title){
+						result = true;
+						return false;
+					}
+				});
+				return result;
 			};
 			vm.addTab = function(obj){
 				var tabData = obj.tabData;
@@ -247,16 +276,10 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 				}
 			};
 			vm.removeTab = function(target){
-				if(typeof target == 'string'){
-					avalon.each(vmodel.tabData,function(i,item){
-						if(item.title === target){
-							target = i;
-							return false;
-						}
-					});
+				target = getIndex(vmodel,target);
+				if(target !== false){
+					doCloseTab(vmodel,target);
 				}
-				if(typeof target == 'string') return;
-				doCloseTab(vmodel,target);
 			};
 		});
 		vmodel.tabData.$watch("length",function(){
