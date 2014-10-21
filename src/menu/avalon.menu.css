@@ -1,6 +1,6 @@
 .menu{
 	border: 1px solid #DDDDDD;position: absolute;z-index: 9999;
-	padding:3px;margin: 0;background-color: #FFFFFF;
+	padding:3px;margin: 0;background-color: #FFFFFF;text-align: left;
 }
 .menu div.menu{display: none;top:0;left: 100%;}
 .menu-item{

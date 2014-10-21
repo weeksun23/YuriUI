@@ -1,117 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title></title>
-  <link rel="stylesheet" type="text/css" href="css/icon.css">
-  <link rel="stylesheet" type="text/css" href="css/demo.css">
-  <script src="../src/avalon.js"></script>
-  <link rel="stylesheet" type="text/css" href="../src/base.css">
-	<link rel="stylesheet" type="text/css" href="../src/menu/avalon.menu.css">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    <script src="../src/avalon.js"></script>
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/menu/avalon.menu.css">
+    <style type="text/css">
+        h1{margin: 0}
+        .zone{width: 200px;height: 200px;text-align: center;line-height: 200px;}
+    </style>
 </head>
 <body ms-controller='test'>
-  <div ms-widget="menu,testmenu,$testmenuOpts"></div>
-  <div class='fl zone' ms-mousedown='down1'>
-      <h1>区域1</h1>
-  </div>
-  <div class='fl zone' ms-mousedown='down2'>
-      <h1>区域2</h1>
-  </div>
-  <div class='fl zone posr'>
-      <h1>区域3</h1>
-      <div ms-widget="menu,testmenu1,$testmenu1Opts"></div>
-  </div>
-  <p>
-      <button onclick="changeText()">text</button>
-  </p>
-  <script>
-    function changeText(){
-        avalon.vmodels.testmenu.updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
-    }
-  	require("menu/avalon.menu", function() {
-      	avalon.define("test", function(vm) {
-            vm.down1 = function(e){
-                if(e.button === 2){
-                    avalon.vmodels.testmenu.show(e.pageX,e.pageY);
-                    avalon.vmodels.testmenu.updateAttr("zone1btn",{isHide : false});
-                    avalon.vmodels.testmenu.updateAttr("zone2btn",{isHide : true});
-                    avalon.vmodels.testmenu.updateAttr("zone1btn1",{disabled : false});
-                    avalon.vmodels.testmenu.updateAttr("zone2btn1",{disabled : true});
-                }
-            };
-            vm.down2 = function(e){
-                if(e.button === 2){
-                    avalon.vmodels.testmenu.show(e.pageX,e.pageY);
-                    avalon.vmodels.testmenu.updateAttr("zone1btn",{isHide : true});
-                    avalon.vmodels.testmenu.updateAttr("zone2btn",{isHide : false});
-                    avalon.vmodels.testmenu.updateAttr("zone1btn1",{disabled : true});
-                    avalon.vmodels.testmenu.updateAttr("zone2btn1",{disabled : false});
-                }
-            };
-            var data = (function(){
-                var data = [];
-                for(var i=0;i<100;i++){
-                    data.push({
-                        text : Math.random(0,1) * 1000,
-                        iconCls : "icon-save"
-                    });
-                }
-                return data;
-            })();
-            vm.$testmenu1Opts = {
-                isShow : true,
-                menuList : data
-            };
-        	vm.$testmenuOpts = {
-            	menuList : [{
-            		text : "test1111",
-                    isHide : false,
-                    click : function(item){
-                        avalon.vmodels.testmenu.updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
-                    },
-            		subMenu : [{
-            			iconCls : "icon-ok",
-            			text : "test1",
-            			subMenu : [{
-	            			iconCls : "icon-ok",
-	            			text : "test123323",
-	            			subMenu : [{
-		            			iconCls : "icon-ok",
-		            			text : "test23231",
-                                click : function(){
-                                    alert(this.text);
-                                }
-		            		}]
-	            		}]
-            		}]
-            	},{
-            		iconCls : "icon-ok",
-            		text : "test"
-            	},{
-                    iconCls : "icon-edit",
-                    isHide : false,
-                    text : "只在区域1显示",
-                    id : "zone1btn"
-                },{
-                    iconCls : "icon-edit",
-                    isHide : false,
-                    text : "只在区域2显示",
-                    id : "zone2btn"
-                },{
-                    iconCls : "icon-edit",
-                    text : "只在区域1启用",
-                    disabled : false,
-                    id : "zone1btn1"
-                },{
-                    iconCls : "icon-edit",
-                    text : "只在区域2启用",
-                    disabled : false,
-                    id : "zone2btn1"
-                }]
-        	};
-      	});
-      	avalon.scan();
-  	});
-  </script>
+    <div ms-widget="menu,testmenu,$testmenuOpts"></div>
+    <div class='fl zone' ms-mousedown='$down1'>
+        <h1>区域1</h1>
+    </div>
+    <div class='fl zone' ms-mousedown='$down2'>
+        <h1>区域2</h1>
+    </div>
+    <div class='fl zone posr' ms-mousedown='$down3'>
+        <h1>区域3</h1>
+        <div ms-widget="menu,testmenu1,$testmenu1Opts"></div>
+    </div>
+    <p>
+        <button onclick="changeText()">text</button>
+    </p>
+    <script>
+        function changeText() {
+            avalon.vmodels.testmenu.updateAttr("zone2btn1", {
+                text: "wwwwwwwwwwwwwwwwwwwwwwwwwwww"
+            });
+        }
+        require("menu/avalon.menu", function() {
+            avalon.define("test", function(vm) {
+                vm.$down1 = function(e) {
+                    if (e.button === 2) {
+                        avalon.vmodels.testmenu.show(e.pageX, e.pageY);
+                        avalon.vmodels.testmenu.updateAttr("zone1btn", {
+                            isHide: false
+                        });
+                        avalon.vmodels.testmenu.updateAttr("zone2btn", {
+                            isHide: true
+                        });
+                        avalon.vmodels.testmenu.updateAttr("zone1btn1", {
+                            disabled: false
+                        });
+                        avalon.vmodels.testmenu.updateAttr("zone2btn1", {
+                            disabled: true
+                        });
+                    }
+                };
+                vm.$down2 = function(e) {
+                    if (e.button === 2) {
+                        avalon.vmodels.testmenu.show(e.pageX, e.pageY);
+                        avalon.vmodels.testmenu.updateAttr("zone1btn", {
+                            isHide: true
+                        });
+                        avalon.vmodels.testmenu.updateAttr("zone2btn", {
+                            isHide: false
+                        });
+                        avalon.vmodels.testmenu.updateAttr("zone1btn1", {
+                            disabled: true
+                        });
+                        avalon.vmodels.testmenu.updateAttr("zone2btn1", {
+                            disabled: false
+                        });
+                    }
+                };
+                vm.$down3 = function(e){
+                    if (e.button === 2) {
+                        avalon.vmodels.testmenu1.show(e.offsetX, e.offsetY);
+                    }
+                };
+                var data = (function() {
+                    var data = [];
+                    for (var i = 0; i < 10; i++) {
+                        data.push({
+                            text: Math.random(0, 1) * 1000,
+                            iconCls: "icon-save"
+                        });
+                    }
+                    return data;
+                })();
+                vm.$testmenu1Opts = {
+                    //isShow: true,
+                    menuList: data
+                };
+                vm.$testmenuOpts = {
+                    menuList: [{
+                        text: "test1111",
+                        isHide: false,
+                        click: function(item) {
+                            avalon.vmodels.testmenu.updateAttr("zone2btn1", {
+                                text: "wwwwwwwwwwwwwwwwwwwwwwwwwwww"
+                            });
+                        },
+                        subMenu: [{
+                            iconCls: "icon-ok",
+                            text: "test1",
+                            subMenu: [{
+                                iconCls: "icon-ok",
+                                text: "test123323",
+                                subMenu: [{
+                                    iconCls: "icon-ok",
+                                    text: "test23231",
+                                    click: function() {
+                                        alert(this.text);
+                                    }
+                                }]
+                            }]
+                        }]
+                    }, {
+                        iconCls: "icon-ok",
+                        text: "test"
+                    }, {
+                        iconCls: "icon-edit",
+                        isHide: false,
+                        text: "只在区域1显示",
+                        id: "zone1btn"
+                    }, {
+                        iconCls: "icon-edit",
+                        isHide: false,
+                        text: "只在区域2显示",
+                        id: "zone2btn"
+                    }, {
+                        iconCls: "icon-edit",
+                        text: "只在区域1启用",
+                        disabled: false,
+                        id: "zone1btn1"
+                    }, {
+                        iconCls: "icon-edit",
+                        text: "只在区域2启用",
+                        disabled: false,
+                        id: "zone2btn1"
+                    }]
+                };
+            });
+            avalon.scan();
+        });
+    </script>
 </body>
 </html>
