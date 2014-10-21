@@ -42,6 +42,7 @@
             var vmodel = avalon.define("demo",function(vm){
                 vm.$demotreeOpts = {
                     treeList : [{
+                        id : 0,
                         text : "YuriUI",
                         state : "open",
                         children : [{
@@ -53,6 +54,7 @@
                         }]
                     }],
                     $onSelect : function(el){
+                        if(el.id === 0) return;
                         addTab(el.text,el.text + ".html");
                     }
                 };
