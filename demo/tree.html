@@ -78,21 +78,21 @@
                 };
                 vm.$delSelected = function(){
                     var tree = avalon.vmodels.testtree;
-                    var sel = tree.$getSelected();
-                    sel && tree.$removeNode(sel);
+                    var sel = tree.getSelected();
+                    sel && tree.removeNode(sel);
                 };
                 vm.$updateNode = function(){
                     var tree = avalon.vmodels.testtree;
-                    var sel = tree.$getSelected();
+                    var sel = tree.getSelected();
                     if(!sel) return;
                     sel.text = Math.random(0,1) * 10;
                     sel.iconCls = "icon-redo";
                 };
                 vm.$addChildren = function(){
                     var tree = avalon.vmodels.testtree;
-                    var sel = tree.$getSelected();
+                    var sel = tree.getSelected();
                     if(!sel) return;
-                    tree.$appendNodes([{
+                    tree.appendNodes([{
                         iconCls : "icon-undo",
                         state : 'closed',
                         text : Math.random(0,1) * 1000
@@ -100,7 +100,7 @@
                 };
                 vm.$addRoot = function(){
                     var tree = avalon.vmodels.testtree;
-                    tree.$appendNodes([{
+                    tree.appendNodes([{
                         iconCls : "icon-save",
                         text : Math.random(0,1) * 1000
                     }]);
@@ -116,40 +116,40 @@
                         });
                     }
                     var time2 = new Date().getTime();
-                    tree.$loadData(data);
+                    tree.loadData(data);
                     var time3 = new Date().getTime();
                     avalon.log("数据生成用时:" + (time2 - time1));
                     avalon.log("结构生成用时:" + (time3 - time2));
                 };
                 vm.$reload = function(){
-                    avalon.vmodels.testtree.$reload();
+                    avalon.vmodels.testtree.reload();
                 };
                 vm.$expandAll = function(){
-                    avalon.vmodels.testtree.$toggleState("open");
+                    avalon.vmodels.testtree.toggleState("open");
                 };
                 vm.$collapseAll = function(){
-                    avalon.vmodels.testtree.$toggleState("close");
+                    avalon.vmodels.testtree.toggleState("close");
                 };
                 vm.$expandTo = function(){
-                    avalon.vmodels.testtree.$expandTo(1);
+                    avalon.vmodels.testtree.expandTo(1);
                 };
             });
             avalon.define("treeCtrl", function(vm) {
                 vm.$testtreeOpts = {
                     line : hasLine,
-                    $onSelect : function(el){
-                       //avalon.log(this.$getParents(el));
+                    onSelect : function(el){
+                       //avalon.log(this.getParents(el));
                     },
-                    $onBeforeExpand : function(){
+                    onBeforeExpand : function(){
 
                     },
-                    $onDbClick : function(el){
+                    onDbClick : function(el){
                         avalon.log(el);
                     },
-                    $formatter : "{{el.text}}[{{el.iconCls}}]",
-                    $queryParams : {param1 : "hello"},
-                    $url : "../src/tree/data1.json",
-                    $onBeforeLoad : function(el,param){
+                    formatter : "{{el.text}}[{{el.iconCls}}]",
+                    queryParams : {param1 : "hello"},
+                    url : "../src/tree/data1.json",
+                    onBeforeLoad : function(el,param){
                         param.text = !el ? null : el.text;
                     },
                     checkbox : true,

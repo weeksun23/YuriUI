@@ -15,3 +15,9 @@ a:focus {
 .hide{display: none;}
 .ofh{overflow: hidden;}
 .ofa{overflow: auto;}
+
+.arrow{background-image: url('images/arrows.png');background-repeat: no-repeat;height: 16px;width: 16px;}
+.arrow-top{background-position: -16px -16px;}
+.arrow-bottom{background-position: -16px 0;}
+.arrow-left{background-position: 0 0;}
+.arrow-right{background-position: 0 -16px;}

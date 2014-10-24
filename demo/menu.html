@@ -72,7 +72,7 @@
                 };
                 vm.$down3 = function(e){
                     if (e.button === 2) {
-                        avalon.vmodels.testmenu1.show(e.offsetX, e.offsetY);
+                        avalon.vmodels.testmenu1.show(e.offsetX || e.layerX, e.offsetY || e.layerY);
                     }
                 };
                 var data = (function() {

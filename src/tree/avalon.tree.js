@@ -95,25 +95,25 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 		}
 		el.loading = true;
 		var param = {id : el.id};
-		avalon.mix(param,vmodel.$queryParams);
-		if(vmodel.$onBeforeLoad(callBackEl,param) === false){
+		avalon.mix(param,vmodel.queryParams);
+		if(vmodel.onBeforeLoad(callBackEl,param) === false){
 			return;
 		}
 		avalon.ajax({
-			url : vmodel.$url,
-			type : vmodel.$method,
+			url : vmodel.url,
+			type : vmodel.method,
 			cache : false,
 			data : param,
 			dataType : 'json',
 			complete : function(promise,result){
 				el.loading = false;
-				vmodel.$onLoadComplete(callBackEl,promise,result);
+				vmodel.onLoadComplete(callBackEl,promise,result);
 			},
 			success : function(ch){
-				vmodel.$loadFilter(ch,callBackEl);
+				vmodel.loadFilter(ch,callBackEl);
 				if(callBackEl){
 					el.state = 'open';
-					if(vmodel.checkbox && vmodel.$cascadeCheck){
+					if(vmodel.checkbox && vmodel.cascadeCheck){
 						//如果存在勾选框且有级联检查
 						eachNode(ch,function(item){
 							initNodeAttr(item);
@@ -131,15 +131,15 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 					vmodel.treeList = ch
 					func && func();
 				}
-				vmodel.$onLoadSuccess(ch,callBackEl);
+				vmodel.onLoadSuccess(ch,callBackEl);
 			},
 			error : function(promise){
-				vmodel.$onLoadError(callBackEl,promise);
+				vmodel.onLoadError(callBackEl,promise);
 			}
 		});
 	}
 	function expandNode(vmodel,el){
-		if(vmodel.$onBeforeExpand(el) === false){
+		if(vmodel.onBeforeExpand(el) === false){
 			return;
 		}
 		if(el.children && el.children.length){
@@ -149,17 +149,17 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 			if(!el.chLoaded){
 				el.chLoaded = true;
 			}
-		}else if(vmodel.$url){
+		}else if(vmodel.url){
 			ajaxLoad(el,vmodel);
 		}
-		vmodel.$onExpand(el);
+		vmodel.onExpand(el);
 	}
 	function collapseNode(vmodel,el){
-		if(vmodel.$onBeforeCollapse(el) === false){
+		if(vmodel.onBeforeCollapse(el) === false){
 			return;
 		}
 		el.state = 'closed';
-		vmodel.$onCollapse(el);
+		vmodel.onCollapse(el);
 	}
 	function toggleElState(vmodel,el,state){
 		if(!el.state) return;
@@ -189,7 +189,7 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 		}else{
 			checked = el.checked = 1;
 		}
-		if(vmodel.$cascadeCheck){
+		if(vmodel.cascadeCheck){
 			if(el.children.length){
 				//勾选或反选所有子节点
 				eachNode(el.children,function(item){
@@ -225,25 +225,30 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 	}
 	var widget = avalon.ui.tree = function(element, data, vmodels){
 		var options = data.treeOptions;
-		template = template.replace("MS_OPTIONS_FORMATTER",options.$formatter);
+		template = template.replace("MS_OPTIONS_FORMATTER",options.formatter);
 		if(!avalon.templateCache["TREE_TPL"]){
 			avalon.templateCache["TREE_TPL"] = template.replace("MS_OPTIONS_NODELIST","el.children");
 		}
 		var curSelEl = null;
 		//选择节点
 		function selectNode(el){
-			if(vmodel.$onBeforeSelect(el) === false || el === curSelEl){
+			if(vmodel.onBeforeSelect(el) === false || el === curSelEl){
 				return;
 			}
 			if(curSelEl){
 				curSelEl.selected = false;
 			}
 			el.selected = true;
-			vmodel.$onSelect(curSelEl = el);
+			vmodel.onSelect(curSelEl = el);
 		}
 		eachNode(options.treeList);
 		var vmodel = avalon.define(data.treeId,function(vm){
 			avalon.mix(vm, options);
+			vm.$skipArray = ["cascadeCheck","formatter","loadFilter","url","method","queryParams","onBeforeSelect",
+				"onSelect","onBeforeExpand","onExpand","onBeforeCollapse","onCollapse",
+				"onBeforeCollapse","onBeforeLoad","onLoadSuccess","onLoadError","onLoadComplete","onDbClick",
+				"loadData","getNode","reload","getParents","toggleState","expandTo","getSelected",
+			"removeNode","appendNodes"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass('tree');
@@ -279,23 +284,23 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 			};
 			vm.$rootDbClick = function(e){
 				findNodeContent(e.target,function(el){
-					vmodel.$onDbClick(el,e);
+					vmodel.onDbClick(el,e);
 				});	
 			};
 			/****************************方法****************************/
-			vm.$loadData = function(data){
+			vm.loadData = function(data){
 				eachNode(data);
 				vmodel.treeList = data;
 			};
-			vm.$getNode = function(target){
+			vm.getNode = function(target){
 				var result = null;
 				findNode(vmodel.treeList,target,function(item){
 					result = item;
 				});
 				return result;
 			};
-			vm.$reload = function(target){
-				if(!vmodel.$url) return;
+			vm.reload = function(target){
+				if(!vmodel.url) return;
 				if(target !== null && target !== undefined){
 					findNode(vmodel.treeList,target,function(item){
 						ajaxLoad(item,vmodel);
@@ -304,13 +309,13 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 					ajaxLoad(null,vmodel);
 				}
 			};
-			vm.$getParents = function(target){
+			vm.getParents = function(target){
 				var pArr = [];
 				getParents(vmodel.treeList,target,pArr);
 				return pArr;
 			};
 			//展开或收缩
-			vm.$toggleState = function(state,el){
+			vm.toggleState = function(state,el){
 				if(el){
 					toggleElState(vmodel,el,state);
 				}else{
@@ -320,7 +325,7 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 				}
 			};
 			//展开到指定节点
-			vm.$expandTo = function(target){
+			vm.expandTo = function(target){
 				var pArr = [];
 				getParents(vmodel.treeList,target,pArr);
 				avalon.each(pArr,function(i,el){
@@ -328,14 +333,14 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 				});
 			};
 			//获取当前选中的节点
-			vm.$getSelected = function(){
+			vm.getSelected = function(){
 				return curSelEl;
 			};
 			/*
 			移除指定节点
 			target : 节点id或节点监控对象
 			*/
-			vm.$removeNode = function(target){
+			vm.removeNode = function(target){
 				findNode(vmodel.treeList,target,function(item,i,list){
 					if(item.loading) return;
 					var pArr = [];
@@ -352,7 +357,7 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 			data : 节点数据数组
 			parent : 若不指定则默认添加到根节点，若为string或number则是节点id，若为object则是节点的监控对象
 			*/
-			vm.$appendNodes = function(data,parent){
+			vm.appendNodes = function(data,parent){
 				var target,el;
 				if(parent){
 					if(typeof parent == 'object'){
@@ -392,28 +397,28 @@ define(["avalon","text!./avalon.tree.html","mmRequest"],function(avalon,template
 		//节点是否带checkbox
 		checkbox : false,
 		//是否级联检查
-		$cascadeCheck : true,
+		cascadeCheck : true,
 		//定义如何显示node text
-		$formatter : '{{el.text}}',
-		$loadFilter : avalon.noop,
+		formatter : '{{el.text}}',
+		loadFilter : avalon.noop,
 		//异步获取数据的url
-		$url : null,
-		$method : 'GET',
-		$queryParams : {},
-		//$loader : null
+		url : null,
+		method : 'GET',
+		queryParams : {},
+		//loader : null
 		/****************************事件****************************/
-		$onBeforeSelect : avalon.noop,
-		$onSelect : avalon.noop,
-		$onBeforeExpand : avalon.noop,
-		$onExpand : avalon.noop,
-		$onBeforeCollapse : avalon.noop,
-		$onCollapse : avalon.noop,
-		$onBeforeCollapse : avalon.noop,
-		$onBeforeLoad : avalon.noop,
-		$onLoadSuccess : avalon.noop,
-		$onLoadError : avalon.noop,
-		$onLoadComplete : avalon.noop,
-		$onDbClick : avalon.noop
+		onBeforeSelect : avalon.noop,
+		onSelect : avalon.noop,
+		onBeforeExpand : avalon.noop,
+		onExpand : avalon.noop,
+		onBeforeCollapse : avalon.noop,
+		onCollapse : avalon.noop,
+		onBeforeCollapse : avalon.noop,
+		onBeforeLoad : avalon.noop,
+		onLoadSuccess : avalon.noop,
+		onLoadError : avalon.noop,
+		onLoadComplete : avalon.noop,
+		onDbClick : avalon.noop
 	};
 	widget.version = 1.0;
 });

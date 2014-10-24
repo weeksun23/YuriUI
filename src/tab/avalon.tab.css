@@ -34,7 +34,6 @@
 	background-color: #fff;cursor: pointer;display: none;
 }
 .tab-header-btn div{
-	background-image: url('images/arrows.png');background-repeat: no-repeat;height: 16px;width: 16px;
 	position: absolute;left: 50%;top: 50%;margin-left: -8px;margin-top: -8px;
 }
 .tab-header-btn:hover{background-color: #E6E6E6}

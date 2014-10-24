@@ -53,7 +53,7 @@
                             text : "tree"
                         }]
                     }],
-                    $onSelect : function(el){
+                    onSelect : function(el){
                         if(el.id === 0) return;
                         addTab(el.text,el.text + ".html");
                     }
