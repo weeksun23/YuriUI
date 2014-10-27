@@ -1,4 +1,4 @@
-define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base){
+define(["avalon.uibase","text!./avalon.tab.html"],function(avalon,templete){
 	//扫描dom 获取配置数据
 	function getData(el,tagName){
 		if(!el) return [];
@@ -35,18 +35,8 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 		});
 		return result;
 	}
-	//初始化监控属性
-	function initData(target,data){
-		avalon.each(data,function(i,item){
-			for(var j in target){
-				if(item[j] === undefined){
-					item[j] = target[j];
-				}
-			}
-		});
-	}
 	function initTabData(data){
-		initData({
+		avalon.uibase.initData({
 			title : '',
 			closeable : false,
 			iconCls : null,
@@ -56,7 +46,7 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 		},data);
 	}
 	function initPanelData(data){
-		initData({
+		avalon.uibase.initData({
 			content : "",
 			height : null,
 			width : null,
@@ -201,7 +191,7 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 				element.innerHTML = element.textContent = "";
 			};
 			vm.$clickTab = function(e){
-				base.propagation.call(this,{
+				avalon.uibase.propagation.call(this,{
 					tabLink : function(){
 						doSelTab(vmodel,Number(this.getAttribute("data-index")));
 					},
@@ -213,7 +203,7 @@ define(["avalon","text!./avalon.tab.html","base"],function(avalon,templete,base)
 			};
 			vm.$mousedownTab = function(e){
 				if(e.button === 2){
-					base.propagation.call(this,{
+					avalon.uibase.propagation.call(this,{
 						tabLink : function(e){
 							vmodel.onContextMenu.call(this,e,Number(this.getAttribute("data-index")));
 						}

@@ -33,7 +33,7 @@
 	position: absolute;z-index: 3;text-align: center;
 	background-color: #fff;cursor: pointer;display: none;
 }
-.tab-header-btn div{
+.tab-header-btn .arrow{
 	position: absolute;left: 50%;top: 50%;margin-left: -8px;margin-top: -8px;
 }
 .tab-header-btn:hover{background-color: #E6E6E6}
@@ -63,8 +63,8 @@
 .tab-top .tab-header-scroll .tab-header-nav{margin: 0 19px;}
 .tab-top .tab-header-l{border-right: 1px solid #ddd;left: 0;}
 .tab-top .tab-header-r{border-left: 1px solid #ddd;right: 0;}
-.tab-top .tab-header-l div{background-position: 0 0;}
-.tab-top .tab-header-r div{background-position: 0 -16px;}
+.tab-top .tab-header-l .arrow{background-position: 0 0;}
+.tab-top .tab-header-r .arrow{background-position: 0 -16px;}
 /*tab-left*/
 .tab-left.tab-border .tab-header{border-right-width: 0}
 .tab-left.tab-border .tab-content{border-left-width: 0}
@@ -87,8 +87,8 @@
 .tab-left .tab-header-scroll .tab-header-nav{margin: 24px 0;}
 .tab-left .tab-header-l{border-bottom: 1px solid #ddd;top: 0}
 .tab-left .tab-header-r{border-top: 1px solid #ddd;bottom: 0}
-.tab-left .tab-header-l div{background-position: -16px -16px;}
-.tab-left .tab-header-r div{background-position: -16px 0;}
+.tab-left .tab-header-l .arrow{background-position: -16px -16px;}
+.tab-left .tab-header-r .arrow{background-position: -16px 0;}
 /*tab-content*/
 .tab-content>div{display: none;}
 .tab-content>div.active{display: block;}

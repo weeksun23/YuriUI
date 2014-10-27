@@ -14,17 +14,43 @@
     </style>
 </head>
 <body ms-controller='demo'>
-    <div class='accordion accordion-border wh1'>
-        <div class='accordion-title clearfix'>
-            hello
-            <i></i>
+    <div class='demo'>
+        <div class='demo-title'>avalon.accordion</div>
+        <div class='demo-content'>
+            <div ms-widget="accordion,testaccordion,$testaccordionOpts" class='mg5'>
+                <div title='ssddwwe' data-options="tools:[{iconCls:'icon-reload',click:function(){avalon.log(1);}}],iconCls:'icon-save',selected:true">
+                    <h1>qwdqwdqwd</h1>
+                </div>
+                <div title='ssddwwe' data-options="tools:[{iconCls:'icon-reload'}],iconCls:'icon-save',selected:false">
+                    <h1>qwdqwdqwd</h1>
+                </div>
+                <div title='ssddwwe' data-options="tools:[{iconCls:'icon-reload'}],iconCls:'icon-save',selected:false">
+                    <h1>asfsdgvsdfdf</h1>
+                </div>
+            </div>
         </div>
-        <div class='accordion-panel'>
-            hello word
+        <div class='demo-oper'>
+            <button ms-click='$toggleMultiple'>toggleMultiple</button>
         </div>
     </div>
+    
     <script>
-
+        require("accordion/avalon.accordion", function() {
+            avalon.define("demo",function(vm){
+                vm.$testaccordionOpts = {
+                    toolClick : function(i,el){
+                        avalon.log(2);
+                        avalon.log(arguments);
+                        el.title = Math.random(0,1) * 1000;
+                    }
+                };
+                vm.$toggleMultiple = function(){
+                    var ui = avalon.vmodels.testaccordion;
+                    ui.multiple = !ui.multiple;
+                };
+            });
+            avalon.scan();
+        });
     </script>
 </body>
 </html>
