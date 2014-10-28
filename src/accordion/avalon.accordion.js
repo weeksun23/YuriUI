@@ -41,50 +41,78 @@ define(["avalon.uibase","text!./avalon.accordion.html"],function(avalon,templete
 		}
 		return selections;
 	}
+	function getIndexByTitle(vmodel,t){
+		if(typeof t == 'string'){
+			avalon.each(vmodel.data,function(i,item){
+				if(item.title === t){
+					t = i;
+					return false;
+				}
+			});
+		}
+		if(typeof t != 'number') return false;
+		return t;
+	}
+	function initData(data,func){
+		avalon.uibase.initData({
+			title : null,
+			content : null,
+			iconCls : null,
+			tools : null,
+			selected : false
+		},data,func);
+	}
 	var widget = avalon.ui.accordion = function(element, data, vmodels){
 		var options = data.accordionOptions;
 		if(options.data){
-			avalon.uibase.initData({
-				title : null,
-				content : null,
-				iconCls : null,
-				tools : null,
-				selected : false
-			},options.data);
+			initData(options.data);
 		}else{
 			options.data = getData(element);
 		}
-		function toggleSelect(index){
+		function toggleSelect(index,isSelect){
 			var target = vmodel.data[index];
 			var isSelected = false;
 			var selections = toggleSelect.selections;
 			avalon.each(selections,function(i,item){
 				if(item === target){
-					selections.splice(i,1);
+					if(isSelect){
+						//目标已经被选择 直接触发选择事件
+						vmodel.onSelect.call(item);
+					}else{
+						selections.splice(i,1);
+						target.selected = false;
+						vmodel.onUnselect.call(item);
+					}
 					isSelected = true;
-					return target.selected = false;
+					return false;
 				}
 			});
 			if(!isSelected){
-				target.selected = true;
-				if(!vmodel.multiple && selections.length > 0){
-					selections[0].selected = false;
-					selections.splice(0,1);
+				if(isSelect === false){
+					//目标已经被取消选择 直接触发反选事件
+					vmodel.onUnselect.call(target);
+				}else{
+					target.selected = true;
+					vmodel.onSelect.call(target);
+					if(!vmodel.multiple && selections.length > 0){
+						selections[0].selected = false;
+						selections.splice(0,1);
+					}
+					selections.push(target);
 				}
-				selections.push(target);
 			}
 		}
 		toggleSelect.selections = null;
 		var vmodel = avalon.define(data.accordionId,function(vm){
 			avalon.mix(vm,options);
-			vm.$skipArray = ["toolClick"];
+			vm.$skipArray = ["toolClick","getSelected","getSelections","getPanel",
+				"select","unselect","add","remove","onSelect","onUnselect"];
 			vm.$init = function(){
 				var $el = avalon(element);
 				$el.addClass("accordion");
 				avalon.uibase.setAttr($el,{
 					"ms-class" : "accordion-border:border",
-					"ms-css-width" : "width",
-					"ms-css-height" : "height"
+					"ms-css-width" : "width"
 				});
 				element.innerHTML = templete;
 				toggleSelect.selections = getSelections(vmodel.multiple,vmodel.data);
@@ -105,6 +133,88 @@ define(["avalon.uibase","text!./avalon.accordion.html"],function(avalon,templete
 					}
 				},e);
 			};
+			/****************************方法*****************************/
+			//获取第一个选择的panel
+			vm.getSelected = function(){
+				return toggleSelect.selections[0];
+			};
+			//获取选择的panels
+			vm.getSelections = function(){
+				return toggleSelect.selections;
+			};
+			//根据索引或标题获取panel
+			vm.getPanel = function(t){
+				if(typeof t == 'number') return vmodel.data[t];
+				var target;
+				avalon.each(vmodel.data,function(i,item){
+					if(item.title === t){
+						target = item;
+						return false;
+					}
+				});
+				return target;
+			};
+			//根据索引或标题选中panel
+			vm.select = function(t){
+				var i = getIndexByTitle(vmodel,t);
+				if(i === false) return;
+				toggleSelect(i,true);
+			};
+			//根据索引或标题反选panel
+			vm.unselect = function(t){
+				var i = getIndexByTitle(vmodel,t);
+				if(i === false) return;
+				toggleSelect(i,false);
+			};
+			//增加panel
+			vm.add = function(data){
+				if(avalon.type(data) === 'object'){
+					data = [data];
+				}
+				var selArr = [];
+				initData(data,function(i,el){
+					if(vmodel.multiple){
+						el.selected && selArr.push(i);
+					}else{
+						if(el.selected){
+							if(selArr.length === 0){
+								selArr.push(i);
+							}else{
+								el.selected = false;
+							}
+						}
+					}
+				});
+				var vmData = vmodel.data;
+				var len = vmData.length;
+				var selections = toggleSelect.selections;
+				vmData.pushArray(data);
+				if(selArr.length > 0){
+					if(vmodel.multiple){
+						avalon.each(selArr,function(i,item){
+							selections.push(vmData[len + item]);
+						});
+					}else{
+						if(selections.length > 0){
+							selections[0].selected = false;
+							selections.splice(0,1);
+						}
+						selections.push(vmData[len + selArr[0]]);
+					}
+				}
+			};
+			//删除panel
+			vm.remove = function(t){
+				var i = getIndexByTitle(vmodel,t);
+				if(i === false) return;
+				var target = vmodel.data[i];
+				avalon.each(toggleSelect.selections,function(i,item){
+					if(item === target){
+						toggleSelect.selections.splice(i,1);
+					}
+				});
+				vmodel.data.splice(i,1);
+			};
 		});
 		vmodel.$watch("multiple",function(newVal){
 			if(!newVal){
@@ -120,12 +230,18 @@ define(["avalon.uibase","text!./avalon.accordion.html"],function(avalon,templete
 		});
 		return vmodel;
 	};
+	widget.version = 1.0;
 	widget.defaults = {
 		data : null,
+		//每个panel的内容高度，不包含title
 		height : null,
+		//整个accordion的宽度
 		width : null,
 		border : true,
 		multiple : false,
-		toolClick : avalon.noop
+		/****************************事件*****************************/
+		toolClick : avalon.noop,
+		onSelect : avalon.noop,
+		onUnselect : avalon.noop
 	};
 });

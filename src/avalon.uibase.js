@@ -19,13 +19,14 @@ define(["avalon"],function(avalon){
 				}
 			}
 		},
-		initData : function(target,data){
+		initData : function(target,data,func){
 			avalon.each(data,function(i,item){
 				for(var j in target){
 					if(item[j] === undefined){
 						item[j] = target[j];
 					}
 				}
+				func && func(i,item);
 			});
 		},
 		setAttr : function($el,attr){

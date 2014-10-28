@@ -18,3 +18,4 @@ body{font-size: 12px;margin:0;overflow:auto;*position:relative;}
 .demo-title{font-size: 20px;font-weight: bolder;height: 30px;line-height: 30px;border-bottom:1px solid #d2d2d2;}
 .demo-content{position: absolute;top:31px;left:0;right: 150px;bottom: 0;}
 .demo-oper{position:absolute;top: 31px;right: 0;bottom: 0;width: 149px;border-left: 1px solid #d2d2d2}
+.demo-oper button{display: block;}
