@@ -11,15 +11,21 @@
     <script src="../src/avalon.js"></script>
 </head>
 <body ms-controller='demo'>
-    <div title='叼你老豆' ms-widget="dialog,testdialog,$testdialogOpts" style='left:100px;top:100px;'>
+    <button ms-click='$open()'>open</button>
+    <div title='电你老豆' ms-widget="dialog,testdialog,$testdialogOpts">
         <h1>diao ni lao dou</h1>
     </div>
     <script>
         require(["dialog/avalon.dialog"], function() {
             var vmodel = avalon.define("demo",function(vm){
+                vm.$open = function(){
+                    avalon.vmodels.testdialog.closed = false;
+                };
                 vm.$testdialogOpts = {
                     width : 300,
                     height : 200,
+                    centered : true,
+                    modal : true,
                     iconCls : "icon-ok",
                     tools : [{
                         iconCls : "icon-save"

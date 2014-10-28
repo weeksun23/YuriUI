@@ -1,6 +1,6 @@
 define(["avalon"],function(avalon){
 	avalon.uibase = {
-		//Ä£·ÂÃ°ÅÝ
+		//æ¨¡ä»¿å†’æ³¡
 		propagation : function(obj,e){
 			var target = e.target;
 			var propType = "data-prop-type";

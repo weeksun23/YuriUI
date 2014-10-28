@@ -33,7 +33,7 @@ a:focus {
 
 /*panel*/
 .panel-title{font-size: 12px;padding: 3px 22px 3px 3px;position: relative;}
-.panel-title-content{display: inline-block;vertical-align: middle;line-height: 18px;}
+.panel-title-content{display: inline-block;line-height: 18px;}
 .panel-title-content>i{margin-right: 2px;}
 .panel-title-content>span{vertical-align: middle;}
 .panel-title-tool{
@@ -42,6 +42,6 @@ a:focus {
 }
 .panel-title-tool:hover{opacity: 1;filter:none;}
 .panel-title-bar{float: right;font-size: 0;}
-.panel-title-icon{display: inline-block;padding: 2px;cursor: pointer;height: 16px;vertical-align: middle;}
+.panel-title-icon{display: inline-block;padding: 2px;cursor: pointer;height: 16px;}
 .panel-title-icon:hover,.panel-title-tool:hover{background-color: #ddd;}
 .panel-content{overflow: auto;}

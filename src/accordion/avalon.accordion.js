@@ -119,7 +119,7 @@ define(["avalon.uibase","text!./avalon.accordion.html"],function(avalon,templete
 				avalon.scan(element, vmodel);
 			};
 			vm.$toggleSelect = function(e,index){
-				avalon.uibase.propagation({
+				avalon.uibase.propagation.call(this,{
 					title : function(e){
 						toggleSelect(Number(this.getAttribute("data-index")));
 					},
