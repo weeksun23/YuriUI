@@ -27,15 +27,23 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 	};
 	widget.version = 1.0;
 	widget.defaults = {
+		//dialog宽度
 		width : 300,
+		//工具栏按钮数组
 		tools : null,
+		//dialog图标 显示在标题左旁边
 		iconCls : null,
 		//内容高度 不包含标题
 		height : null,
+		//是否模态
 		modal : true,
+		//标题 支持html
 		title : null,
+		//dialog内容 支持html
 		content : null,
 		//是否含右上关闭按钮
-		closeable : true
+		closeable : true,
+		//是否居中
+		center : false
 	};
 });

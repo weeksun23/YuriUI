@@ -8,7 +8,7 @@ define(["avalon","text!./avalon.ui.html"],function(avalon,templete){
 				element.innerHTML = templete;
 				avalon.scan(element, vmodel);
 			};
-			/****************************æ–¹æ³•*****************************/
+			/****************************·½·¨*****************************/
 		});
 		return vmodel;
 	};
