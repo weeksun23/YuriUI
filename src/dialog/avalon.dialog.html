@@ -1,0 +1,14 @@
+<div class='dialog-title panel-title'>
+    <div ms-if="tools && tools.length > 0" class='panel-title-bar'>
+        <span ms-repeat='tools' class='panel-title-icon'>
+            <i ms-class='{{el.iconCls}}'></i> 
+        </span>
+    </div>
+    <span class='panel-title-content'>
+        <i ms-if='iconCls' ms-class='{{iconCls}}'></i><span>{{title | html}}</span>
+    </span>
+    <div ms-if='closeable' class='panel-title-tool'>
+        <div class='tool tool-close'></div>
+    </div>
+</div>
+<div class='dialog-content ball ofa' ms-css-height='height'>{{content | html}}</div>
