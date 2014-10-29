@@ -50,37 +50,38 @@ define(["avalon.uibase"],function(avalon){
             });
 		});
 	}
-	//逐层遍历子节点 找到不在widget下的handle
-	function levelFindHandle(els,result){
-		avalon.each(els,function(i,el){
-			if(el.getAttribute("ms-widget")){}
-		});
-	}
-
 	var widget = avalon.ui.draggable = function(element, data, vmodels){
 		var options = data.draggableOptions;
 		var vmodel = avalon.define(data.draggableId,function(vm){
 			avalon.mix(vm,options);
-			vm.$skipArray = ["overEdge","dragCursor","disabled",
+			vm.$skipArray = ["overEdge","dragCursor",
 			"axis","onBeforeDrag","onStartDrag","onDrag","onStopDrag"];
 			vm.$init = function(){
-				element.style.position = 'absolute';
+				var pos = avalon(element).css('position');
+				if(pos !== 'absolute' && pos !== 'fixed'){
+					element.style.position = 'absolute';
+				}
 				avalon.scan(element,[vmodel].concat(vmodels));
 				var handle;
 				avalon.each(element.getElementsByTagName("*"),function(i,el){
 					if(el.getAttribute("data-drag-handle")){
-						handle = el;
-						el.style.cursor = vmodel.dragCursor;
+						element.handle = handle = el;
 						el.removeAttribute("data-drag-handle");
 						return false;
 					}
 				});
-				if(!handle){
-					element.style.cursor = vmodel.dragCursor;
-				}
+				vmodel.$fire("disabled",vmodel.disabled);
 				bindDrag(element,vmodel,handle);
 			};
 			/****************************方法*****************************/
+		});
+		vmodel.$watch("disabled",function(r){
+			var str = r ? "default" : vmodel.dragCursor;
+			var target = element;
+			if(element.handle){
+				target = element.handle;
+			}
+			target.style.cursor = str;
 		});
 		return vmodel;
 	};
@@ -100,4 +101,5 @@ define(["avalon.uibase"],function(avalon){
 		onDrag : avalon.noop,
 		onStopDrag : avalon.noop
 	};
+	return avalon;
 });

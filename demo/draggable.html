@@ -27,28 +27,19 @@
         <div class='drag2' ms-widget='draggable,test2'>
             <div data-drag-handle='1' class='handle' style="background-color:green"></div>
         </div>
-        <div class='drag3 ball' ms-widget='draggable,test3,$test3Opts'>
+        <div class='drag3 ball' ms-widget='draggable' data-draggable-over-edge='true'>
             我可以滑出边缘，呵呵
         </div>
     </div>
-    <div class='drag4 ball' ms-widget='draggable,test4,$test4Opts'>
+    <div class='drag4 ball' ms-widget='draggable' data-draggable-axis='x'>
         我只能x轴方向移动
     </div>
-     <div class='drag5 ball' ms-widget='draggable,test5,$test5Opts'>
+     <div class='drag5 ball' ms-widget='draggable' data-draggable-axis='y'>
         我只能y轴方向移动
     </div>
     <script>
         require(["draggable/avalon.draggable"], function() {
             var vmodel = avalon.define("demo",function(vm){
-                vm.$test3Opts = {
-                    overEdge : true
-                };
-                vm.$test4Opts = {
-                    axis : "x"
-                };
-                vm.$test5Opts = {
-                    axis : "y"
-                };
                 vm.$testOpts = {
                     onBeforeDrag : function(){
                         avalon.log("onBeforeDrag");

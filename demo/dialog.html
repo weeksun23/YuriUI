@@ -13,16 +13,41 @@
 </head>
 <body ms-controller='demo'>
     <button ms-click='$open()'>open</button>
-    <div title='电你老豆' ms-widget="dialog,testdialog,$testdialogOpts">
-        <a class="btn btn-default" href='javascript:void(0)'>
-            <i class="btn-icon icon-save" ></i><span class="btn-text">text</span>
+    <div title='对话框1' ms-widget="dialog,testdialog,$testdialogOpts">
+        <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("draggable")'>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">{{draggable ? "undrag" : "drag"}}</span>
         </a>
+        <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("centered")'>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">{{centered ? "uncentered" : "centered"}}</span>
+        </a>
+        <a class="btn btn-default" href='javascript:void(0)' ms-click='$open2()'>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框2</span>
+        </a>
+    </div>
+    <div title='对话框2' ms-widget="dialog,testdialog2,$testdialog2Opts">
+        <h1>我从对话框1中打开，所以在其上面，呵呵</h1>
+        <a class="btn btn-default" href='javascript:void(0)' ms-click='$open3()'>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
+        </a>
+    </div>
+    <div title='对话框3' ms-widget="dialog,testdialog3,$testdialog3Opts">
+        <h1>我从对话框2中打开，所以在其上面，呵呵</h1>
     </div>
     <script>
         require(["dialog/avalon.dialog"], function() {
             var vmodel = avalon.define("demo",function(vm){
+                vm.$toggle = function(target){
+                    var dialog = avalon.vmodels.testdialog;
+                    dialog[target] = !dialog[target];
+                };
                 vm.$open = function(){
                     avalon.vmodels.testdialog.closed = false;
+                };
+                vm.$open2 = function(){
+                    avalon.vmodels.testdialog2.closed = false;
+                };
+                vm.$open3 = function(){
+                    avalon.vmodels.testdialog3.closed = false;
                 };
                 vm.$testdialogOpts = {
                     buttons : [{
@@ -41,14 +66,20 @@
                     }],
                     width : 300,
                     height : 200,
-                    centered : true,
                     modal : true,
+                    centered : true,
+                    contentStyle : "padding:5px",
                     iconCls : "icon-ok",
                     tools : [{
                         iconCls : "icon-save"
                     },{
                         iconCls : "icon-reload"
                     }]
+                };
+                vm.testdialog2Opts = {
+                    modal : true,
+                    width : 200,
+                    iconCls : "icon-reload"
                 };
             });
             avalon.scan();
