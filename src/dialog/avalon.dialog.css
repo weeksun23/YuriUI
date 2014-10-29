@@ -19,3 +19,5 @@
 .dialog-content{
 	background-color: #fff;
 }
+.dialog-button{background-color: #F4F4F4;padding:5px;text-align: right;border-top:0;}
+.dialog-button a{margin-left:2px;}

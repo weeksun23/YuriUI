@@ -8,12 +8,15 @@
     
     <link rel="stylesheet" type="text/css" href="../src/base.css">
     <link rel="stylesheet" type="text/css" href="../src/dialog/avalon.dialog.css">
+    <link rel="stylesheet" type="text/css" href="../src/btn/avalon.btn.css">
     <script src="../src/avalon.js"></script>
 </head>
 <body ms-controller='demo'>
     <button ms-click='$open()'>open</button>
     <div title='电你老豆' ms-widget="dialog,testdialog,$testdialogOpts">
-        <h1>diao ni lao dou</h1>
+        <a class="btn btn-default" href='javascript:void(0)'>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">text</span>
+        </a>
     </div>
     <script>
         require(["dialog/avalon.dialog"], function() {
@@ -22,6 +25,20 @@
                     avalon.vmodels.testdialog.closed = false;
                 };
                 vm.$testdialogOpts = {
+                    buttons : [{
+                        iconCls : "icon-save",
+                        text : "保存",
+                        click : function(){
+                            alert("没有设置doClose");
+                        }
+                    },{
+                        iconCls : "icon-cancel",
+                        doClose : true,
+                        click : function(){
+                            alert("由于设置了doClose，所以弹完后关闭");
+                        },
+                        text : "取消"
+                    }],
                     width : 300,
                     height : 200,
                     centered : true,

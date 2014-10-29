@@ -42,6 +42,17 @@ define(["avalon"],function(avalon){
 				return (new Function('return {' + target + '};'))();
 			}
 			return {};
+		},
+		//获取已定位的父容器
+		getPosParent : function(el){
+			var p = el.parentNode;
+			while(p.tagName.toLowerCase() !== 'body'){
+				var $p = avalon(p);
+				var pos = $p.css("position");
+				if(pos === 'relative' || pos === 'absolute' || pos === 'fixed') break;
+				p = p.parentNode;
+			}
+			return p;
 		}
 	};
 	return avalon;

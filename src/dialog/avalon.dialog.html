@@ -12,3 +12,9 @@
     </div>
 </div>
 <div class='dialog-content ball ofa' ms-css-height='height'>{{content | html}}</div>
+<div ms-if='buttons && buttons.length > 0' class='dialog-button ball' ms-click='$buttonsClick()'>
+    <a ms-repeat='buttons' class="btn btn-default" href='javascript:void(0)' 
+        data-prop-type='button' ms-data-index='$index'>
+        <i ms-if='el.iconCls' class="btn-icon" ms-class='{{el.iconCls}}'></i><span class="btn-text">{{el.text}}</span>
+    </a>
+</div>

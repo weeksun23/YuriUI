@@ -9,13 +9,7 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 	//遍历父节点 找到position不为static的父节点或是body标签 
 	//查看其是否已经生成mask 若没 则生成并返回
 	function getMask(el){
-		var p = el.parentNode;
-		while(p.tagName.toLowerCase() !== 'body'){
-			var $p = avalon(p);
-			var pos = $p.css("position");
-			if(pos === 'relative' || pos === 'absolute' || pos === 'fixed') break;
-			p = p.parentNode;
-		}
+		var p = avalon.uibase.getPosParent(el);
 		var mask;
 		avalon.each(p.children,function(i,node){
 			if(avalon(node).hasClass("dialog-mask")){
@@ -32,6 +26,7 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 		}
 		return mask;
 	}
+	//是否需要居中标志 只有当dialog可见的情况下 才能准确计算居中的位置数据
 	var isNeedCenter = false;
 	var widget = avalon.ui.dialog = function(element, data, vmodels){
 		var options = data.dialogOptions;
@@ -68,6 +63,18 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 					close : function(e){
 						e.stopPropagation();
 						vmodel.closed = true;
+					}
+				},e);
+			};
+			vm.$buttonsClick = function(e){
+				avalon.uibase.propagation.call(this,{
+					button : function(){
+						var index = Number(this.getAttribute("data-index"));
+						var btn = vmodel.buttons[index];
+						btn.click && btn.click.call(this,vmodel);
+						if(btn.doClose){
+							return vmodel.closed = true;
+						}
 					}
 				},e);
 			};
@@ -121,6 +128,8 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 	};
 	widget.version = 1.0;
 	widget.defaults = {
+		//按钮组
+		buttons : null,
 		//dialog宽度
 		width : 300,
 		//工具栏按钮数组
