@@ -21,20 +21,20 @@
     <script src="../src/avalon.js"></script>
 </head>
 <body ms-controller='demo'>
-    <div class='demo' style='width:400px;height:400px;' ms-widget='draggable,test,$testOpts'>
-        <div data-drag-handle='1' class='handle'></div>
-        <div class='drag1' ms-widget='draggable,test1'></div>
-        <div class='drag2' ms-widget='draggable,test2'>
-            <div data-drag-handle='1' class='handle' style="background-color:green"></div>
+    <div class='demo' style='width:400px;height:400px;' ms-draggable='$,$testOpts'>
+        <div data-drag-handle class='handle'></div>
+        <div class='drag1' ms-draggable></div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
         </div>
-        <div class='drag3 ball' ms-widget='draggable' data-draggable-over-edge='true'>
+        <div class='drag3 ball' ms-draggable data-draggable-over-edge='true'>
             我可以滑出边缘，呵呵
         </div>
     </div>
-    <div class='drag4 ball' ms-widget='draggable' data-draggable-axis='x'>
+    <div class='drag4 ball' ms-draggable data-draggable-axis='x'>
         我只能x轴方向移动
     </div>
-     <div class='drag5 ball' ms-widget='draggable' data-draggable-axis='y'>
+     <div class='drag5 ball' ms-draggable data-draggable-axis='y'>
         我只能y轴方向移动
     </div>
     <script>

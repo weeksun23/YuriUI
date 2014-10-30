@@ -1,27 +1,31 @@
 define(["avalon.uibase"],function(avalon){
-	function bindDrag(element,vmodel,handle){
-		handle = handle || element;
-		avalon.bind(handle,"mousedown",function(e){
+	function bindDrag(element,options){
+		avalon.bind(element.handle || element,"mousedown",function(e){
 			e.preventDefault();
-			if(vmodel.disabled || vmodel.onBeforeDrag.call(this,e) === false) return;
+			if(options.disabled || options.onBeforeDrag.call(this,e) === false) return;
 			var $el = avalon(element);
 			var position = $el.position();
 			var sL = position.left;
 			var sT = position.top;
 			var sX = e.pageX;
             var sY = e.pageY;
-            var overEdge = vmodel.overEdge;
-            var axis = vmodel.axis;
+            var overEdge = options.overEdge;
+            var axis = options.axis;
             if(!overEdge){
             	var posP = avalon.uibase.getPosParent(element);
             	var $posP = avalon(posP);
             	var maxL = $posP.innerWidth() - $el.outerWidth(true);
             	var maxT = $posP.innerHeight() - $el.outerHeight(true);
             }
-            vmodel.onStartDrag.call(this,e);
+            options.onStartDrag.call(this,e);
+            //var t = new Date;
+            //var gap = document.querySelector ? 12 : 30;
             var move = avalon.bind(document,"mousemove",function(moveE){
+            	//var cur = new Date;
+				//if(cur - t <= gap) return;
+				//t = cur;
             	moveE.preventDefault();
-            	vmodel.onDrag.call(this,moveE);
+            	options.onDrag.call(this,moveE);
             	var newL = sL + (moveE.pageX - sX);
             	var newT = sT + (moveE.pageY - sY);
             	if(!overEdge){
@@ -44,64 +48,31 @@ define(["avalon.uibase"],function(avalon){
             	}
             });
             var up = avalon.bind(document,"mouseup",function(upE){
-            	vmodel.onStopDrag.call(this,upE);
+            	options.onStopDrag.call(this,upE);
                 avalon.unbind(document,"mouseup",up);
                 avalon.unbind(document,"mousemove",move);
             });
 		});
 	}
-	avalon.bindingHandlers.draggable = function(data, vmodels){
-		var args = data.value.match(avalon.rword) || ["$", "draggable"];
-		var ID = args[0].trim(), opts = args[1], model, vmOptions;
-        if (ID && ID != "$") {
-            model = avalon.vmodels[ID];//如果指定了此VM的ID
-            if (!model) {
-                return;
-            }
-        }
-        data.element.removeAttribute("ms-draggable");
-        if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
-            model = vmodels.length ? vmodels[0] : null
-        }
-
-	};
-	var widget = avalon.ui.draggable = function(element, data, vmodels){
-		var options = data.draggableOptions;
-		var vmodel = avalon.define(data.draggableId,function(vm){
-			avalon.mix(vm,options);
-			vm.$skipArray = ["overEdge","dragCursor",
-			"axis","onBeforeDrag","onStartDrag","onDrag","onStopDrag"];
-			vm.$init = function(){
-				var pos = avalon(element).css('position');
-				if(pos !== 'absolute' && pos !== 'fixed'){
-					element.style.position = 'absolute';
-				}
-				avalon.scan(element,[vmodel].concat(vmodels));
-				var handle;
-				avalon.each(element.getElementsByTagName("*"),function(i,el){
-					if(el.getAttribute("data-drag-handle")){
-						element.handle = handle = el;
-						el.removeAttribute("data-drag-handle");
-						return false;
-					}
-				});
-				vmodel.$fire("disabled",vmodel.disabled);
-				bindDrag(element,vmodel,handle);
-			};
-			/****************************方法*****************************/
-		});
-		vmodel.$watch("disabled",function(r){
-			var str = r ? "default" : vmodel.dragCursor;
-			var target = element;
-			if(element.handle){
-				target = element.handle;
+	//逐层遍历子节点 寻找移动代理
+	function findHandle(target,element){
+		var children = target.children;
+		if(!children || children.length === 0) return;
+		var find = false; 
+		avalon.each(children,function(i,el){
+			if(el.getAttribute("data-drag-handle") === ''){
+				find = true;
+				element.handle = el;
+				return false;
 			}
-			target.style.cursor = str;
+			if(el.getAttribute("ms-draggable") === null && findHandle(el,element)){
+				find = true;
+				return false;
+			}
 		});
-		return vmodel;
-	};
-	widget.version = 1.0;
-	widget.defaults = {
+		return find;
+	}
+	var defaults = {
 		//是否可以滑出已定位的父容器
 		overEdge : false,
 		//滑动elment或代理的鼠标样式
@@ -116,4 +87,47 @@ define(["avalon.uibase"],function(avalon){
 		onDrag : avalon.noop,
 		onStopDrag : avalon.noop
 	};
+	var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
+        var ID = data.value || "$";
+        var opts = "$draggable";
+        var model, vmOptions;
+        if (ID && ID != "$") {
+            model = avalon.vmodels[ID];//如果指定了此VM的ID
+            if (!model) {
+                return;
+            }
+        }
+        if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
+            model = vmodels.length ? vmodels[0] : null;
+        }
+        if (model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
+            vmOptions = model[opts];
+        }
+        var element = data.element;
+        element.removeAttribute("ms-draggable");
+        var $element = avalon(element);
+        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "draggable"),{
+        	//方法
+        	doDisable : function(isDisable){
+        		var str = isDisable ? "default" : options.dragCursor;
+				var target = element;
+				if(element.handle){
+					target = element.handle;
+				}
+				target.style.cursor = str;
+				options.disabled = isDisable;
+        	}
+        });
+        model[opts] = options;
+        if(!/^[a|f]/.test($element.css("position"))){
+        	element.style.position = 'absolute';
+        }
+        //开始初始化
+        avalon.log(element.innerHTML);
+        findHandle(element,element);
+        options.doDisable(options.disabled);
+        bindDrag(element,options);
+    };
+	draggable.version = 1.0;
+	draggable.defaults = defaults;
 });

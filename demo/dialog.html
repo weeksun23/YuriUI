@@ -22,9 +22,9 @@
     <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
         <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
     </a>
-    <div title='对话框1' ms-widget="dialog,testdialog1,$testdialog1Opts">
+    <div title='对话框1' ms-widget="dialog,testdialog1,$testdialog1Opts" ms-draggable>
         <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("draggable")'>
-            <i class="btn-icon icon-save" ></i><span class="btn-text">{{draggable ? "undrag" : "drag"}}</span>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">toggledrag</span>
         </a>
         <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("centered")'>
             <i class="btn-icon icon-save" ></i><span class="btn-text">{{centered ? "uncentered" : "centered"}}</span>
@@ -36,13 +36,13 @@
             <i class="btn-icon icon-cancel" ></i><span class="btn-text">销毁对话框1</span>
         </a>
     </div>
-    <div title='对话框2' ms-widget="dialog,testdialog2,$testdialog2Opts">
+    <div title='对话框2' ms-widget="dialog,testdialog2,$testdialog2Opts" ms-draggable>
         <h1>我从对话框1中打开，所以在其上面，呵呵</h1>
         <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
             <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
         </a>
     </div>
-    <div title='对话框3' ms-widget="dialog,testdialog3,$testdialog3Opts">
+    <div title='对话框3' ms-widget="dialog,testdialog3,$testdialog3Opts" ms-draggable>
         <h1>我从对话框2中打开，所以在其上面，呵呵</h1>
     </div>
     <script>
@@ -51,6 +51,9 @@
                 vm.draggable = true;
                 vm.$toggle = function(target){
                     var dialog = avalon.vmodels.testdialog1;
+                    if(target === 'draggable'){
+                        dialog.$draggable.doDisable(!dialog.$draggable.disabled);
+                    }
                     dialog[target] = !dialog[target];
                 };
                 vm.$open = function(i){
@@ -61,6 +64,9 @@
                     el.parentNode.removeChild(el);
                 };
                 vm.$testdialog1Opts = {
+                    $draggable : {
+                        disabled : true
+                    },
                     buttons : [{
                         iconCls : "icon-save",
                         text : "保存",
