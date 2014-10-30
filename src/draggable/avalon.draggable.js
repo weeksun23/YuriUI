@@ -50,6 +50,21 @@ define(["avalon.uibase"],function(avalon){
             });
 		});
 	}
+	avalon.bindingHandlers.draggable = function(data, vmodels){
+		var args = data.value.match(avalon.rword) || ["$", "draggable"];
+		var ID = args[0].trim(), opts = args[1], model, vmOptions;
+        if (ID && ID != "$") {
+            model = avalon.vmodels[ID];//如果指定了此VM的ID
+            if (!model) {
+                return;
+            }
+        }
+        data.element.removeAttribute("ms-draggable");
+        if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
+            model = vmodels.length ? vmodels[0] : null
+        }
+
+	};
 	var widget = avalon.ui.draggable = function(element, data, vmodels){
 		var options = data.draggableOptions;
 		var vmodel = avalon.define(data.draggableId,function(vm){
@@ -101,5 +116,4 @@ define(["avalon.uibase"],function(avalon){
 		onDrag : avalon.noop,
 		onStopDrag : avalon.noop
 	};
-	return avalon;
 });

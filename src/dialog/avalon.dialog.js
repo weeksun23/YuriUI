@@ -1,4 +1,4 @@
-define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalon,templete){
+define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 	var getZIndex = (function(){
 		var zindex = 90;
 		return function(){
@@ -26,6 +26,7 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 		}
 		return mask;
 	}
+	//设置窗口居中 非固定居中
 	function setCenterPos(el,mask){
 		if(!mask){
 			mask = avalon.uibase.getPosParent(el);
@@ -35,7 +36,11 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 		$el.css("left",($mask.innerWidth() - $el.outerWidth()) / 2)
 			.css("top",($mask.innerHeight() - $el.outerHeight()) / 2);
 	}
-	function showHideMask(element,mask,isHide){
+	//显示或隐藏遮罩层
+	//mask.activeDialog 存放所有可见的带遮罩的dialog
+	function showHideMask(element,isHide){
+		var mask = element.mask;
+		if(!mask) return;
 		var activeDialog = mask.activeDialog;
 		if(activeDialog === undefined){
 			activeDialog = mask.activeDialog = [];
@@ -55,6 +60,7 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 				mask.style.display = 'block';
 			}
 		}
+		return mask;
 	}
 	var widget = avalon.ui.dialog = function(element, data, vmodels){
 		//是否需要固定居中标志 只有当dialog可见的情况下 才能准确计算居中的位置数据
@@ -72,24 +78,28 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 		var dialogId = data.dialogId;
 		var vmodel = avalon.define(dialogId,function(vm){
 			avalon.mix(vm,options);
-			vm.$skipArray = [];
+			vm.widgetElement = element;
+			vm.$skipArray = ['widgetElement'];
 			vm.$init = function(){
-				var $el = avalon(element);
-				$el.addClass("dialog ball").css("z-index",getZIndex());
+				var $el = avalon(element).addClass("dialog ball").css("z-index",getZIndex());
 				isAutoCenter = vmodel.centered;
-				var draggable = isAutoCenter ? false : vmodel.draggable;
 				avalon.uibase.setAttr($el,{
 					"ms-class" : "dialog-noclose:!closeable",
 					"ms-class-1" : "dialog-center:centered",
 					"ms-visible" : "!closed",
-					"ms-css-width" : "width",
-					"ms-widget" : "draggable," + dialogId + "drag",
-					"data-draggable-disabled" : !draggable
+					"ms-css-width" : "width"
 				});
 				element.innerHTML = templete;
 				avalon.scan(element, [vmodel].concat(vmodels));
 				vmodel.modal && vmodel.$fire("modal",true);
 				!vmodel.closed && vmodel.$fire("closed",false);
+			};
+			vm.$remove = function(){
+				var mask = showHideMask(element,true);
+				if(mask){
+					vmodel.modal = false;
+				}
+				element.innerHTML = element.textContent = ""
 			};
 			vm.$titleClick = function(e){
 				avalon.uibase.propagation.call(this,{
@@ -116,10 +126,6 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 			};
 			/****************************方法*****************************/
 		});
-		vmodel.$watch("draggable",function(r){
-			if(vmodel.centered) return;
-			avalon.vmodels[dialogId + "drag"].disabled = !r;
-		});
 		vmodel.$watch("centered",function(r){
 			var $el = avalon(element);
 			var display = element.style.display;
@@ -143,12 +149,9 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 					isCenter = false;
 				}
 			}
-			if(vmodel.draggable){
-				avalon.vmodels[dialogId + "drag"].disabled = r;
-			}
 		});
 		vmodel.$watch("modal",function(r){
-			var mask = getMask(element);
+			var mask = element.mask || getMask(element);
 			var $mask = avalon(mask);
 			var num = Number($mask.attr("data-dialog-num"));
 			if(r){
@@ -159,12 +162,16 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 				num--;
 			}
 			$mask.attr("data-dialog-num",num);
+			if(num === 0){
+				mask.parentNode.removeChild(mask);
+			}
 		});
 		vmodel.$watch("closed",function(r){
-			var mask = element.mask;
+			showHideMask(element,r);
 			if(!r){
 				//打开窗口
 				var zIndex = getZIndex();
+				var mask = element.mask;
 				mask && (mask.style.zIndex = zIndex - 1);
 				element.style.zIndex = zIndex;
 				if(isAutoCenter){
@@ -177,7 +184,6 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 					isCenter = false;
 				}
 			}
-			mask && showHideMask(element,mask,r);
 		});
 		return vmodel;
 	};
@@ -205,9 +211,7 @@ define(["draggable/avalon.draggable","text!./avalon.dialog.html"],function(avalo
 		closeable : true,
 		//窗口是否关闭(隐藏)
 		closed : true,
-		//是否居中 设置为true后 窗口就不能移动
-		centered : false,
-		//是否可拖拽
-		draggable : true
+		//是否固定居中
+		centered : false
 	};
 });
