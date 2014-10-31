@@ -8,20 +8,21 @@
     
     <link rel="stylesheet" type="text/css" href="../src/base.css">
     <style type="text/css">
+        .drag0{top:20px;background-color: #fff}
         .handle{height:30px;background-color: #ccc}
         .drag1{
-            background-color: red;width: 100px;height: 100px;position: absolute;left: 50px;top:50px;
+            background-color: red;width: 100px;height: 100px;
         }
         .drag2{
-            background-color: blue;width: 100px;height:100px;position: absolute;left: 100px;top: 100px;
+            background-color: blue;width: 100px;height:100px;
         }
-        .drag3{width: 150px;height:100px;left:200px;top:100px;}
-        .drag4,.drag5{width: 150px;height:100px;left:200px;top:100px;background-color: #f2f2f2}
+        .drag3{width: 150px;height:100px;}
+        .drag4,.drag5{width: 150px;height:100px;background-color: #f2f2f2}
     </style>
     <script src="../src/avalon.js"></script>
 </head>
 <body ms-controller='demo'>
-    <div class='demo' style='width:400px;height:400px;' ms-draggable='$,$testOpts'>
+    <div class='ball drag0' style='width:400px;height:400px;position:relative' ms-draggable='$,$testOpts'>
         <div data-drag-handle class='handle'></div>
         <div class='drag1' ms-draggable></div>
         <div class='drag2' ms-draggable>
@@ -37,6 +38,7 @@
      <div class='drag5 ball' ms-draggable data-draggable-axis='y'>
         我只能y轴方向移动
     </div>
+    <div>经过draggable处理后，在我上面的都是些position为relative的元素，所以即使他们的位置发生变化，也不会影响到我，呵呵</div>
     <script>
         require(["draggable/avalon.draggable"], function() {
             var vmodel = avalon.define("demo",function(vm){

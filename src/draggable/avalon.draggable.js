@@ -4,9 +4,15 @@ define(["avalon.uibase"],function(avalon){
 			e.preventDefault();
 			if(options.disabled || options.onBeforeDrag.call(this,e) === false) return;
 			var $el = avalon(element);
-			var position = $el.position();
-			var sL = position.left;
-			var sT = position.top;
+            var isRelative = /^r/.test($el.css("position"));
+            if(isRelative){
+                var sL = parseInt(element.style.left,10);
+                var sT = parseInt(element.style.top,10);
+            }else{
+                var position = $el.position();
+                sL = position.left;
+                sT = position.top;
+            }
 			var sX = e.pageX;
             var sY = e.pageY;
             var overEdge = options.overEdge;
@@ -14,16 +20,26 @@ define(["avalon.uibase"],function(avalon){
             if(!overEdge){
             	var posP = avalon.uibase.getPosParent(element);
             	var $posP = avalon(posP);
-            	var maxL = $posP.innerWidth() - $el.outerWidth(true);
-            	var maxT = $posP.innerHeight() - $el.outerHeight(true);
+                if(isRelative){
+                    position = $el.position();
+                    minL = sL - position.left;
+                    minT = sT - position.top;
+                    maxL = $posP.innerWidth() - $el.outerWidth(true) - Math.abs(minL);
+                    maxT = $posP.innerHeight() - $el.outerHeight(true) - Math.abs(minT);
+                }else{
+                    var maxL = $posP.innerWidth() - $el.outerWidth(true);
+                    var maxT = $posP.innerHeight() - $el.outerHeight(true);
+                    var minL = 0;
+                    var minT = 0;
+                }
             }
             options.onStartDrag.call(this,e);
-            //var t = new Date;
-            //var gap = document.querySelector ? 12 : 30;
+            var t = new Date;
+            var gap = document.querySelector ? 12 : 30;
             var move = avalon.bind(document,"mousemove",function(moveE){
-            	//var cur = new Date;
-				//if(cur - t <= gap) return;
-				//t = cur;
+            	var cur = new Date;
+				if(cur - t <= gap) return;
+				t = cur;
             	moveE.preventDefault();
             	options.onDrag.call(this,moveE);
             	var newL = sL + (moveE.pageX - sX);
@@ -31,13 +47,13 @@ define(["avalon.uibase"],function(avalon){
             	if(!overEdge){
             		if(newL > maxL){
             			newL = maxL;
-            		}else if(newL < 0){
-            			newL = 0;
+            		}else if(newL < minL){
+            			newL = minL;
             		}
             		if(newT > maxT){
             			newT = maxT;
-            		}else if(newT < 0){
-            			newT = 0;
+            		}else if(newT < minT){
+            			newT = minT;
             		}
             	}
             	if(axis === null || axis === 'x'){
@@ -88,8 +104,11 @@ define(["avalon.uibase"],function(avalon){
 		onStopDrag : avalon.noop
 	};
 	var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
-        var ID = data.value || "$";
-        var opts = "$draggable";
+        var args = data.value.match(avalon.rword) || [];
+        var ID = (args[0] || "$").trim(), 
+            //向model暴露处理完后的options对应的属性名
+            exportField = args[1],
+            opts = exportField || '$draggable';
         var model, vmOptions;
         if (ID && ID != "$") {
             model = avalon.vmodels[ID];//如果指定了此VM的ID
@@ -101,7 +120,10 @@ define(["avalon.uibase"],function(avalon){
             model = vmodels.length ? vmodels[0] : null;
         }
         if (model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
-            vmOptions = model[opts];
+            vmOptions = model[opts]
+            if (vmOptions.$model) {
+                vmOptions = vmOptions.$model
+            }
         }
         var element = data.element;
         element.removeAttribute("ms-draggable");
@@ -118,12 +140,24 @@ define(["avalon.uibase"],function(avalon){
 				options.disabled = isDisable;
         	}
         });
-        model[opts] = options;
-        if(!/^[a|f]/.test($element.css("position"))){
-        	element.style.position = 'absolute';
+        if(exportField){
+            model[exportField] = options;
+        }
+        var csspos = $element.css("position");
+        if(!/^[a|f|r]/.test(csspos)){
+        	csspos = element.style.position = 'relative';
+        }
+        if(/^r/.test(csspos)){
+            //处理relative的情况 
+            //不知道怎么获取relative元素相对自身的偏移值 只能通过如下取巧的方法
+            var pos = $element.position();
+            element.style.position = 'static';
+            var _pos = $element.position();
+            element.style.position = 'relative';
+            element.style.left = (pos.left - _pos.left) + "px";
+            element.style.top = (pos.top - _pos.top) + "px";
         }
         //开始初始化
-        avalon.log(element.innerHTML);
         findHandle(element,element);
         options.doDisable(options.disabled);
         bindDrag(element,options);
