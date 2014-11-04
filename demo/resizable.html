@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <script src="../src/avalon.js"></script>
+    <style type="text/css">
+    .resizable1{width: 200px;height: 200px;border-width: 5px;position: absolute;left: 0;top: 0}
+    .handle{height: 20px;background-color: #888}
+    </style>
+</head>
+<body ms-controller='demo'>
+    <div ms-resizable='$,$resize' ms-draggable class='resizable1 ball' data-resizable-max-width='300' data-resizable-max-height='300'>
+        <div class='handle' data-drag-handle></div>
+        我的position为absolute<br/>
+        <button ms-click='$toggle'>{{disabled ? "开启resize" : "禁止resize"}}</button>
+    </div>
+    <div style='height:200px;width:200px;margin:100px;' class='ball' ms-resizable>我的position为static</div>
+    <script>
+        require(["resizable/avalon.resizable","draggable/avalon.draggable"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$toggle = function(){
+                    vmodel.disabled = vmodel.$resize.disabled = !vmodel.$resize.disabled;
+                };
+                vm.disabled = true;
+                vm.$resize = {
+                    disabled : true,
+                    onStartResize : function(){
+                        console.log('onStartResize',arguments);
+                    },
+                    onResize : function(){
+                        console.log('onResize',arguments);
+                    },
+                    onStopResize : function(){
+                        console.log('onStopResize',arguments);
+                    }
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

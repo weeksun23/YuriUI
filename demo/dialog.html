@@ -22,7 +22,7 @@
     <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
         <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
     </a>
-    <div title='对话框1' ms-widget="dialog,testdialog1,$testdialog1Opts" ms-draggable='$,$draggable'>
+    <div title='对话框1' class='hide' ms-widget="dialog,testdialog1,$testdialog1Opts" ms-draggable='$,$draggable'>
         <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("draggable")'>
             <i class="btn-icon icon-save" ></i><span class="btn-text">toggledrag</span>
         </a>
@@ -36,13 +36,13 @@
             <i class="btn-icon icon-cancel" ></i><span class="btn-text">销毁对话框1</span>
         </a>
     </div>
-    <div title='对话框2' ms-widget="dialog,testdialog2,$testdialog2Opts" ms-draggable>
+    <div title='对话框2' class='hide' ms-widget="dialog,testdialog2,$testdialog2Opts" ms-draggable>
         <h1>我从对话框1中打开，所以在其上面，呵呵</h1>
         <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
             <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
         </a>
     </div>
-    <div title='对话框3' ms-widget="dialog,testdialog3,$testdialog3Opts" ms-draggable>
+    <div title='对话框3' class='hide' ms-widget="dialog,testdialog3,$testdialog3Opts" ms-draggable>
         <h1>我从对话框2中打开，所以在其上面，呵呵</h1>
     </div>
     <script>
@@ -83,7 +83,7 @@
                     }],
                     width : 300,
                     height : 200,
-                    modal : true,
+                    modal : false,
                     centered : true,
                     contentStyle : "padding:5px",
                     iconCls : "icon-ok",

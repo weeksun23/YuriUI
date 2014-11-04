@@ -1,4 +1,4 @@
-define(["avalon.uibase"],function(avalon){
+define(["avalon.uibase.function"],function(avalon){
 	function bindDrag(element,options){
 		avalon.bind(element.handle || element,"mousedown",function(e){
 			e.preventDefault();
@@ -37,10 +37,10 @@ define(["avalon.uibase"],function(avalon){
             var t = new Date;
             var gap = document.querySelector ? 12 : 30;
             var move = avalon.bind(document,"mousemove",function(moveE){
+                moveE.preventDefault();
             	var cur = new Date;
 				if(cur - t <= gap) return;
 				t = cur;
-            	moveE.preventDefault();
             	options.onDrag.call(this,moveE);
             	var newL = sL + (moveE.pageX - sX);
             	var newT = sT + (moveE.pageY - sY);
@@ -104,31 +104,10 @@ define(["avalon.uibase"],function(avalon){
 		onStopDrag : avalon.noop
 	};
 	var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
-        var args = data.value.match(avalon.rword) || [];
-        var ID = (args[0] || "$").trim(), 
-            //向model暴露处理完后的options对应的属性名
-            exportField = args[1],
-            opts = exportField || '$draggable';
-        var model, vmOptions;
-        if (ID && ID != "$") {
-            model = avalon.vmodels[ID];//如果指定了此VM的ID
-            if (!model) {
-                return;
-            }
-        }
-        if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
-            model = vmodels.length ? vmodels[0] : null;
-        }
-        if (model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
-            vmOptions = model[opts]
-            if (vmOptions.$model) {
-                vmOptions = vmOptions.$model
-            }
-        }
+        var options = avalon.uibase.initBinding(data, vmodels, "draggable", defaults);
         var element = data.element;
-        element.removeAttribute("ms-draggable");
         var $element = avalon(element);
-        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "draggable"),{
+        avalon.mix(options,{
         	//方法
         	doDisable : function(isDisable){
         		var str = isDisable ? "default" : options.dragCursor;
@@ -140,9 +119,6 @@ define(["avalon.uibase"],function(avalon){
 				options.disabled = isDisable;
         	}
         });
-        if(exportField){
-            model[exportField] = options;
-        }
         var csspos = $element.css("position");
         if(!/^[a|f|r]/.test(csspos)){
         	csspos = element.style.position = 'relative';

@@ -1,3 +1,4 @@
+/*avalon ui Ä£°å*/
 define(["avalon","text!./avalon.uiName.html"],function(avalon,templete){
 	var widget = avalon.ui.uiName = function(element, data, vmodels){
 		var options = data.uiNameOptions;
