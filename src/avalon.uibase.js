@@ -1,6 +1,7 @@
 define(["avalon"],function(avalon){
 	avalon.uibase = {
 		//模仿冒泡
+		//向上遍历父节点 直到找到 data-prop-type 不为null 或是 当前点击的元素为止
 		propagation : function(obj,e){
 			var target = e.target;
 			var propType = "data-prop-type";
@@ -10,9 +11,12 @@ define(["avalon"],function(avalon){
 			}else{
 				if(target === this) return;
 				var pNode = target.parentNode;
-				while(pNode !== this){
+				while(pNode){
 					if(obj[type = pNode.getAttribute(propType)]){
 						obj[type].call(pNode,e);
+						return;
+					}
+					if(pNode === this || pNode.tagName.toLowerCase() === 'body'){
 						return;
 					}
 					pNode = pNode.parentNode;
