@@ -20,12 +20,17 @@ define(["avalon.uibase.function"],function(avalon){
             if(!overEdge){
             	var posP = avalon.uibase.getPosParent(element);
             	var $posP = avalon(posP);
+                var scrollL = $posP.scrollLeft();
+                var scrollT = $posP.scrollTop();
                 if(isRelative){
                     position = $el.position();
+                    avalon.log(position,sL,sT);
                     minL = sL - position.left;
                     minT = sT - position.top;
-                    maxL = $posP.innerWidth() - $el.outerWidth(true) - Math.abs(minL);
-                    maxT = $posP.innerHeight() - $el.outerHeight(true) - Math.abs(minT);
+                    maxL = $posP.innerWidth() - $el.outerWidth(true) - (-minL);
+                    maxT = $posP.innerHeight() -$el.outerHeight(true) - (-minT);
+                    //avalon.log(maxL,maxT);
+                   // avalon.log(maxT + scrollT);
                 }else{
                     var maxL = $posP.innerWidth() - $el.outerWidth(true);
                     var maxT = $posP.innerHeight() - $el.outerHeight(true);
