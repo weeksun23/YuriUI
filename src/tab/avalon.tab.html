@@ -30,8 +30,8 @@
 <div class='tab-content' 
 	ms-css-height="{{position === 'top' ? height : null}}px">
 	<div ms-repeat='panelData' ms-css-height="el.height" 
-		ms-css-width = "el.width"
-		ms-class='active:tabData[$index].selected' 
+		ms-css-width="el.width"
+		ms-class='active:$index === _curIndex' 
 		ms-class-1='abfit:!el.height && !el.width' 
 		ms-class-2='ofh:el.$iframeSrc'>
 		{{el.content | html}}

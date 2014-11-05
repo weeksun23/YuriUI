@@ -105,6 +105,7 @@ define(["avalon.uibase","text!./avalon.tab.html"],function(avalon,templete){
 					vmodel.onSelect.call(vmodel,true,target);
 				}
 			}
+			vmodel._curIndex = index;
 			vmodel.onClick.call(vmodel,target);
 		}
 		//当前选中的选项卡对象
@@ -115,14 +116,13 @@ define(["avalon.uibase","text!./avalon.tab.html"],function(avalon,templete){
 			var target = tabData[index];
 			if(doSelTab.curSelected === target){
 				if(tabData.length > 1){
-					doSelTab.curSelected = tabData[index > 0 ? index - 1 : 1];
-					doSelTab.curSelected.selected = true;
+					doSelTab(vmodel,index - 1);
 				}else{
 					doSelTab.curSelected = {};
 				}
 			}
-			vmodel.panelData.removeAt(index);
 			tabData.removeAt(index);
+			vmodel.panelData.removeAt(index);
 		}
 		var resizer;
 		var vmodel = avalon.define(data.tabId,function(vm){
@@ -278,6 +278,8 @@ define(["avalon.uibase","text!./avalon.tab.html"],function(avalon,templete){
 		return vmodel;
 	};
 	widget.defaults = {
+		//当前选择的索引
+		_curIndex : null,
 		position : 'top',
 		autoResize : true,
 		tabData : null,
