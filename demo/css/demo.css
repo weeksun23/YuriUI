@@ -1,6 +1,7 @@
 html,body{width: 100%;height: 100%;}
 html{overflow:hidden;}
 body{font-size: 12px;margin:0;overflow:auto;*position:relative;}
+p{margin:0;}
 
 .fl{float: left;}
 .posr{position: relative;}

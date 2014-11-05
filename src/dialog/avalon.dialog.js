@@ -79,7 +79,7 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 		var vmodel = avalon.define(dialogId,function(vm){
 			avalon.mix(vm,options);
 			vm.widgetElement = element;
-			vm.$skipArray = ['widgetElement'];
+			vm.$skipArray = ['widgetElement','resizeByDialogH'];
 			vm.$init = function(){
 				var $el = avalon(element).addClass("dialog ball").css("z-index",getZIndex());
 				isAutoCenter = vmodel.centered;
@@ -125,6 +125,16 @@ define(["avalon.uibase","text!./avalon.dialog.html"],function(avalon,templete){
 				},e);
 			};
 			/****************************方法*****************************/
+			vm.resizeByDialogH = function(dialogH){
+				var ch = element.children;
+				var h = avalon(ch[0]).outerHeight(true);
+				if(ch.length === 3){
+					h += avalon(ch[2]).outerHeight();
+				}
+				var content = avalon(ch[1]);
+				var dH = content.outerHeight() - content.height();
+				vmodel.height = dialogH - h - dH;
+			};
 		});
 		vmodel.$watch("centered",function(r){
 			var $el = avalon(element);

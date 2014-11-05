@@ -23,20 +23,24 @@
         <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
     </a>
     <div title='对话框1' class='hide' ms-widget="dialog,testdialog1,$testdialog1Opts" ms-draggable='$,$draggable'>
-        <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("draggable")'>
-            <i class="btn-icon icon-save" ></i><span class="btn-text">toggledrag</span>
-        </a>
-        <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("centered")'>
-            <i class="btn-icon icon-save" ></i><span class="btn-text">{{centered ? "uncentered" : "centered"}}</span>
-        </a>
-        <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(2)'>
-            <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框2</span>
-        </a>
-        <a class="btn btn-default" href='javascript:void(0)' ms-click='$remove1()' style='margin-top:5px;'>
-            <i class="btn-icon icon-cancel" ></i><span class="btn-text">销毁对话框1</span>
-        </a>
+        <p>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("draggable")'>
+                <i class="btn-icon icon-save" ></i><span class="btn-text">toggledrag</span>
+            </a>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("centered")'>
+                <i class="btn-icon icon-save" ></i><span class="btn-text">{{centered ? "uncentered" : "centered"}}</span>
+            </a>
+        </p>
+        <p class='mt1'>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(2)'>
+                <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框2</span>
+            </a>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$remove1()'>
+                <i class="btn-icon icon-cancel" ></i><span class="btn-text">销毁对话框1</span>
+            </a>
+        </p>
     </div>
-    <div title='对话框2' class='hide' ms-widget="dialog,testdialog2,$testdialog2Opts" ms-draggable>
+    <div title='对话框2' class='hide' ms-widget="dialog,testdialog2,$testdialog2Opts" ms-draggable ms-resizable>
         <h1>我从对话框1中打开，所以在其上面，呵呵</h1>
         <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
             <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
@@ -46,7 +50,7 @@
         <h1>我从对话框2中打开，所以在其上面，呵呵</h1>
     </div>
     <script>
-        require(["dialog/avalon.dialog","draggable/avalon.draggable"], function() {
+        require(["dialog/avalon.dialog","draggable/avalon.draggable","resizable/avalon.resizable"], function() {
             var vmodel = avalon.define("demo",function(vm){
                 vm.draggable = true;
                 vm.$toggle = function(target){
@@ -93,7 +97,14 @@
                         iconCls : "icon-reload"
                     }]
                 };
-                vm.testdialog2Opts = {
+                vm.$testdialog2Opts = {
+                    $resizable : {
+                        onResize : function(e,obj){
+                            if(obj.height){
+                                avalon.vmodels.testdialog2.resizeByDialogH(obj.height);
+                            }
+                        }
+                    },
                     width : 200,
                     iconCls : "icon-reload"
                 };

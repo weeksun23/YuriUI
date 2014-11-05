@@ -7,6 +7,7 @@ define(["avalon.uibase.function"],function(avalon){
 		//The edge of border to be resized.
 		edge : 5,
 		disabled : false,
+        defaultCursor : "default",
 		onStartResize : avalon.noop,
 		onResize : avalon.noop,
 		onStopResize : avalon.noop
@@ -27,51 +28,55 @@ define(["avalon.uibase.function"],function(avalon){
         var cursor;
         var isChanging = false;
         avalon.bind(data.element,"mousemove",function(e){
-        	if(isChanging || options.disabled) return;
-        	var element = this;
-        	var $this = avalon(this);
-        	var offset = $this.offset();
-        	var w = $this.outerWidth();
-        	var h = $this.outerHeight();
-        	var x = e.pageX - offset.left;
-        	var y = e.pageY - offset.top;
-        	var edge = options.edge;
-        	cursor = null;
-        	if(y < edge){
-        		if(x < edge){
-        			//左上角
-        			cursor = "nw-resize";
-        		}else if(x > w - 5){
-        			//右上角
-        			cursor = "ne-resize";
-        		}else{
-        			//中间
-        			cursor = "n-resize";
-        		}
-        	}else if(y > h - 5){
-        		if(x < edge){
-        			//左下角
-        			cursor = "sw-resize";
-        		}else if(x > w - 5){
-        			//右下角
-        			cursor = "se-resize";
-        		}else{
-        			//中间
-        			cursor = "s-resize";
-        		}
-	    	}else{
-	    		if(x < edge){
-	    			//左边
-	    			cursor = "w-resize";
-	    		}else if(x > w - 5){
-	    			//右边
-	    			cursor = 'e-resize';
-	    		}
-	    	}
-	    	this.style.cursor = cursor || "default";
+            if(e.target !== this){
+                return this.style.cursor = options.defaultCursor;
+            }
+        	if(!isChanging && !options.disabled){
+                cursor = null;
+                var element = this;
+                var $this = avalon(this);
+                var offset = $this.offset();
+                var w = $this.outerWidth();
+                var h = $this.outerHeight();
+                var x = e.pageX - offset.left;
+                var y = e.pageY - offset.top;
+                var edge = options.edge;
+                if(y < edge){
+                    if(x < edge){
+                        //左上角
+                        cursor = "nw-resize";
+                    }else if(x > w - 5){
+                        //右上角
+                        cursor = "ne-resize";
+                    }else{
+                        //中间
+                        cursor = "n-resize";
+                    }
+                }else if(y > h - 5){
+                    if(x < edge){
+                        //左下角
+                        cursor = "sw-resize";
+                    }else if(x > w - 5){
+                        //右下角
+                        cursor = "se-resize";
+                    }else{
+                        //中间
+                        cursor = "s-resize";
+                    }
+                }else{
+                    if(x < edge){
+                        //左边
+                        cursor = "w-resize";
+                    }else if(x > w - 5){
+                        //右边
+                        cursor = 'e-resize';
+                    }
+                }
+                this.style.cursor = cursor || "default";
+            }
         });
 		avalon.bind(data.element,"mousedown",function(e){
-			if(!options.disabled && cursor){
+			if(e.target === this && !options.disabled && cursor){
 				e.preventDefault();
 				var element = this;
 				var sX = e.pageX;
@@ -180,6 +185,7 @@ define(["avalon.uibase.function"],function(avalon){
         		});
         		var up = avalon.bind(document,"mouseup",function(e){
         			isChanging = false;
+                    cursor = null;
 	                avalon.unbind(document,"mouseup",up);
 	                avalon.unbind(document,"mousemove",move);
 	                options.onStopResize.call(element,e);
