@@ -7,7 +7,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 		function toggleSelectItem(el){
 			var selected = toggleSelectItem.selected;
 			if(vmodel.multiple){
-
+				
 			}else{
 				var s0 = selected[0];
 				if(el === s0) return;
