@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+    alert(setTimeout(1));
+    alert(setTimeout(1));
+    alert(setTimeout(1));
+        function ajax(){
+            var xmlHttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            var i=0;
+            xmlHttp.onreadystatechange = function(e){
+                console.log(xmlHttp);
+            };
+            //alert(xmlHttp.readyState);
+            xmlHttp.open("GET",'1',true);
+           // xmlHttp.setRequestHeader("sdsdsdsdsdsd","pgsd");
+           // xmlHttp.send();
+        }
+        ajax();
+    </script>
+</body>
+</html>

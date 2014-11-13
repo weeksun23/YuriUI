@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/combobox/avalon.combobox.css">
+    <script src="../src/avalon.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body ms-controller='demo'>
+    <p style='margin:10px;'>
+        <span ms-widget="combobox,test,$testOpts"></span>
+        sdsdsdsd
+    </p>
+    
+    <script>
+        require(["combobox/avalon.combobox"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$testOpts = {
+                    data : [{
+                        value : "1",text : "23deer"
+                    },{
+                        value : "wer",text : "wefwe"
+                    },{
+                        value : "3r33",text : "qw3d"
+                    },{
+                        value : "566",text : "sdvs"
+                    },{
+                        value : "78",text : "sdvew"
+                    }],
+                    value : '3333'
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

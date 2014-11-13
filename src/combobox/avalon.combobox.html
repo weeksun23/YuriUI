@@ -1,0 +1,9 @@
+<span class='combobox-content ball' ms-click='$onClickContent()'>
+    <input type='text' class='combobox-content-input' ms-css-width='width' ms-value='text' ms-attr-readonly='!editable'/> 
+</span><span class='combobox-down ball' ms-click='$onClickDown()'><i class='combobox-down-arrow'></i></span>
+<span tabindex='-1' class='combobox-items ball' ms-css-visibility="isItemsVisible ? 'visible' : 'hidden'" 
+    ms-blur='$onItemsBlur()' ms-click="$onClickItem()" ms-css-width='panelWidth'>
+    <span ms-repeat='data' class='combobox-item' ms-class='combobox-item-selected:el.selected'
+        data-prop-type='item' ms-data-el='el'>MS_OPTIONS_FORMATTER</span>
+</span>
+<input type='hidden' ms-value='value' class='combobox-value'MS_OPTIONS_NAME />

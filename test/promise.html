@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="../src/avalon.js"></script>
+</head>
+<body>
+<script>
+	require("mmPromise.js",function(avalon){
+		var promise = new Promise(function(resolve,reject){
+			setTimeout(function(){
+				resolve("1");
+			},1000);
+		});
+		promise.then(function(){
+			console.log(arguments);
+			return "2";
+		}).then(function(){
+			console.log(arguments);
+			return new Promise(function(resolve){
+				resolve("2-1");
+			}).then(function(){
+				console.log(arguments);
+				return new Promise(function(resolve){
+					resolve("2-1-1");
+				}).then(function(){
+					console.log(arguments);
+					return "3";
+				});
+			});
+		}).then(function(){
+			console.log(arguments);
+		});
+	});
+</script>
+</body>
+</html>
