@@ -19,7 +19,7 @@
 .combobox-multiple-mes{padding: 0 5px;}
 .combobox-down{
 	cursor: pointer;border-left: 0;display: inline-block;height: 20px;width: 20px;vertical-align: middle;
-	position: relative;
+	position: relative;font-size: 0;
 }
 .combobox-down:hover{background-color: #f2f2f2}
 .combobox-down-arrow{

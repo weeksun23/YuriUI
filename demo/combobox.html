@@ -15,25 +15,35 @@
 <body ms-controller='demo'>
     <p style='margin:10px;'>
         <span ms-widget="combobox,test,$testOpts"></span>
+        <button ms-click="$loadData()">loadData</button>
+    </p>
+    <p style='margin:10px;'>
         sdsdsdsd
     </p>
-    
     <script>
         require(["combobox/avalon.combobox"], function() {
             var vmodel = avalon.define("demo",function(vm){
                 vm.$testOpts = {
                     data : [{
-                        value : "1",text : "23deer"
+                        val : "1",text : "23deer"
                     },{
-                        value : "wer",text : "wefwe"
+                        val : "wer",text : "wefwe"
                     },{
-                        value : "3r33",text : "qw3d"
+                        val : "3r33",text : "qw3d"
                     },{
-                        value : "566",text : "sdvs"
+                        val : "566",text : "sdvs"
                     },{
-                        value : "78",text : "sdvew"
+                        val : "78",text : "sdvew"
                     }],
-                    value : '3333'
+                    value : 'wer',
+                    valueField : "val"
+                };
+                vm.$loadData = function(){
+                    avalon.vmodels.test.loadData([{
+                        val : "33",text : "dfdf"
+                    },{
+                        val : "445",text : 'dfee'
+                    }]);
                 };
             });
             avalon.scan();
