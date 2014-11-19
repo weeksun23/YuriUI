@@ -10,7 +10,21 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 		function toggleSelectItem(el){
 			var selected = toggleSelectItem.selected;
 			if(vmodel.multiple){
-				
+				var isSel = false;
+				avalon.each(selected,function(i,item){
+					if(el === item){
+						el.selected = false;
+						selected.splice(i,1);
+						vmodel.values.splice(i,1);
+						isSel = true;
+						return false;
+					}
+				});
+				if(!isSel){
+					selected.push(el);
+					vmodel.values.push(el[vmodel.textField]);
+					el.selected = true;
+				}
 			}else{
 				var s0 = selected[0];
 				if(el === s0) return;
@@ -18,6 +32,14 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 				el.selected = true;
 				selected[0] = el;
 			}
+		}
+		function getSelVals(){
+			var valArr = [];
+			var valueField = vmodel.valueField;
+			avalon.each(toggleSelectItem.selected,function(i,item){
+				valArr.push(item[valueField]);
+			});
+			return valArr.join(",");
 		}
 		toggleSelectItem.selected = [];
 		function getNextEl(el){
@@ -27,19 +49,28 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 			}
 			return next;
 		}
+		function getMultipleEl(){
+			return element.children[0].children[0];
+		}
 		var vmodel = avalon.define(data.comboboxId,function(vm){
 			avalon.mix(vm,options);
 			vm.widgetElement = element;
-			vm.$skipArray = ['widgetElement','onSelect','textField','valueField','width','value',
-			'panelWidth','editable','multiple','formatter','loadData','clear','setValue'];
+			vm.$skipArray = ['widgetElement','onSelect','onUnselect','textField','valueField','width',
+				'panelHeight','editable','multiple','formatter','loadData','clear','setValue'];
 			vm.isItemsVisible = false;
 			vm.text = '';
+			if(vm.multiple){
+				vm.values = [];
+			}
 			vm.$init = function(){
-				avalon(element).addClass("combobox");
+				var $el = avalon(element).addClass("combobox");
 				element.innerHTML = templete
 					.replace("MS_OPTIONS_NAME",element.name ? (" name='" + element.name + "'") : "")
 					.replace("MS_OPTIONS_FORMATTER",vmodel.formatter);
 				avalon.scan(element, vmodel);
+				if(!vmodel.panelWidth){
+					vmodel.panelWidth = $el.width();
+				}
 				vmodel.setValue(vmodel.value);
 			};
 			vm.$onItemsBlur = function(){
@@ -53,10 +84,26 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 			vm.$onClickItem = function(e){
 				avalon.uibase.propagation.call(this,{
 					item : function(e){
-						vmodel.isItemsVisible = false;
-						vmodel.setValue(this["data-el"][vmodel.valueField]);
+						var el = this["data-el"];
+						if(vmodel.multiple){
+							toggleSelectItem(el);
+							avalon(getMultipleEl()).scrollLeft(9999);
+						}else{
+							vmodel.isItemsVisible = false;
+							vmodel.setValue(el[vmodel.valueField]);
+						}
 					}
 				},e);
+			};
+			vm.$onKeydown = function(e){
+				if(!vmodel.multiple) return;
+				var code = e.keyCode;
+				if(code === 37 || code === 39){
+					var $this = avalon(getMultipleEl());
+					var scrollLeft = $this.scrollLeft();
+					scrollLeft += (code === 37 ? -20 : 20);
+					$this.scrollLeft(scrollLeft);
+				}
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = "";
@@ -78,18 +125,43 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 					item.selected = false;
 				});
 				toggleSelectItem.selected = [];
+				vmodel.values = [];
+				vmodel.value = '';
 			};
-			vm.setValue = function(newValue){
+			vm.setValue = function(newValue,unOnSel){
 				var valueField = vmodel.valueField;
+				var multiple = vmodel.multiple;
+				if(multiple){
+					vmodel.clear();
+					if(typeof newValue == 'string'){
+						newValue = newValue.join(",");
+					}
+				}
 				avalon.each(vmodel.data,function(i,item){
-					if(item[valueField] === newValue){
-						vmodel.value = newValue;
-						vmodel.text = item[vmodel.textField];
-						toggleSelectItem(item);
-						vmodel.onSelect.call(this,item);
-						return false;
+					var value = item[valueField];
+					if(multiple){
+						for(var j=0,jj=newValue.length;j<jj;j++){
+							var val = newValue[j];
+							if(value === val){
+								toggleSelectItem(item);
+								newValue.splice(j,1);
+								return false;
+							}
+						}
+					}else{
+						if(value === newValue){
+							vmodel.value = newValue;
+							vmodel.text = item[vmodel.textField];
+							toggleSelectItem(item);
+							!unOnSel && vmodel.onSelect.call(this,item);
+							return false;
+						}
 					}
 				});
+				if(multiple){
+					vmodel.value = getSelVals();
+					avalon(getMultipleEl()).scrollLeft(9999);
+				}
 			};
 		});
 		return vmodel;
@@ -97,6 +169,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 	widget.version = 1.0;
 	widget.defaults = {
 		panelWidth : null,
+		panelHeight : null,
 		width : null,
 		formatter : "{{el.text}}",
 		textField : "text",
@@ -106,6 +179,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 		data : [],
 		value : null,
 		/*事件*/
-		onSelect : avalon.noop
+		onSelect : avalon.noop,
+		onUnselect : avalon.noop
 	};
 });

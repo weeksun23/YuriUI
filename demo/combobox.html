@@ -34,9 +34,20 @@
                         val : "566",text : "sdvs"
                     },{
                         val : "78",text : "sdvew"
+                    },{
+                        val : undefined,text : 'undefined'
+                    },{
+                        val : null,text : 'null'
+                    },{
+                        val : 0, text : '0'
+                    },{
+                        val : '',text : '空'
                     }],
-                    value : 'wer',
-                    valueField : "val"
+                    value : 0,
+                    valueField : "val",
+                    panelHeight : 300,
+                    width : 80,
+                    multiple : false
                 };
                 vm.$loadData = function(){
                     avalon.vmodels.test.loadData([{
