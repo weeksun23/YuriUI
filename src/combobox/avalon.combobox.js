@@ -55,7 +55,10 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 			return next;
 		}
 		function getMultipleEl(){
-			return element.children[0].children[0];
+			return avalon(element.children[0].children[0]);
+		}
+		function scrollMultiple(){
+			getMultipleEl().scrollLeft(9999);
 		}
 		function doSelItem(item,isOnSel){
 			var re = toggleSelectItem(item);
@@ -96,7 +99,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 						var el = this["data-el"];
 						if(vmodel.multiple){
 							doSelItem(el,true);
-							avalon(getMultipleEl()).scrollLeft(9999);
+							scrollMultiple();
 						}else{
 							vmodel.isItemsVisible = false;
 							vmodel.setValue(el[vmodel.valueField],true);
@@ -108,7 +111,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 				if(!vmodel.multiple) return;
 				var code = e.keyCode;
 				if(code === 37 || code === 39){
-					var $this = avalon(getMultipleEl());
+					var $this = getMultipleEl();
 					var scrollLeft = $this.scrollLeft();
 					scrollLeft += (code === 37 ? -20 : 20);
 					$this.scrollLeft(scrollLeft);
@@ -176,7 +179,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 				});
 				if(multiple){
 					vmodel.value = getSelVals();
-					avalon(getMultipleEl()).scrollLeft(9999);
+					scrollMultiple();
 				}
 			};
 		});
