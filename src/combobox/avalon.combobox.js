@@ -149,7 +149,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 					vmodel.clear();
 					if(typeof newValue == 'string'){
 						newValue = newValue.join(",");
-					}else if(typeof newValue == 'number'){
+					}else if(avalon.type(newValue) !== 'array'){
 						newValue = [newValue];
 					}
 				}

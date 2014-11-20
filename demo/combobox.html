@@ -14,15 +14,28 @@
 </head>
 <body ms-controller='demo'>
     <p style='margin:10px;'>
+        单选:
         <span ms-widget="combobox,test,$testOpts"></span>
         <button ms-click="$loadData()">loadData</button>
+        <button ms-click="$methods('test','setValue',5)">setValue</button>
+        <button ms-click="$methods('test','clear')">clear</button>
     </p>
     <p style='margin:10px;'>
-        sdsdsdsd
+        多选:
+        <span ms-widget="combobox,test1,$test1Opts"></span>
+        <button ms-click="$methods('test1','setValue',[0,4,5,'78',null])">setValue</button>
+        <button ms-click="$methods('test1','clear')">clear</button>
     </p>
+
     <script>
         require(["combobox/avalon.combobox"], function() {
             var vmodel = avalon.define("demo",function(vm){
+                vm.$methods = function(uiId,methodName){
+                    var ui = avalon.vmodels[uiId];
+                    var method = ui[methodName];
+                    var args = Array.prototype.slice.call(arguments,2);
+                    method.apply(ui,args);
+                };
                 vm.$testOpts = {
                     data : [{
                         val : 0,text : "23deer"
@@ -50,17 +63,49 @@
                     multiple : false,
                     onSelect : function(el){
                         avalon.log("onSelect",this,el);
-                    },
-                    onUnselect : function(el){
-                        avalon.log("onUnselect",this,el);
                     }
                 };
                 vm.$loadData = function(){
                     avalon.vmodels.test.loadData([{
-                        val : "33",text : "dfdf"
+                        val : 5,text : "dfdf"
                     },{
-                        val : "445",text : 'dfee'
+                        val : "445",text : 'sdvsd'
+                    },{
+                        val : "er",text : 'adsfd'
+                    },{
+                        val : "f33",text : 'sbff'
+                    },{
+                        val : "ff",text : 'efwe'
                     }]);
+                };
+                vm.$test1Opts = {
+                    width : 300,
+                    data : [{
+                        value : 0,text : "23deer"
+                    },{
+                        value : 4,text : "wefwe"
+                    },{
+                        value : 5,text : "qw3d"
+                    },{
+                        value : 3,text : "sdvs"
+                    },{
+                        value : "78",text : "sdvew"
+                    },{
+                        value : undefined,text : 'undefined'
+                    },{
+                        value : null,text : 'null'
+                    },{
+                        value : 99, text : '0'
+                    },{
+                        value : '',text : '空'
+                    }],
+                    multiple : true,
+                    onSelect : function(el){
+                        avalon.log("onSelect",this,el);
+                    },
+                    onUnselect : function(el){
+                        avalon.log("onUnselect",this,el);
+                    }
                 };
             });
             avalon.scan();
