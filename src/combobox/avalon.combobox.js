@@ -7,9 +7,13 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 	var widget = avalon.ui.combobox = function(element, data, vmodels){
 		var options = data.comboboxOptions;
 		initData(options.data);
+		/*
+		选中或反选项 所有选中的项存放在selected数组中
+		*/
 		function toggleSelectItem(el){
 			var selected = toggleSelectItem.selected;
 			if(vmodel.multiple){
+				//当前el是否已选过
 				var isSel = false;
 				avalon.each(selected,function(i,item){
 					if(el === item){
@@ -25,6 +29,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 					vmodel.values.push(el[vmodel.textField]);
 					el.selected = true;
 				}
+				return !isSel;
 			}else{
 				var s0 = selected[0];
 				if(el === s0) return;
@@ -52,6 +57,10 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 		function getMultipleEl(){
 			return element.children[0].children[0];
 		}
+		function doSelItem(item,isOnSel){
+			var re = toggleSelectItem(item);
+			isOnSel && vmodel[re ? "onSelect" : "onUnselect"].call(vmodel,item);
+		}
 		var vmodel = avalon.define(data.comboboxId,function(vm){
 			avalon.mix(vm,options);
 			vm.widgetElement = element;
@@ -69,7 +78,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 					.replace("MS_OPTIONS_FORMATTER",vmodel.formatter);
 				avalon.scan(element, vmodel);
 				if(!vmodel.panelWidth){
-					vmodel.panelWidth = $el.width();
+					vmodel.panelWidth = $el.width() - 2;
 				}
 				vmodel.setValue(vmodel.value);
 			};
@@ -86,11 +95,11 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 					item : function(e){
 						var el = this["data-el"];
 						if(vmodel.multiple){
-							toggleSelectItem(el);
+							doSelItem(el,true);
 							avalon(getMultipleEl()).scrollLeft(9999);
 						}else{
 							vmodel.isItemsVisible = false;
-							vmodel.setValue(el[vmodel.valueField]);
+							vmodel.setValue(el[vmodel.valueField],true);
 						}
 					}
 				},e);
@@ -128,13 +137,20 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 				vmodel.values = [];
 				vmodel.value = '';
 			};
-			vm.setValue = function(newValue,unOnSel){
+			/*
+			选中或反选（multiple为true）项方法
+			newValue 目标项的value值
+			isOnSel 是否触发onSelect onUnselect事件
+			*/
+			vm.setValue = function(newValue,isOnSel){
 				var valueField = vmodel.valueField;
 				var multiple = vmodel.multiple;
 				if(multiple){
 					vmodel.clear();
 					if(typeof newValue == 'string'){
 						newValue = newValue.join(",");
+					}else if(typeof newValue == 'number'){
+						newValue = [newValue];
 					}
 				}
 				avalon.each(vmodel.data,function(i,item){
@@ -143,7 +159,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 						for(var j=0,jj=newValue.length;j<jj;j++){
 							var val = newValue[j];
 							if(value === val){
-								toggleSelectItem(item);
+								doSelItem(item,isOnSel);
 								newValue.splice(j,1);
 								return false;
 							}
@@ -153,7 +169,7 @@ define(["avalon.uibase","text!./avalon.combobox.html"],function(avalon,templete)
 							vmodel.value = newValue;
 							vmodel.text = item[vmodel.textField];
 							toggleSelectItem(item);
-							!unOnSel && vmodel.onSelect.call(this,item);
+							isOnSel && vmodel.onSelect.call(vmodel,item);
 							return false;
 						}
 					}

@@ -25,13 +25,13 @@
             var vmodel = avalon.define("demo",function(vm){
                 vm.$testOpts = {
                     data : [{
-                        val : "1",text : "23deer"
+                        val : 0,text : "23deer"
                     },{
-                        val : "wer",text : "wefwe"
+                        val : 4,text : "wefwe"
                     },{
-                        val : "3r33",text : "qw3d"
+                        val : 5,text : "qw3d"
                     },{
-                        val : "566",text : "sdvs"
+                        val : 3,text : "sdvs"
                     },{
                         val : "78",text : "sdvew"
                     },{
@@ -39,7 +39,7 @@
                     },{
                         val : null,text : 'null'
                     },{
-                        val : 0, text : '0'
+                        val : 99, text : '0'
                     },{
                         val : '',text : '空'
                     }],
@@ -47,7 +47,13 @@
                     valueField : "val",
                     panelHeight : 300,
                     width : 80,
-                    multiple : false
+                    multiple : false,
+                    onSelect : function(el){
+                        avalon.log("onSelect",this,el);
+                    },
+                    onUnselect : function(el){
+                        avalon.log("onUnselect",this,el);
+                    }
                 };
                 vm.$loadData = function(){
                     avalon.vmodels.test.loadData([{
