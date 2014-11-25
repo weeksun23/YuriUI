@@ -4,7 +4,6 @@ define(["avalon.uibase.function"],function(avalon){
 		minHeight : 20,
 		maxWidth : null,
 		maxHeight : null,
-		//The edge of border to be resized.
 		edge : 5,
 		disabled : false,
         defaultCursor : "default",
