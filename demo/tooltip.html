@@ -9,23 +9,27 @@
     <link rel="stylesheet" type="text/css" href="../src/base.css">
     <link rel="stylesheet" type="text/css" href="../src/tooltip/avalon.tooltip.css">
     <script src="../src/avalon.js"></script>
+    <style type="text/css">
+    </style>
 </head>
-<body ms-controller='demo' style="padding:30px">
-    <p>
-        tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou">left</a>
-    </p>
-    <p>
-        tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou" 
-        data-tooltip-position='top'>top</a>
-    </p>
-    <p>
-        tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou"
-        data-tooltip-position='right'>right</a>
-    </p>
-    <p>
-        tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou"
-        data-tooltip-position='bottom'>bottom</a>
-    </p>
+<body ms-controller='demo'>
+    <div style='margin:30px;'>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou">left</a>
+        </p>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou" 
+            data-tooltip-position='top'>top</a>
+        </p>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou"
+            data-tooltip-position='right'>right</a>
+        </p>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="dian ni laodou"
+            data-tooltip-position='bottom'>bottom</a>
+        </p>
+    </div>
     <div style='background-color:#ccc;width:250px;height:200px;padding:10px;' ms-widget='tooltip,$,$opts'>
         <button ms-widget='tooltip' data-tooltip-content='删除后，同时删除动态生成的dom tip' 
         onclick="this.parentNode.parentNode.removeChild(this.parentNode)">remove me</button>
