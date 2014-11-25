@@ -30,19 +30,19 @@ define(["avalon"],function(avalon){
 					switch(vmodel.position){
 						case "top" : 
 							vmodel.left = offset.left + ($this.outerWidth() - $tip.outerWidth()) / 2;
-							vmodel.top = offset.top - $tip.outerHeight() - arrowWidth;
+							vmodel.top = offset.top - $tip.outerHeight();
 							break;
 						case "bottom" : 
 							vmodel.left = offset.left + ($this.outerWidth() - $tip.outerWidth()) / 2;
-							vmodel.top = offset.top + $this.outerHeight() + arrowWidth;
+							vmodel.top = offset.top + $this.outerHeight();
 							break;
 						case "left" : 
 							vmodel.top = offset.top + ($this.outerHeight() - $tip.outerHeight()) / 2;
-							vmodel.left = offset.left - $tip.outerWidth() - arrowWidth;
+							vmodel.left = offset.left - $tip.outerWidth();
 							break;
 						case "right" : 
 							vmodel.top = offset.top + ($this.outerHeight() - $tip.outerHeight()) / 2;
-							vmodel.left = offset.left + $this.outerWidth() + arrowWidth;
+							vmodel.left = offset.left + $this.outerWidth();
 							break;
 					}
 				});

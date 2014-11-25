@@ -4,6 +4,11 @@
 .tooltip-innerarrow{z-index: 10001}
 .tooltip-outerarrow{z-index: 10000}
 
+.tooltip-left{margin-right: 9px}
+.tooltip-right{margin-left: 9px}
+.tooltip-top{margin-top: -9px}
+.tooltip-bottom{margin-top: 9px}
+
 .tooltip-left .tooltip-arrow,
 .tooltip-right .tooltip-arrow{
 	border-top-color: transparent;border-bottom-color: transparent;top:50%;
