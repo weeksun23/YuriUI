@@ -4,7 +4,7 @@
 .tooltip-innerarrow{z-index: 10001}
 .tooltip-outerarrow{z-index: 10000}
 
-.tooltip-left{margin-right: 9px}
+.tooltip-left{margin-left: -9px}
 .tooltip-right{margin-left: 9px}
 .tooltip-top{margin-top: -9px}
 .tooltip-bottom{margin-top: 9px}
@@ -22,7 +22,6 @@
 .tooltip-left .tooltip-arrow{border-width: 6px 0 6px 9px;}
 .tooltip-left .tooltip-innerarrow{border-left-color: #fff;right: -7px;}
 .tooltip-left .tooltip-outerarrow{right: -9px;}
-
 
 .tooltip-top .tooltip-arrow,
 .tooltip-bottom .tooltip-arrow{

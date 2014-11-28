@@ -5,7 +5,6 @@ define(["avalon"],function(avalon){
        	"<div class='tooltip-innerarrow tooltip-arrow ball'></div>" +
         "<div class='tooltip-outerarrow tooltip-arrow ball'></div>" +
     "</div>";
-    var arrowWidth = 9;
 	var widget = avalon.ui.tooltip = function(element, data, vmodels){
 		var options = data.tooltipOptions;
 		var vmodel = avalon.define(data.tooltipId,function(vm){
@@ -22,7 +21,8 @@ define(["avalon"],function(avalon){
 				var tipNode = vmodel.tipElement = div.children[0];
 				document.body.appendChild(tipNode);
 				avalon.scan(tipNode, vmodel);
-				avalon(element).bind("mouseover",function(){
+				var $el = avalon(element);
+				$el.bind("mouseover",function(){
 					vmodel.show = true;
 					var $this = avalon(this);
 					var $tip = avalon(vmodel.tipElement);
@@ -46,7 +46,7 @@ define(["avalon"],function(avalon){
 							break;
 					}
 				});
-				avalon(element).bind("mouseout",function(){
+				$el.bind("mouseout",function(){
 					vmodel.show = false;
 				});
 				avalon.scan(element, vmodel);
