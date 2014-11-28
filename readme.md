@@ -7,6 +7,7 @@
 + menu
 + tab
 + tree
++ tooltip
 
 ##功能组件
 + draggable
