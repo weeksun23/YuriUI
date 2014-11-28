@@ -54,7 +54,6 @@ define(["avalon"],function(avalon){
 			vm.$remove = function(){
 				document.body.removeChild(vmodel.tipElement);
 			};
-			/****************************方法*****************************/
 		});
 		return vmodel;
 	};
