@@ -1,0 +1,30 @@
+<div ms-if='title' class='panel-title bbottom'>
+    <span class='panel-title-content'>
+        <span>{{title}}</span>
+    </span>
+</div>
+<div ms-if='toolbar' class='datagrid-bar bbottom'>
+    <a ms-repeat='toolbar' class="btn plain btn-default" href='javascript:void(0)'>
+        <i class="btn-icon" ms-class='{{el.iconCls}}'></i><span class="btn-text">el.text</span>
+    </a>
+</div>
+<div class='ofa' ms-css-height='height'>
+   <table class='datagrid-main'>
+        <thead ms-if='columns' ms-visible='showHeader'>
+            <tr class='bbottom'>
+                <th ms-if='rowNumbers' class='td-first'></th>
+                <th ms-repeat='columns' ms-class-1='bright:$last' ms-class='td-first:!rowNumbers && $first'>
+                    <div ms-css-width='el.width'>{{el.title}}</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody ms-if='columns && data'>
+            <tr ms-repeat-row='data' ms-class='bbottom:$index !== data.length - 1 || height'>
+                <td class='tac td-first' ms-if='rowNumbers'>{{$index + 1}}</td>
+                <td ms-repeat='columns' ms-class-1='bright:$last' ms-class='td-first:!rowNumbers && $first'>
+                    {{row[el.field]}}
+                </td>
+            </tr>
+        </tbody>
+    </table> 
+</div>

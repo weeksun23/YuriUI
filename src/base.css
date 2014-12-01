@@ -15,7 +15,10 @@ a:focus {
 .hide{display: none;}
 .ofh{overflow: hidden;}
 .ofa{overflow: auto;}
+.tac{text-align: center;}
 .ball{border:1px solid #d2d2d2;}
+.bbottom{border-bottom: 1px solid #d2d2d2}
+.bright{border-right:1px solid #d2d2d2;}
 
 .arrow{background-image: url('images/arrows.png');background-repeat: no-repeat;height: 16px;width: 16px;}
 .arrow-top{background-position: -16px -16px;}

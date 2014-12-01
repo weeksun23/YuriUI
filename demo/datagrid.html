@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/btn/avalon.btn.css">
+    <link rel="stylesheet" type="text/css" href="../src/datagrid/avalon.datagrid.css">
+    <script src="../src/avalon.js"></script>
+</head>
+<body ms-controller='demo'>
+    <div style='margin:10px;'>
+        <div ms-widget='datagrid,usergrid,$opts'></div>
+    </div>
+    <script>
+        require(["datagrid/avalon.datagrid"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$opts = {
+                    title : "成绩单",
+                    columns : [
+                        {title : "班级",field : "grade",width : 100},
+                        {title : "姓名",field : "name",width : 200},
+                        {title : "成绩",field : "score",width :150}
+                    ],
+                    data : [{
+                        grade : "2-1",name : "丁洁琳111",score : "0"
+                    },{
+                        grade : "2-1",name : "丁洁琳",score : "0"
+                    },{
+                        grade : "2-1",name : "丁洁琳",score : "0"
+                    },{
+                        grade : "2-1",name : "丁洁琳",score : "0"
+                    },{
+                        grade : "2-1",name : "丁洁琳",score : "0"
+                    },{
+                        grade : "2-1",name : "丁洁琳",score : "0"
+                    }],
+                    rowNumbers : true,
+                    width : 400,
+                    height : 400
+                }
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

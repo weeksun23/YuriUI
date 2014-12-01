@@ -1,0 +1,9 @@
+.datagrid{}
+.datagrid .panel-title-content>span{font-weight: bolder;color: #777;font-size: 14px;}
+.datagrid-bar{padding:2px;font-size: 0;}
+.datagrid-main{border-collapse: collapse;table-layout: fixed;}
+.datagrid-main th,.datagrid-main td{border-left: 1px dotted #ccc;padding: 5px;}
+.datagrid-main th{font-weight: normal;text-align: left;}
+.datagrid-main tbody tr:hover,
+.datagrid-main th:hover{background-color: #f0f0f0}
+.datagrid-main .td-first{border-left: 0;}
