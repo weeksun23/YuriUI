@@ -1,9 +1,32 @@
-.datagrid{}
+.datagrid table{border-collapse: collapse;border-spacing: 0;}
 .datagrid .panel-title-content>span{font-weight: bolder;color: #777;font-size: 14px;}
 .datagrid-bar{padding:2px;font-size: 0;}
-.datagrid-main{border-collapse: collapse;table-layout: fixed;}
-.datagrid-main th,.datagrid-main td{border-left: 1px dotted #ccc;padding: 5px;}
-.datagrid-main th{font-weight: normal;text-align: left;}
-.datagrid-main tbody tr:hover,
-.datagrid-main th:hover{background-color: #f0f0f0}
+
+.datagrid-main{position: relative;}
+.datagrid-view1{position: absolute;height: 100%;left:0;top:0;border-right:1px dotted #ccc;}
+.datagrid-view2{height: 100%;}
+
 .datagrid-main .td-first{border-left: 0;}
+.datagrid-main .td-last{border-right-style: dotted;}
+
+.datagrid-header table{border:0;}
+.datagrid-header th{
+	border-bottom: 1px solid #ccc;font-weight: normal;text-align: left;
+	border-left: 1px dotted #ccc;padding:0 5px;
+}
+/*rownumber*/
+.datagrid-header .datagrid-td-rownumber{border-left: 0;}
+.datagrid-header .datagrid-td-rownumber:hover,.datagrid-td-rownumber{background-color: #fff;}
+
+.datagrid-view2 .datagrid-body{overflow: auto;}
+.datagrid-view2 .datagrid-header{overflow: hidden;}
+.datagrid-body td{
+	border-left: 1px dotted #ccc;padding: 0 5px;border-bottom: 1px dotted #ccc;
+	white-space: nowrap;overflow: hidden;
+}
+.datagrid-body tr.odd{background-color: #f2f2f2}
+.datagrid-header th:hover,
+.datagrid-body tr.hover{background-color: #EAF2FF}
+.datagrid-body tr.selected,
+.datagrid-body tr.selected:hover{background-color: #FFE48D}
+

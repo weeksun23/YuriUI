@@ -18,27 +18,28 @@
     <script>
         require(["datagrid/avalon.datagrid"], function() {
             var vmodel = avalon.define("demo",function(vm){
+                var data = [];
+                for(var i=0;i<50;i++){
+                    data.push({
+                        grade : "2-" + i,
+                        name : 'fkiguooui',
+                        score : 33
+                    });
+                }
                 vm.$opts = {
                     title : "成绩单",
                     columns : [
-                        {title : "班级",field : "grade",width : 100},
+                        {title : "班级",field : "grade",width : 100,
+                            formatter : function(i,v,r){
+                                return v;
+                            }
+                        },
                         {title : "姓名",field : "name",width : 200},
                         {title : "成绩",field : "score",width :150}
                     ],
-                    data : [{
-                        grade : "2-1",name : "丁洁琳111",score : "0"
-                    },{
-                        grade : "2-1",name : "丁洁琳",score : "0"
-                    },{
-                        grade : "2-1",name : "丁洁琳",score : "0"
-                    },{
-                        grade : "2-1",name : "丁洁琳",score : "0"
-                    },{
-                        grade : "2-1",name : "丁洁琳",score : "0"
-                    },{
-                        grade : "2-1",name : "丁洁琳",score : "0"
-                    }],
+                    data : data,
                     rowNumbers : true,
+                    singleSelect : true,
                     width : 400,
                     height : 400
                 }
