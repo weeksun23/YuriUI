@@ -34,22 +34,33 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 			vm.widgetElement = element;
 			vm.$skipArray = ['widgetElement','toolbar'];
 			vm.$init = function(){
-				avalon(element).addClass("datagrid ball");
+				var $el = avalon(element);
+				$el.addClass("datagrid ball");
 				element.setAttribute("ms-css-width","width");
 				element.setAttribute("ms-css-height","height");
 				element.innerHTML = templete;
 				var t = new Date;
 				avalon.scan(element, vmodel);
 				avalon.log(new Date - t);
-				//reset datagrid-main marginLeft
+				
+				var h = 0;
+				var $main;
+				var view2;
+				var view1;
 				avalon.each(element.children,function(i,el){
-					if(avalon(el).hasClass("datagrid-main")){
+					var $el = avalon(el);
+					if($el.hasClass("datagrid-main")){
 						var ch = el.children;
-						ch[1].style.marginLeft = avalon(ch[0]).outerWidth() + "px";
-						return false;
+						view2 = ch[1];
+						view2.style.marginLeft = avalon(view1 = ch[0]).outerWidth() + "px";
+						$main = $el;
+					}else if(vmodel.height){
+						h += $el.outerHeight();
 					}
 				});
-				
+				var bodyH = $el.height() - h - avalon(view2.children[0]).outerHeight();
+				view2.children[1].style.height = bodyH + 'px';
+				view1.children[1].style.height = bodyH + 'px';
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = ""
