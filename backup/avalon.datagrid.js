@@ -10,26 +10,40 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 			_height : null
 		},data);
 	}
-	function resizeTrHeight(vmodel){
-		if(vmodel.frozenColumns || vmodel.rowNumbers){
-			var mainElement = vmodel.mainElement;
-			var ch = mainElement.children;
-			var g = "getElementsByTagName";
-			var view1trs = ch[0][g]("tbody")[0][g]("tr");
-			var view2trs = ch[1][g]("tbody")[0][g]("tr");
-			avalon.each(view2trs,function(i,tr){
-				var $view2tr = avalon(tr);
-				var $view1tr = avalon(view1trs[i]);
-				var h1 = $view1tr.height();
-				var h2 = $view2tr.height();
-				if(h1 > h2){
-					$view2tr.height(h1);
-				}else if(h2 > h1){
-					$view1tr.height(h2);
+	function resizeTdWidth(vmodel){
+		var columns = vmodel.columns;
+		if(!columns) return;
+		var mainElement = vmodel.mainElement;
+		var frozenColumns = vmodel.frozenColumns;
+		var hasFrozen = frozenColumns && frozenColumns.length > 0;
+		var ch = mainElement.children;
+		var len = ch.length;
+		var g = 'getElementsByTagName';
+		avalon.each(ch,function(i,el){
+			var tables = el[g]("table");
+			var target;
+			if(len > 1 && i === 0){
+				if(!hasFrozen) return;
+				target = frozenColumns;
+			}else{
+				target = columns;
+			}
+			var tr0 = tables[1][g]('tr')[0];
+			if(tr0){
+				var tdFields = tr0.children;
+			}
+			var k = 0;
+			avalon.each(tables[0][g]('th'),function(j,th){
+				var $th = avalon(th);
+				if($th.hasClass('th-field') && !target[k].width){
+					avalon.log($th.width(),tdFields ? avalon(tdFields[k]).width() : 0);
+					target[k].width = Math.max($th.width() + 5,tdFields ? avalon(tdFields[k]).width() : 0);
+					k++;
 				}
 			});
-		}
+		});
 	}
+
 	var widget = avalon.ui.datagrid = function(element, data, vmodels){
 		var options = data.datagridOptions;
 		initData(options.data);
@@ -58,7 +72,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		var vmodel = avalon.define(data.datagridId,function(vm){
 			avalon.mix(vm,options);
 			vm.widgetElement = element;
-			vm.$skipArray = ['mainElement','widgetElement','toolbar','columns','frozenColumns','rowNumbers'];
+			vm.$skipArray = ['mainElement','widgetElement','toolbar','rowNumbers'];
 			vm.headerHeight = null;
 			vm.$init = function(){
 				var $el = avalon(element);
@@ -99,21 +113,8 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 				if(view1){
 					view1.children[1].style.height = bodyH + 'px';
 				}
-				resizeTrHeight(vmodel);
-			};
-			vm.$scroll = function(e){
-				var $this = avalon(this);
-				avalon(this.parentNode.children[0]).scrollLeft($this.scrollLeft());
-				if(vmodel.rowNumbers || vmodel.frozenColumns){
-					var top = $this.scrollTop();
-					avalon.each(vmodel.mainElement.getElementsByTagName("div"),function(i,el){
-						var $el = avalon(el);
-						if($el.hasClass("datagrid-body")){
-							$el.scrollTop(top);
-							return false;
-						}
-					});
-				}
+
+				resizeTdWidth(vmodel);
 			};
 			vm.$remove = function(){
 				element.innerHTML = element.textContent = ""
@@ -149,6 +150,6 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		title : "",
 		field : null,
 		formatter : null,
-		width : 100
+		width : null
 	};
 });

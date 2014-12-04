@@ -23,19 +23,21 @@
                     data.push({
                         grade : "2-" + i,
                         name : 'fkiguooui',
-                        score : 33
+                        score : 33,
+                        asd : "fvfvfvfer"
                     });
                 }
                 vm.$opts = {
                     title : "成绩单",
                     columns : [
-                        {title : "班级",field : "grade",width : 100,
+                        {title : "班级",field : "grade",
                             formatter : function(i,v,r){
                                 return v;
                             }
                         },
-                        {title : "姓名",field : "name",width : 200},
-                        {title : "成绩",field : "score",width :150}
+                        {title : "姓名",field : "name"},
+                        {title : "成绩",field : "score"},
+                        {title : "sfdfdf",field : "asd"}
                     ],
                     data : data,
                     rowNumbers : true,

@@ -1,49 +1,31 @@
 <div ms-if='title' class='panel-title bbottom'>
     <span class='panel-title-content'>
-        <span>{{title}}</span>
+        <span>{{title | html}}</span>
     </span>
 </div>
 <div ms-if='toolbar' class='datagrid-bar bbottom'>
     <a ms-repeat='toolbar' class="btn plain btn-default" href='javascript:void(0)'>
-        <i class="btn-icon" ms-class='{{el.iconCls}}'></i><span class="btn-text">el.text</span>
+        <i class="btn-icon" ms-class='{{el.iconCls}}'></i><span class="btn-text">{{el.text}}</span>
     </a>
 </div>
 <div class='datagrid-main'>
+    <!-- view1 rowNumbers frozenColumns -->
     <div class='datagrid-view1' ms-if='rowNumbers || frozenColumns'>
-        <table class='datagrid-header' ms-visible='showHeader'>
-            <thead>
-                <tr ms-css-height='headerHeight'>
-                    <th class='bbottom datagrid-td-rownumber td-first' ms-if='rowNumbers'>
-                        <span class='vbh'>{{data.length}}</span>
-                    </th>
-                </tr>
-            </thead>
-        </table>
-        <div class='datagrid-body ofh'>
-            <table>
-                <tbody ms-if='columns && data' ms-click='$onClickBody()'>
-                    <tr ms-repeat-row='data' ms-css-height='row._height' 
-                        ms-data-index='$index' data-prop-type='row' 
-                        ms-class-1='odd:striped && $index % 2 !== 0' 
-                        ms-class-2='selected:row._selected'
-                        ms-class-3='hover:row._hover' 
-                        ms-mouseenter='$hoverRow($index,true)' 
-                        ms-mouseleave='$hoverRow($index,false)'>
-                        <td class='tac datagrid-td-rownumber td-first' ms-if='rowNumbers'>{{$index + 1}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class='datagrid-view2 ofa'>
-        <div class='datagrid-header' ms-if='columns' ms-visible='showHeader'>
+        <div class='datagrid-header' ms-visible='showHeader'>
             <table>
                 <thead>
                     <tr ms-css-height='headerHeight'>
-                        <th ms-repeat='columns' class='bbottom' 
-                            ms-class-1='bright td-last:$last' ms-class='td-first:$first'>
-                            <div class='datagrid-main-td' ms-css-width='el.width' ms-css-text-align='el.align'>
-                                {{el.title}}
+                        <th class='bbottom datagrid-td-rownumber td-first' ms-if='rowNumbers'>
+                            <span class='vbh'>{{data.length}}</span>
+                        </th>
+                        <th ms-if='frozenColumns' 
+                            ms-repeat='frozenColumns' 
+                            class='bbottom' 
+                            ms-class-2='th-field:el.field'
+                            ms-class-1='bright td-last:$last' 
+                            ms-class='td-first:$first'>
+                            <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
+                                {{el.title | html}}
                             </div>
                         </th>
                     </tr>
@@ -51,18 +33,69 @@
             </table>
         </div>
         <div class='datagrid-body'>
+            <div>
+                <table>
+                    <tbody ms-if='(columns || frozenColumns) && data' ms-click='$onClickBody()'>
+                        <tr ms-repeat-row='data' ms-css-height='row._height' 
+                            ms-data-index='$index' data-prop-type='row' 
+                            ms-class-1='odd:striped && $index % 2 !== 0' 
+                            ms-class-2='selected:row._selected'
+                            ms-class-3='hover:row._hover' 
+                            ms-mouseenter='$hoverRow($index,true)' 
+                            ms-mouseleave='$hoverRow($index,false)'>
+                            <td class='tac datagrid-td-rownumber td-first' ms-if='rowNumbers'>{{$index + 1}}</td>
+                            <td ms-if='frozenColumns' 
+                                ms-repeat='frozenColumns' 
+                                ms-class-1='bright td-last:$last' 
+                                ms-class='td-first:$first' 
+                                ms-class-2='td-field:el.field'>
+                                <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
+                                    {{el.formatter ? el.formatter($outer.$index,row[el.field],row) : row[el.field] | html}}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- view2 columns -->
+    <div class='datagrid-view2'>
+        <div class='datagrid-header' ms-if='columns' ms-visible='showHeader'>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th ms-repeat='columns' 
+                                class='bbottom' 
+                                ms-class-2='th-field:el.field'
+                                ms-class-1='bright td-last:$last' 
+                                ms-class='td-first:$first'>
+                                <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
+                                    {{el.title | html}}
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class='datagrid-body' ms-scroll='$scroll()'>
             <table>
                 <tbody ms-if='columns && data' ms-click='$onClickBody()'>
-                    <tr ms-repeat-row='data' ms-css-height='row._height' 
+                    <tr ms-repeat-row='data' ms-css-height='row._height'
                         ms-data-index='$index' data-prop-type='row' 
                         ms-class-1='odd:striped && $index % 2 !== 0' 
                         ms-class-2='selected:row._selected'
                         ms-class-3='hover:row._hover' 
                         ms-mouseenter='$hoverRow($index,true)' 
                         ms-mouseleave='$hoverRow($index,false)'>
-                        <td ms-repeat='columns' ms-class-1='bright td-last:$last' ms-class='td-first:$first'>
-                            <div class='datagrid-main-td' ms-css-width='el.width' ms-css-text-align='el.align'>
-                                {{el.formatter ? el.formatter($outer.$index,row[el.field],row) : row[el.field]}}
+                        <td ms-repeat='columns' 
+                            ms-class-1='bright td-last:$last' 
+                            ms-class-2='td-field:el.field'
+                            ms-class='td-first:$first'>
+                            <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
+                                {{el.formatter ? el.formatter($outer.$index,row[el.field],row) : row[el.field] | html}}
                             </div>
                         </td>
                     </tr>

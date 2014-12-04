@@ -3,6 +3,8 @@
 .datagrid-bar{padding:2px;font-size: 0;}
 
 .datagrid-main{position: relative;}
+.datagrid-main-cell{overflow: hidden;}
+.datagrid-main td,.datagrid-main th{padding:5px;}
 .datagrid-view1{position: absolute;height: 100%;left:0;top:0;border-right:1px dotted #ccc;}
 .datagrid-view2{height: 100%;}
 
@@ -12,17 +14,19 @@
 .datagrid-header table{border:0;}
 .datagrid-header th{
 	border-bottom: 1px solid #ccc;font-weight: normal;text-align: left;
-	border-left: 1px dotted #ccc;padding:0 5px;
+	border-left: 1px dotted #ccc;
 }
 /*rownumber*/
 .datagrid-header .datagrid-td-rownumber{border-left: 0;}
 .datagrid-header .datagrid-td-rownumber:hover,.datagrid-td-rownumber{background-color: #fff;}
 
+.datagrid-view1 .datagrid-body{overflow: hidden;}
+.datagrid-view1 .datagrid-body>div{height: 10000px;}
 .datagrid-view2 .datagrid-body{overflow: auto;}
 .datagrid-view2 .datagrid-header{overflow: hidden;}
+.datagrid-view2 .datagrid-header>div{width: 10000px}
 .datagrid-body td{
-	border-left: 1px dotted #ccc;padding: 0 5px;border-bottom: 1px dotted #ccc;
-	white-space: nowrap;overflow: hidden;
+	border-left: 1px dotted #ccc;border-bottom: 1px dotted #ccc;
 }
 .datagrid-body tr.odd{background-color: #f2f2f2}
 .datagrid-header th:hover,
