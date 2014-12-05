@@ -8,6 +8,7 @@
 + tab
 + tree
 + tooltip
++ datagrid
 
 ##功能组件
 + draggable

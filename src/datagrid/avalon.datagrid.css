@@ -1,6 +1,7 @@
 .datagrid table{border-collapse: collapse;border-spacing: 0;}
 .datagrid .panel-title-content>span{font-weight: bolder;color: #777;font-size: 14px;}
-.datagrid-bar{padding:2px;font-size: 0;}
+.datagrid-bar{padding:2px;overflow: auto;}
+.datagrid-bar-btns>a{margin-right: 3px}
 
 .datagrid-main{position: relative;}
 .datagrid-main-cell{overflow: hidden;}

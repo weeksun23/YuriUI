@@ -13,7 +13,15 @@
 </head>
 <body ms-controller='demo'>
     <div style='margin:10px;'>
-        <div ms-widget='datagrid,usergrid,$opts'></div>
+        <div ms-widget='datagrid,usergrid,$opts'>
+            <div class='datagrid-bar'>
+                <p>第一行测试</p>
+                <p>
+                <label class='vam'>姓名:</label><input type='text' class='vam'/>
+                <a class='btn btn-default' href='javascript:void(0)'><i class="btn-icon icon-search"></i>搜索</a>
+                </p>
+            </div>
+        </div>
     </div>
     <script>
         require(["datagrid/avalon.datagrid"], function() {
@@ -31,7 +39,7 @@
                 vm.$opts = {
                     title : "成绩单",
                     columns : [
-                        {title : "班级",field : "grade",
+                        {title : "班级",field : "grade",align : 'left',
                             formatter : function(i,v,r){
                                 return v;
                             }
@@ -43,10 +51,19 @@
                     frozenColumns : [
                         {title : "a1",field : "a1"}
                     ],
+                    toolbar : [{
+                        text : "hello",
+                        iconCls : "icon-save"
+                    },{
+                        text : "hello",
+                        iconCls : "icon-save"
+                    },{
+                        text : "hello",
+                        iconCls : "icon-save"
+                    }],
                     data : data,
                     rowNumbers : true,
                     singleSelect : true,
-                    width : 300,
                     height : 400
                 }
             });

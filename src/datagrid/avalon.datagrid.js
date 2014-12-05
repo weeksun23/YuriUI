@@ -32,6 +32,14 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 	}
 	var widget = avalon.ui.datagrid = function(element, data, vmodels){
 		var options = data.datagridOptions;
+		if(!options.toolbarHtml){
+			avalon.each(element.children,function(i,item){
+				if(avalon(item).hasClass('datagrid-bar')){
+					options.toolbarHtml = item.innerHTML;
+					return false;
+				}
+			});
+		}
 		initData(options.data);
 		initColumns(options.columns);
 		initColumns(options.frozenColumns);
@@ -58,6 +66,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		var vmodel = avalon.define(data.datagridId,function(vm){
 			avalon.mix(vm,options);
 			vm.widgetElement = element;
+			vm.mainElement = null;
 			vm.$skipArray = ['mainElement','widgetElement','toolbar','columns','frozenColumns','rowNumbers'];
 			vm.headerHeight = null;
 			vm.$init = function(){
@@ -66,7 +75,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 				element.setAttribute("ms-css-width","width");
 				element.setAttribute("ms-css-height","height");
 				element.innerHTML = templete;
-
+				//测试渲染时间
 				var t = new Date;
 				avalon.scan(element, vmodel);
 				avalon.log(new Date - t);
@@ -92,6 +101,9 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 						$main = $el;
 					}else{
 						h += $el.outerHeight();
+						if($el.hasClass('datagrid-bar')){
+							$el.height($el.height());
+						}
 					}
 				});
 				var bodyH = $el.height() - h - avalon(view2.children[0]).outerHeight();
@@ -143,7 +155,8 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		height : null,
 		singleSelect : false,
 		striped : true,
-		frozenColumns : []
+		frozenColumns : [],
+		toolbarHtml : ""
 	};
 	widget.columnsDefaults = {
 		title : "",
