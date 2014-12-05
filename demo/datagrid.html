@@ -24,7 +24,8 @@
                         grade : "2-" + i,
                         name : 'fkiguooui',
                         score : 33,
-                        asd : "fvfvfvfer"
+                        asd : "fvfvfvfer",
+                        a1 : 23
                     });
                 }
                 vm.$opts = {
@@ -39,10 +40,13 @@
                         {title : "成绩",field : "score"},
                         {title : "sfdfdf",field : "asd"}
                     ],
+                    frozenColumns : [
+                        {title : "a1",field : "a1"}
+                    ],
                     data : data,
                     rowNumbers : true,
                     singleSelect : true,
-                    width : 400,
+                    width : 300,
                     height : 400
                 }
             });

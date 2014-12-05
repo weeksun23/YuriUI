@@ -20,6 +20,7 @@ a:focus {
 .ball{border:1px solid #d2d2d2;}
 .bbottom{border-bottom: 1px solid #d2d2d2}
 .bright{border-right:1px solid #d2d2d2;}
+.bleft{border-left: 1px solid #d2d2d2}
 .h100{height: 100%;}
 
 .arrow{background-image: url('images/arrows.png');background-repeat: no-repeat;height: 16px;width: 16px;}

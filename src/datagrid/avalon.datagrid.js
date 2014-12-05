@@ -90,7 +90,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 							view2.style.marginLeft = avalon(view1).outerWidth() + "px";
 						}
 						$main = $el;
-					}else if(vmodel.height){
+					}else{
 						h += $el.outerHeight();
 					}
 				});
@@ -149,6 +149,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		title : "",
 		field : null,
 		formatter : null,
-		width : 100
+		align : 'center',
+		width : 80
 	};
 });

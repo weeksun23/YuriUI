@@ -9,7 +9,6 @@
 .datagrid-view2{height: 100%;}
 
 .datagrid-main .td-first{border-left: 0;}
-.datagrid-main .td-last{border-right-style: dotted;}
 
 .datagrid-header table{border:0;}
 .datagrid-header th{
@@ -25,6 +24,7 @@
 .datagrid-view2 .datagrid-body{overflow: auto;}
 .datagrid-view2 .datagrid-header{overflow: hidden;}
 .datagrid-view2 .datagrid-header>div{width: 10000px}
+.datagrid-view2 .td-last{border-right-style: dotted;}
 .datagrid-body td{
 	border-left: 1px dotted #ccc;border-bottom: 1px dotted #ccc;
 }

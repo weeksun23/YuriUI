@@ -22,8 +22,7 @@
                             ms-repeat='frozenColumns' 
                             class='bbottom' 
                             ms-class-2='th-field:el.field'
-                            ms-class-1='bright td-last:$last' 
-                            ms-class='td-first:$first'>
+                            ms-class='td-first:$first && !rowNumbers'>
                             <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
                                 {{el.title | html}}
                             </div>
@@ -45,9 +44,8 @@
                             ms-mouseleave='$hoverRow($index,false)'>
                             <td class='tac datagrid-td-rownumber td-first' ms-if='rowNumbers'>{{$index + 1}}</td>
                             <td ms-if='frozenColumns' 
-                                ms-repeat='frozenColumns' 
-                                ms-class-1='bright td-last:$last' 
-                                ms-class='td-first:$first' 
+                                ms-repeat='frozenColumns'
+                                ms-class='td-first:$first && !rowNumbers' 
                                 ms-class-2='td-field:el.field'>
                                 <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
                                     {{el.formatter ? el.formatter($outer.$index,row[el.field],row) : row[el.field] | html}}
