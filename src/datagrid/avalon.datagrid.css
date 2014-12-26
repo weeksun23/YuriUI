@@ -35,3 +35,4 @@
 .datagrid-body tr.selected,
 .datagrid-body tr.selected:hover{background-color: #FFE48D}
 
+.datagrid-pagination{}

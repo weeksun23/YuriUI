@@ -154,6 +154,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		width : null,
 		height : null,
 		singleSelect : false,
+		pagination : {},
 		striped : true,
 		frozenColumns : [],
 		toolbarHtml : ""
