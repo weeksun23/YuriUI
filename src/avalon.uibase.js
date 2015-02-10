@@ -1,5 +1,5 @@
 define(["avalon"],function(avalon){
-	avalon.uibase = {
+	var base = avalon.uibase = {
 		//模仿冒泡
 		//向上遍历父节点 直到找到 data-prop-type 不为null 或是 当前点击的元素为止
 		propagation : function(obj,e){
@@ -23,6 +23,7 @@ define(["avalon"],function(avalon){
 				}
 			}
 		},
+		//遍历data数组，初始化每一个对象中的监控属性
 		initData : function(target,data,func){
 			avalon.each(data,function(i,item){
 				for(var j in target){
@@ -33,10 +34,21 @@ define(["avalon"],function(avalon){
 				func && func(i,item);
 			});
 		},
+		//递归遍历树形list数组，初始化每一个对象中的监控属性
+		eachItem : function(target,list,chKey,func){
+			base.initData(target,list,function(i,item){
+				var ch = item[chKey];
+				func && func(i,item);
+				if(ch && ch.length){
+					base.eachItem(target,ch,chKey,func);
+				}
+			});
+		},
 		setAttr : function($el,attr){
 			for(var i in attr){
 				$el.attr(i,attr[i]);
 			}
+			return $el;
 		},
 		parseOptions : function(target){
 			if(target.nodeType){
@@ -53,7 +65,7 @@ define(["avalon"],function(avalon){
 			while(p.tagName.toLowerCase() !== 'body'){
 				var $p = avalon(p);
 				var pos = $p.css("position");
-				if(pos === 'relative' || pos === 'absolute' || pos === 'fixed') break;
+				if(pos && /^[r|a|f]/.test(pos.toLowerCase())) break;
 				p = p.parentNode;
 			}
 			return p;

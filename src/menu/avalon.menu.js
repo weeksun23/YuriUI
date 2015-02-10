@@ -1,6 +1,7 @@
-define(["avalon"],function(avalon){
+define(["avalon.uibase"],function(avalon){
 	function getMenuStr(HTML_OR_TPL){
-		return "<div ms-repeat='"+HTML_OR_TPL+"' ms-class='menu-item' ms-class-1='disabled:el.disabled' ms-visible='!el.isHide' ms-click='$itemClick($event,el)' ms-hover='menu-item-hover'>"+
+		return "<div ms-repeat='"+HTML_OR_TPL+"' ms-class='menu-item' ms-class-1='disabled:el.disabled' "+
+		"ms-visible='!el.isHide' ms-click='$itemClick($event,el)' ms-hover='menu-item-hover'>"+
 			"<i ms-if='el.iconCls' ms-class='{{el.iconCls}}'></i>" +
 			"<i ms-if='!el.iconCls'></i>" +
 			"<span ms-class='menu-text' ms-class-1='menu-text-noch:!el.subMenu || !el.subMenu.length'>{{el.text}}</span>" +
@@ -21,15 +22,17 @@ define(["avalon"],function(avalon){
 			}
 		}
 	}
+	var defaultItemObj = {
+		subMenu : []
+	};
 	var widget = avalon.ui.menu = function(element, data, vmodels){
 		if(!avalon.templateCache["MENU_TPL"]){
 			avalon.templateCache["MENU_TPL"] = getMenuStr("el.subMenu");
 		}
+		avalon.uibase.eachItem(defaultItemObj,data.menuOptions.menuList,'subMenu');
 		var vmodel = avalon.define(data.menuId,function(vm){
 			avalon.mix(vm, data.menuOptions);
 			vm.$skipArray = ["show","updateAttr","target"];
-			vm.widgetElement = element;
-			vm.template = getMenuStr("menuList");
 			vm.$itemClick = function(e,el){
 				e.stopPropagation();
 				if(el.disabled) return;
@@ -46,12 +49,13 @@ define(["avalon"],function(avalon){
 			};
 			vm.$init = function(){
 				var $el = avalon(element);
-				$el.attr("ms-css-left","left");
-				$el.attr("ms-css-top","top");
-				$el.attr("ms-visible","isShow");
-				$el.attr("ms-mouseleave","$mouseleave");
-				$el.addClass("menu");
-				element.innerHTML = vmodel.template;
+				avalon.uibase.setAttr($el,{
+					"ms-css-left" : "left",
+					"ms-css-top" : "top",
+					"ms-visible" : "isShow",
+					"ms-mouseleave" : "$mouseleave"
+				}).addClass("menu");
+				element.innerHTML = getMenuStr("menuList");
 				avalon.scan(element, vmodel);
 			};
 			vm.$remove = function(){

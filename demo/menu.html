@@ -34,7 +34,7 @@
                 text: "wwwwwwwwwwwwwwwwwwwwwwwwwwww"
             });
         }
-        require("menu/avalon.menu", function() {
+        require(["menu/avalon.menu"], function() {
             avalon.define("test", function(vm) {
                 vm.$down1 = function(e) {
                     if (e.button === 2) {
@@ -91,6 +91,7 @@
                 };
                 vm.$testmenuOpts = {
                     menuList: [{
+                        iconCls : "icon-reload",
                         text: "test1111",
                         isHide: false,
                         click: function(item) {
@@ -115,7 +116,8 @@
                         }]
                     }, {
                         iconCls: "icon-ok",
-                        text: "test"
+                        text: "test",
+                        subMenu : []
                     }, {
                         iconCls: "icon-edit",
                         isHide: false,
