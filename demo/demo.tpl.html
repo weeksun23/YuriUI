@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='UTF-8'/>
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="css/icon.css">
-    <link rel="stylesheet" type="text/css" href="css/demo.css">
-    
-    <link rel="stylesheet" type="text/css" href="../src/base.css">
-    <link rel="stylesheet" type="text/css" href="../src/dialog/avalon.dialog.css">
-    <script src="../src/avalon.js"></script>
-</head>
-<body ms-controller='demo'>
-    
-    <script>
-        require(["dialog/avalon.dialog"], function() {
-            var vmodel = avalon.define("demo",function(vm){
-                
-            });
-            avalon.scan();
-        });
-    </script>
-</body>
-</html>
+<div class='des'>
+    <h1 class='title'>{{name}}</h1>
+    <fieldset>
+        <legend>{{text}}</legend>
+        <p>
+            {{description}}
+        </p>
+    </fieldset>
+    <fieldset>
+        <legend>使用说明</legend>
+        <div ms-widget='datagrid,useinfo,$useGridOpts'></div>
+    </fieldset>
+    <fieldset>
+        <legend>示例</legend>
+        {{example}}
+    </fieldset>
+</div>

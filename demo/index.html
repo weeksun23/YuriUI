@@ -41,32 +41,43 @@
         require(["tree/avalon.tree","tab/avalon.tab"], function() {
             var vmodel = avalon.define("demo",function(vm){
                 vm.$demotreeOpts = {
+                    line : true,
                     treeList : [{
-                        id : 0,
+                        id : 1,
                         text : "YuriUI",
                         state : "open",
                         children : [{
-                            text : "menu"
+                            id : 2,
+                            state : "open",
+                            text : "UI组件",
+                            children : [{
+                                text : "menu"
+                            },{
+                                text : "tab"
+                            },{
+                                text : "tree"
+                            },{
+                                text : "accordion"
+                            },{
+                                text : "dialog"
+                            },{
+                                text : "combobox"
+                            },{
+                                text : "tooltip"
+                            }]
                         },{
-                            text : "tab"
-                        },{
-                            text : "tree"
-                        },{
-                            text : "accordion"
-                        },{
-                            text : "dialog"
-                        },{
-                            text : "draggable"
-                        },{
-                            text : "resizable"
-                        },{
-                            text : "combobox"
-                        },{
-                            text : "tooltip"
+                            text : "功能性组件",
+                            id : 3,
+                            state : "open",
+                            children : [{
+                                text : "draggable"
+                            },{
+                                text : "resizable"
+                            }]
                         }]
                     }],
                     onSelect : function(el){
-                        if(el.id === 0) return;
+                        if(el.id) return;
                         addTab(el.text,el.text + ".html");
                     }
                 };

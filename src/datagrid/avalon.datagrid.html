@@ -13,7 +13,7 @@
     </div>
 </div>
 <div class='datagrid-main'>
-    <div class='datagrid-view1' ms-if='rowNumbers || frozenColumns'>
+    <div class='datagrid-view1' ms-if='rowNumbers || (frozenColumns && frozenColumns.length)'>
         <div class='datagrid-header' ms-visible='showHeader'>
             <table>
                 <thead>
@@ -35,50 +35,46 @@
             </table>
         </div>
         <div class='datagrid-body'>
-            <div>
-                <table>
-                    <tbody ms-if='(columns || frozenColumns) && data' ms-click='$onClickBody()'>
-                        <tr ms-repeat-row='data' ms-css-height='row._height' 
-                            ms-data-index='$index' data-prop-type='row' 
-                            ms-class-1='odd:striped && $index % 2 !== 0' 
-                            ms-class-2='selected:row._selected'
-                            ms-class-3='hover:row._hover' 
-                            ms-mouseenter='$hoverRow($index,true)' 
-                            ms-mouseleave='$hoverRow($index,false)'>
-                            <td class='tac datagrid-td-rownumber td-first' ms-if='rowNumbers'>{{$index + 1}}</td>
-                            <td ms-if='frozenColumns' 
-                                ms-repeat='frozenColumns'
-                                ms-class='td-first:$first && !rowNumbers' 
-                                ms-class-2='td-field:el.field'>
-                                <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
-                                    {{el.formatter ? el.formatter($outer.$index,row[el.field],row) : row[el.field] | html}}
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table>
+                <tbody ms-if='(columns || frozenColumns) && data' ms-click='$onClickBody()'>
+                    <tr ms-repeat-row='data' ms-css-height='row._height' 
+                        ms-data-index='$index' data-prop-type='row' 
+                        ms-class-1='odd:striped && $index % 2 !== 0' 
+                        ms-class-2='selected:row._selected'
+                        ms-class-3='hover:row._hover' 
+                        ms-mouseenter='$hoverRow($index,true)' 
+                        ms-mouseleave='$hoverRow($index,false)'>
+                        <td class='tac datagrid-td-rownumber td-first' ms-if='rowNumbers'>{{$index + 1}}</td>
+                        <td ms-if='frozenColumns' 
+                            ms-repeat='frozenColumns'
+                            ms-class='td-first:$first && !rowNumbers' 
+                            ms-class-2='td-field:el.field'>
+                            <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
+                                {{el.formatter ? el.formatter($outer.$index,row[el.field],row) : row[el.field] | html}}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class='datagrid-view2'>
         <div class='datagrid-header' ms-if='columns' ms-visible='showHeader'>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th ms-repeat='columns' 
-                                class='bbottom' 
-                                ms-class-2='th-field:el.field'
-                                ms-class-1='bright td-last:$last' 
-                                ms-class='td-first:$first'>
-                                <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
-                                    {{el.title | html}}
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th ms-repeat='columns' 
+                            class='bbottom' 
+                            ms-class-2='th-field:el.field'
+                            ms-class-1='bright td-last:$last' 
+                            ms-class='td-first:$first'>
+                            <div class='datagrid-main-cell' ms-css-width='el.width' ms-css-text-align='el.align'>
+                                {{el.title | html}}
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
         </div>
         <div class='datagrid-body' ms-scroll='$scroll()'>
             <table>

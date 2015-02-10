@@ -14,28 +14,57 @@
     </style>
 </head>
 <body ms-controller='test'>
-    <div ms-widget="menu,testmenu,$testmenuOpts"></div>
-    <div class='fl zone' ms-mousedown='$down1'>
-        <h1>区域1</h1>
+    <div class='des'>
+        <h1 class='title'>menu</h1>
+        <fieldset>
+            <legend>菜单组件</legend>
+            <p>
+                通过json数据生成菜单
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <div ms-widget='datagrid,useinfo,$useGridOpts'></div>
+        </fieldset>
+        <fieldset>
+            <legend>示例</legend>
+            <div ms-widget="menu,testmenu,$testmenuOpts"></div>
+            <div class='fl zone' ms-mousedown='$down1'>
+                <h1>区域1</h1>
+            </div>
+            <div class='fl zone' ms-mousedown='$down2'>
+                <h1>区域2</h1>
+            </div>
+            <div class='fl zone posr' ms-mousedown='$down3'>
+                <h1>区域3</h1>
+                <div ms-widget="menu,testmenu1,$testmenu1Opts"></div>
+            </div>
+            <p>
+                <button ms-click="$changeText()">text</button>
+            </p>
+        </fieldset>
     </div>
-    <div class='fl zone' ms-mousedown='$down2'>
-        <h1>区域2</h1>
-    </div>
-    <div class='fl zone posr' ms-mousedown='$down3'>
-        <h1>区域3</h1>
-        <div ms-widget="menu,testmenu1,$testmenu1Opts"></div>
-    </div>
-    <p>
-        <button onclick="changeText()">text</button>
-    </p>
     <script>
-        function changeText() {
-            avalon.vmodels.testmenu.updateAttr("zone2btn1", {
-                text: "wwwwwwwwwwwwwwwwwwwwwwwwwwww"
-            });
-        }
-        require(["menu/avalon.menu"], function() {
+        require(["menu/avalon.menu",'datagrid/avalon.datagrid'], function() {
             avalon.define("test", function(vm) {
+                vm.$useGridOpts = {
+                    columns : [
+                        {title : "名字",field : "name"},
+                        {title : "类型",field : "type"},
+                        {title : "默认值",field : "defaultVal"},
+                        {title : "说明",field : "des"}
+                    ],
+                    pagination : false,
+                    data : [{
+                        name : "menuList",type : "array",defaultVal : "[]",
+                        des : "菜单的json数据"
+                    }]
+                };
+                vm.$changeText = function(){
+                    avalon.vmodels.testmenu.updateAttr("zone2btn1", {
+                        text: "wwwwwwwwwwwwwwwwwwwwwwwwwwww"
+                    });
+                };
                 vm.$down1 = function(e) {
                     if (e.button === 2) {
                         avalon.vmodels.testmenu.show(e.pageX, e.pageY);

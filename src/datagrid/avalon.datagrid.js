@@ -1,4 +1,4 @@
-define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete){
+define(["avalon.uibase","text!./avalon.datagrid.html","css!./avalon.datagrid.css"],function(avalon,templete){
 	function initColumns(columns){
 		if(!columns) return;
 		avalon.uibase.initData(widget.columnsDefaults,columns);
@@ -11,7 +11,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		},data);
 	}
 	function resizeTrHeight(vmodel){
-		if(vmodel.frozenColumns || vmodel.rowNumbers){
+		if((vmodel.frozenColumns && vmodel.frozenColumns.length) || vmodel.rowNumbers){
 			var mainElement = vmodel.mainElement;
 			var ch = mainElement.children;
 			var g = "getElementsByTagName";
@@ -75,10 +75,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 				element.setAttribute("ms-css-width","width");
 				element.setAttribute("ms-css-height","height");
 				element.innerHTML = templete;
-				//测试渲染时间
-				var t = new Date;
 				avalon.scan(element, vmodel);
-				avalon.log(new Date - t);
 				//修正view2的marginLeft view1、view2 tbody的高度
 				var h = 0;
 				var $main;
@@ -157,6 +154,7 @@ define(["avalon.uibase","text!./avalon.datagrid.html"],function(avalon,templete)
 		pagination : {},
 		striped : true,
 		frozenColumns : [],
+		fit : false,
 		toolbarHtml : ""
 	};
 	widget.columnsDefaults = {

@@ -21,10 +21,9 @@
 .datagrid-header .datagrid-td-rownumber:hover,.datagrid-td-rownumber{background-color: #fff;}
 
 .datagrid-view1 .datagrid-body{overflow: hidden;}
-.datagrid-view1 .datagrid-body>div{height: 10000px;}
+.datagrid-view1 .datagrid-body>table{margin-bottom: 20px;}
 .datagrid-view2 .datagrid-body{overflow: auto;}
-.datagrid-view2 .datagrid-header{overflow: hidden;}
-.datagrid-view2 .datagrid-header>div{width: 10000px}
+.datagrid-view2 .datagrid-header{overflow: hidden;margin-right: 20px;}
 .datagrid-view2 .td-last{border-right-style: dotted;}
 .datagrid-body td{
 	border-left: 1px dotted #ccc;border-bottom: 1px dotted #ccc;
