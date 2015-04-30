@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <style type="text/css">
+        .drag0{top:20px;background-color: #fff;overflow: auto;}
+        .handle{height:30px;background-color: #ccc}
+        .drag1{
+            background-color: red;width: 100px;height: 100px;
+        }
+        .drag2{
+            background-color: blue;width: 100px;height:100px;
+        }
+        .drag3{width: 150px;height:100px;}
+        .drag4,.drag5{width: 150px;height:100px;background-color: #f2f2f2}
+    </style>
+    <script src="../src/avalon.js"></script>
+</head>
+<body ms-controller='demo'>
+    <div class='ball drag0' style='width:400px;height:400px;position:relative' ms-draggable='$,$testOpts'>
+        <div data-drag-handle class='handle'></div>
+        <div class='drag1' ms-draggable></div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
+        </div>
+        <div class='drag3 ball' ms-draggable data-draggable-over-edge='true'>
+            我可以滑出边缘，呵呵
+        </div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
+        </div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
+        </div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
+        </div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
+        </div>
+        <div class='drag2' ms-draggable>
+            <div data-drag-handle class='handle' style="background-color:green"></div>
+        </div>
+    </div>
+    <div class='drag4 ball' ms-draggable data-draggable-axis='x'>
+        我只能x轴方向移动
+    </div>
+     <div class='drag5 ball' ms-draggable data-draggable-axis='y'>
+        我只能y轴方向移动
+    </div>
+    <div>经过draggable处理后，在我上面的都是些position为relative的元素，所以即使他们的位置发生变化，也不会影响到我，呵呵</div>
+    <script>
+        require(["draggable/avalon.draggable"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$testOpts = {
+                    onBeforeDrag : function(){
+                        avalon.log("onBeforeDrag");
+                    },
+                    onStartDrag : function(){
+                        avalon.log("onStartDrag");
+                    },
+                    onDrag : function(){
+                        avalon.log("onDrag");
+                    },
+                    onStopDrag: function(){
+                        avalon.log("onStopDrag");
+                    }
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

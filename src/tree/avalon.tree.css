@@ -1,0 +1,39 @@
+.tree ul>li{padding-left:16px;}
+.tree-line ul>li{background:url(images/tree_line_conn.png) repeat-y 0 -1px;}
+.tree-bg{background-image: url(images/tree_icons.png);background-repeat: no-repeat;}
+.tree-expanded,
+.tree-collapsed,
+.tree-indent,
+.tree-checkbox{width: 16px;height: 18px;display: inline-block;vertical-align: middle;}
+.tree-expanded,
+.tree-collapsed,
+.tree-checkbox{cursor: pointer;}
+.tree-checkbox0 {background-position:-208px -18px;}
+.tree-checkbox1 {background-position:-224px -18px;}
+.tree-checkbox2 {background-position:-240px -18px;}
+.tree-node{font-size: 0;}
+.tree-node-content{display: inline-block;padding-right: 2px;cursor: pointer;}
+.tree-node-content:hover{background-color: #e2e2e2;}
+.tree-node-select{background-color: #3385FF;color: #fff;}
+.tree-node-select:hover{background-color: #3385FF;}
+.tree-node-content>i{margin-right:2px;}
+.tree-expanded {background-position: -18px 0px;}
+.tree-folder {background-position:-208px 0;}
+.tree-folder-open {background-position:-224px 0;}
+.tree-file {background-position:-240px 0;}
+.tree-expanded:hover {background-position: -50px 0px;}
+.tree-collapsed{background-position: 0 0;}
+.tree-collapsed:hover{background-position: -32px 0;}
+.tree-line .tree-expanded {background-position: -144px 0;}
+.tree-line .tree-expanded:hover {background-position: -144px 0;}
+.tree-line .tree-collapsed{background-position: -128px 0;}
+.tree-line .tree-collapsed:hover{background-position: -128px 0;}
+.tree-line .tree-node-last>.tree-expanded {background-position: -80px 0;}
+.tree-line .tree-node-last>.tree-expanded:hover{background-position: -80px 0;}
+.tree-line .tree-node-last>.tree-collapsed{background-position: -64px 0;}
+.tree-line .tree-node-last>.tree-collapsed:hover{background-position: -64px 0;}
+.tree-line .tree-node-last>ul>li{background:none;}
+.tree-join {background-position:-192px 0;}
+.tree-joinbottom {background-position:-160px 0;}
+.tree .tree-icon-loading{background:url(images/loading.gif) no-repeat center center;}
+.tree-title{vertical-align: middle;font-size: 12px;}

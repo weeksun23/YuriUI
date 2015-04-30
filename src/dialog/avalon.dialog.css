@@ -1,0 +1,23 @@
+.dialog{
+	position: absolute;padding: 5px;
+	background-color: #f3f3f3;
+	background: -webkit-linear-gradient(top,#F8F8F8 0,#eeeeee 20%);
+	background: -moz-linear-gradient(top,#F8F8F8 0,#eeeeee 20%);
+	background: -o-linear-gradient(top,#F8F8F8 0,#eeeeee 20%);
+	background: linear-gradient(to bottom,#F8F8F8 0,#eeeeee 20%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#F8F8F8,endColorstr=#eeeeee,GradientType=0);
+	-moz-box-shadow: 2px 2px 3px #cccccc;
+	-webkit-box-shadow: 2px 2px 3px #cccccc;
+	-o-box-shadow: 2px 2px 3px #cccccc;
+	box-shadow: 2px 2px 3px #cccccc;
+}
+.dialog-mask{background-color: #eee;opacity: 0.5;filter:alpha(opacity=50);display: none;}
+.dialog-center{left:50%;top:50%;}
+.dialog-title{padding:0 20px 0 1px;margin-bottom: 5px}
+.dialog-title .panel-title-tool{right: 0}
+.dialog-noclose .dialog-title{padding-right:0;}
+.dialog-content{
+	background-color: #fff;
+}
+.dialog-button{background-color: #F4F4F4;padding:5px;text-align: right;border-top:0;}
+.dialog-button a{margin-left:2px;}

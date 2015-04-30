@@ -1,0 +1,19 @@
+[class^="icon-"],[class*=" icon-"]{
+	background-image: url("images/icons.png");background-repeat: no-repeat;
+	display: inline-block;height: 16px;width: 16px;vertical-align: middle;
+}
+.icon-back{background-position: 0 0}
+.icon-cancel{background-position:-16px 0}
+.icon-cut{background-position:-32px 0}
+.icon-add{background-position:-48px 0}
+.icon-remove{background-position:-64px 0}
+.icon-save{background-position:-80px 0}
+.icon-ask{background-position:-96px 0}
+.icon-error{background-position:-112px 0}
+.icon-ok{background-position:-128px 0}
+.icon-edit{background-position:-144px 0}
+.icon-print{background-position:0 -16px}
+.icon-redo{background-position:-16px -16px}
+.icon-reload{background-position:-32px -16px}
+.icon-search{background-position:-48px -16px}
+.icon-undo{background-position:-64px -16px}

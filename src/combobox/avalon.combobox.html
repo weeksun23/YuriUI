@@ -1,0 +1,12 @@
+<span class='combobox-content ball' ms-click='$onClickContent()'>
+    <input ms-if='!multiple' type='text' class='combobox-content-input' ms-css-width='width' 
+    	ms-value='text' ms-attr-readonly='!editable'/> 
+    <span ms-if='multiple' class='combobox-content-multiple' ms-css-width='width'>
+    	<span ms-repeat='values'>{{el}}</span>
+    </span>
+</span><span class='combobox-down ball' ms-click='$onClickDown()'><i class='combobox-down-arrow'></i></span>
+<span tabindex='-1' ms-keydown='$onKeydown()' class='combobox-items ball' ms-css-visibility="isItemsVisible ? 'visible' : 'hidden'" ms-blur='$onItemsBlur()' ms-click="$onClickItem()" ms-css-width='panelWidth' ms-css-max-height='panelHeight'>
+    <span ms-repeat='data' class='combobox-item' ms-class='combobox-item-selected:el.selected'
+        data-prop-type='item' ms-data-el='el'>MS_OPTIONS_FORMATTER</span>
+</span>
+<input type='hidden' ms-value='value' class='combobox-value'MS_OPTIONS_NAME />

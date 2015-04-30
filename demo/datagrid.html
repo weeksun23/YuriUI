@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/btn/avalon.btn.css">
+    <script src="../src/avalon.js"></script>
+</head>
+<body ms-controller='demo'>
+    <div style='margin:10px;'>
+        <div ms-widget='datagrid,usergrid,$opts'>
+            <div class='datagrid-bar'>
+                <p>第一行测试</p>
+                <p>
+                    <label class='vam'>姓名:</label><input type='text' class='vam'/>
+                    <a class='btn btn-default' href='javascript:void(0)'><i class="btn-icon icon-search"></i>搜索</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        require(["datagrid/avalon.datagrid"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                var data = [];
+                for(var i=0;i<50;i++){
+                    data.push({
+                        grade : "2-" + i,
+                        name : 'fkiguooui',
+                        score : 33,
+                        asd : "fvfvfvfer",
+                        a1 : 23
+                    });
+                }
+                vm.$opts = {
+                    title : "成绩单",
+                    columns : [
+                        {title : "班级",field : "grade",align : 'left',
+                            formatter : function(i,v,r){
+                                return v;
+                            }
+                        },
+                        {title : "姓名",field : "name"},
+                        {title : "成绩",field : "score"},
+                        {title : "sfdfdf",field : "asd"}
+                    ],
+                    frozenColumns : [
+                        {title : "a1",field : "a1"}
+                    ],
+                    toolbar : [{
+                        text : "hello",
+                        iconCls : "icon-save"
+                    },{
+                        text : "hello",
+                        iconCls : "icon-save"
+                    },{
+                        text : "hello",
+                        iconCls : "icon-save"
+                    }],
+                    data : data,
+                    rowNumbers : true,
+                    singleSelect : true,
+                    height : 400
+                }
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

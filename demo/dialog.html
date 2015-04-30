@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/dialog/avalon.dialog.css">
+    <link rel="stylesheet" type="text/css" href="../src/btn/avalon.btn.css">
+    <script src="../src/avalon.js"></script>
+</head>
+<body ms-controller='demo'>
+    <h1>avalon dialog</h1>
+    <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(1)'>
+        <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框1</span>
+    </a>
+    <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(2)'>
+        <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框2</span>
+    </a>
+    <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
+        <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
+    </a>
+    <div title='对话框1' class='hide' ms-widget="dialog,testdialog1,$testdialog1Opts" ms-draggable='$,$draggable'>
+        <p>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("draggable")'>
+                <i class="btn-icon icon-save" ></i><span class="btn-text">toggledrag</span>
+            </a>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$toggle("centered")'>
+                <i class="btn-icon icon-save" ></i><span class="btn-text">{{centered ? "uncentered" : "centered"}}</span>
+            </a>
+        </p>
+        <p class='mt1'>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(2)'>
+                <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框2</span>
+            </a>
+            <a class="btn btn-default" href='javascript:void(0)' ms-click='$remove1()'>
+                <i class="btn-icon icon-cancel" ></i><span class="btn-text">销毁对话框1</span>
+            </a>
+        </p>
+    </div>
+    <div title='对话框2' class='hide' ms-widget="dialog,testdialog2,$testdialog2Opts" ms-draggable ms-resizable>
+        <h1>我从对话框1中打开，所以在其上面，呵呵</h1>
+        <a class="btn btn-default" href='javascript:void(0)' ms-click='$open(3)'>
+            <i class="btn-icon icon-save" ></i><span class="btn-text">打开对话框3</span>
+        </a>
+    </div>
+    <div title='对话框3' class='hide' ms-widget="dialog,testdialog3,$testdialog3Opts" ms-draggable>
+        <h1>我从对话框2中打开，所以在其上面，呵呵</h1>
+    </div>
+    <script>
+        require(["dialog/avalon.dialog","draggable/avalon.draggable","resizable/avalon.resizable"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.draggable = true;
+                vm.$toggle = function(target){
+                    var dialog = avalon.vmodels.testdialog1;
+                    if(target === 'draggable'){
+                        dialog.$draggable.doDisable(!dialog.$draggable.disabled);
+                    }
+                    dialog[target] = !dialog[target];
+                };
+                vm.$open = function(i){
+                    avalon.vmodels["testdialog" + i].closed = false;
+                };
+                vm.$remove1 = function(){
+                    var el = avalon.vmodels.testdialog1.widgetElement;
+                    el.parentNode.removeChild(el);
+                };
+                vm.$testdialog1Opts = {
+                    $draggable : {
+                        disabled : true
+                    },
+                    buttons : [{
+                        iconCls : "icon-save",
+                        text : "保存",
+                        click : function(){
+                            alert("没有设置doClose");
+                        }
+                    },{
+                        iconCls : "icon-cancel",
+                        doClose : true,
+                        click : function(){
+                            alert("由于设置了doClose，所以弹完后关闭");
+                        },
+                        text : "取消"
+                    }],
+                    width : 300,
+                    height : 200,
+                    modal : false,
+                    centered : true,
+                    contentStyle : "padding:5px",
+                    iconCls : "icon-ok",
+                    tools : [{
+                        iconCls : "icon-save"
+                    },{
+                        iconCls : "icon-reload"
+                    }]
+                };
+                vm.$testdialog2Opts = {
+                    $resizable : {
+                        onResize : function(e,obj){
+                            if(obj.height){
+                                avalon.vmodels.testdialog2.resizeByDialogH(obj.height);
+                            }
+                        }
+                    },
+                    width : 200,
+                    iconCls : "icon-reload"
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

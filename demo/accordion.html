@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/accordion/avalon.accordion.css">
+    <script src="../src/avalon.js"></script>
+    <style type="text/css">
+    .wh1{width: 300px;}
+    </style>
+</head>
+<body ms-controller='demo'>
+    <div class='demo'>
+        <div class='demo-title'>avalon.accordion</div>
+        <div class='demo-content'>
+            <div ms-widget="accordion,testaccordion,$testaccordionOpts" class='mg5'>
+                <div title='ssddwwe' data-options="tools:[{iconCls:'icon-reload',click:function(){avalon.log(1);}}],iconCls:'icon-save',selected:true">
+                    <h1>qwdqwdqwd</h1>
+                </div>
+                <div title='ssddwwe' data-options="tools:[{iconCls:'icon-reload'},{iconCls:'icon-save'},{iconCls:'icon-save'},{iconCls:'icon-save'}],iconCls:'icon-save',selected:false">
+                    <h1>qwdqwdqwd</h1>
+                </div>
+                <div title='ssddwwe' data-options="tools:[{iconCls:'icon-reload'}],selected:false">
+                    <h1>asfsdgvsdfdf</h1>
+                </div>
+            </div>
+        </div>
+        <div class='demo-oper'>
+            <button ms-click='$toggleMultiple()'>mulitiple</button>
+            <button ms-click='$methods("getSelected")'>getSelected</button>
+            <button ms-click='$methods("getSelections")'>getSelections</button>
+            <button ms-click='$methods("getPanel",2)'>getPanel</button>
+            <button ms-click='$methods("select",2)'>select</button>
+            <button ms-click='$methods("unselect",2)'>unselect</button>
+            <button ms-click='$methods("add",{title : "pgsd",content : "<h1>hello world</h1>",selected : true})'>add</button>
+            <button ms-click='$methods("add",[{title : "pgsd",content : "<h1>hello world</h1>",selected : true},{title : "pgsd",content : "<h1>hello world</h1>",selected : true},{title : "pgsd",content : "<h1>hello world</h1>",selected : true},{title : "pgsd",content : "<h1>hello world</h1>",selected : true}])'>addMore</button>
+            <button ms-click='$methods("remove",0)'>remove</button>       
+        </div>
+    </div>
+    <script>
+        require("accordion/avalon.accordion", function() {
+            avalon.define("demo",function(vm){
+                vm.$testaccordionOpts = {
+                    toolClick : function(i,el){
+                        avalon.log(2);
+                        avalon.log(arguments);
+                        el.title = Math.random(0,1) * 1000;
+                    },
+                    onSelect : function(){
+                        avalon.log("onSelect");
+                        avalon.log(this);
+                    },
+                    onUnselect : function(){
+                        avalon.log("onUnselect");
+                        avalon.log(this);
+                    }
+                };
+                vm.$toggleMultiple = function(){
+                    var ui = avalon.vmodels.testaccordion;
+                    ui.multiple = !ui.multiple;
+                };
+                vm.$methods = function(name){
+                    var ui = avalon.vmodels.testaccordion;
+                    var m = ui[name];
+                    var arg = [].slice.call(arguments,1);
+                    var result = m.apply(ui,arg);
+                    avalon.log(result);
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

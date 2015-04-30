@@ -1,0 +1,54 @@
+ul{list-style: none;margin: 0;padding: 0}
+a {
+  color: #428bca;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #2a6496;
+}
+.clearfix{*zoom:1;}
+.clearfix:after {visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
+.ib{display:inline-block;*display:inline;*zoom:1;}
+.nosel{user-select:none;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;}
+.abfit{position: absolute;top:0;left: 0;right: 0;bottom: 0}
+.hide{display: none;}
+.ofh{overflow: hidden;}
+.ofa{overflow: auto;}
+.vbh{visibility: hidden;}
+.tac{text-align: center;}
+.ball{border:1px solid #d2d2d2;}
+.bbottom{border-bottom: 1px solid #d2d2d2}
+.bright{border-right:1px solid #d2d2d2;}
+.bleft{border-left: 1px solid #d2d2d2}
+.h100{height: 100%;}
+.vam{vertical-align: middle;}
+
+.arrow{background-image: url('images/arrows.png');background-repeat: no-repeat;height: 16px;width: 16px;}
+.arrow-top{background-position: -16px -16px;}
+.arrow-bottom{background-position: -16px 0;}
+.arrow-left{background-position: 0 0;}
+.arrow-right{background-position: 0 -16px;}
+
+.tool{background-image:url("images/panel_tools.png");background-repeat: no-repeat;height: 16px;width: 16px;}
+.tool-min{background-position: 0 0}
+.tool-close{background-position: -16px 0}
+.tool-collapse{background-position: -32px 0}
+.tool-max{background-position: 0 -16px}
+.tool-restore{background-position: -16px -16px}
+.tool-expand{background-position: -32px -16px}
+
+/*panel*/
+.panel-title{font-size: 12px;padding: 3px 22px 3px 3px;position: relative;}
+.panel-title-content{display: inline-block;line-height: 18px;}
+.panel-title-content>i{margin-right: 2px;}
+.panel-title-content>span{vertical-align: middle;}
+.panel-title-tool{
+	position: absolute;right: 2px;top: 50%;margin-top: -10px;padding: 2px;cursor: pointer;height: 16px;
+	opacity: 0.7;filter:alpha(opacity=70);
+}
+.panel-title-tool:hover{opacity: 1;filter:none;}
+.panel-title-bar{float: right;font-size: 0;}
+.panel-title-icon{display: inline-block;padding: 2px;cursor: pointer;height: 16px;}
+.panel-title-icon:hover,.panel-title-tool:hover{background-color: #ddd;}
+.panel-content{overflow: auto;}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/tree/avalon.tree.css">
+    <link rel="stylesheet" type="text/css" href="../src/tab/avalon.tab.css">
+    <script src="../src/avalon.js"></script>
+</head>
+<body ms-controller='demo'>
+    <div class='page'>
+        <div class='west'>
+            <ul ms-widget="tree,demotree,$demotreeOpts"></ul>
+        </div>
+        <div class='center'>
+            <div ms-widget="tab,demotab,$demotabOpts"></div>
+        </div>
+    </div>
+    <script>
+        function addTab(title,src){
+            var tab = avalon.vmodels.demotab;
+            if(tab.exists(title)){
+                tab.select(title);
+            }else{
+                tab.addTab({
+                    tabData : [{
+                        title : title,
+                        selected : true,
+                        closeable : true
+                    }],
+                    panelData : [{
+                        $iframeSrc : src
+                    }]
+                });
+            }
+        }
+        require(["tree/avalon.tree","tab/avalon.tab"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$demotreeOpts = {
+                    line : true,
+                    treeList : [{
+                        id : 1,
+                        text : "YuriUI",
+                        state : "open",
+                        children : [{
+                            id : 2,
+                            state : "open",
+                            text : "UI组件",
+                            children : [{
+                                text : "menu"
+                            },{
+                                text : "tab"
+                            },{
+                                text : "tree"
+                            },{
+                                text : "accordion"
+                            },{
+                                text : "dialog"
+                            },{
+                                text : "combobox"
+                            },{
+                                text : "tooltip"
+                            }]
+                        },{
+                            text : "功能性组件",
+                            id : 3,
+                            state : "open",
+                            children : [{
+                                text : "draggable"
+                            },{
+                                text : "resizable"
+                            }]
+                        }]
+                    }],
+                    onSelect : function(el){
+                        if(el.id) return;
+                        addTab(el.text,el.text + ".html");
+                    }
+                };
+                vm.$demotabOpts = {
+                    border : false,
+                    fit : true,
+                    tools : [{
+                        iconCls : "icon-reload",
+                        click : function(el){
+                            alert(el);
+                        }
+                    }]
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/combobox/avalon.combobox.css">
+    <script src="../src/avalon.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body ms-controller='demo'>
+    <p style='margin:10px;'>
+        单选:
+        <span ms-widget="combobox,test,$testOpts"></span>
+        <button ms-click="$loadData()">loadData</button>
+        <button ms-click="$methods('test','setValue',5)">setValue</button>
+        <button ms-click="$methods('test','clear')">clear</button>
+    </p>
+    <p style='margin:10px;'>
+        多选:
+        <span ms-widget="combobox,test1,$test1Opts"></span>
+        <button ms-click="$methods('test1','setValue',[0,4,5,'78',null])">setValue</button>
+        <button ms-click="$methods('test1','clear')">clear</button>
+    </p>
+
+    <script>
+        require(["combobox/avalon.combobox"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$methods = function(uiId,methodName){
+                    var ui = avalon.vmodels[uiId];
+                    var method = ui[methodName];
+                    var args = Array.prototype.slice.call(arguments,2);
+                    method.apply(ui,args);
+                };
+                vm.$testOpts = {
+                    data : [{
+                        val : 0,text : "23deer"
+                    },{
+                        val : 4,text : "wefwe"
+                    },{
+                        val : 5,text : "qw3d"
+                    },{
+                        val : 3,text : "sdvs"
+                    },{
+                        val : "78",text : "sdvew"
+                    },{
+                        val : undefined,text : 'undefined'
+                    },{
+                        val : null,text : 'null'
+                    },{
+                        val : 99, text : '0'
+                    },{
+                        val : '',text : '空'
+                    }],
+                    value : 0,
+                    valueField : "val",
+                    panelHeight : 300,
+                    width : 80,
+                    multiple : false,
+                    onSelect : function(el){
+                        avalon.log("onSelect",this,el);
+                    }
+                };
+                vm.$loadData = function(){
+                    avalon.vmodels.test.loadData([{
+                        val : 5,text : "dfdf"
+                    },{
+                        val : "445",text : 'sdvsd'
+                    },{
+                        val : "er",text : 'adsfd'
+                    },{
+                        val : "f33",text : 'sbff'
+                    },{
+                        val : "ff",text : 'efwe'
+                    }]);
+                };
+                vm.$test1Opts = {
+                    width : 300,
+                    data : [{
+                        value : 0,text : "23deer"
+                    },{
+                        value : 4,text : "wefwe"
+                    },{
+                        value : 5,text : "qw3d"
+                    },{
+                        value : 3,text : "sdvs"
+                    },{
+                        value : "78",text : "sdvew"
+                    },{
+                        value : undefined,text : 'undefined'
+                    },{
+                        value : null,text : 'null'
+                    },{
+                        value : 99, text : '0'
+                    },{
+                        value : '',text : '空'
+                    }],
+                    multiple : true,
+                    onSelect : function(el){
+                        avalon.log("onSelect",this,el);
+                    },
+                    onUnselect : function(el){
+                        avalon.log("onUnselect",this,el);
+                    }
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

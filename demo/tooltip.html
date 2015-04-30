@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/tooltip/avalon.tooltip.css">
+    <script src="../src/avalon.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body ms-controller='demo'>
+    <div style='margin:30px;'>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="hello world">right</a>
+        </p>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="hello world" 
+            data-tooltip-position='top'>top</a>
+        </p>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="hello world"
+            data-tooltip-position='left'>left</a>
+        </p>
+        <p>
+            tootip position <a href='#' ms-widget="tooltip" data-tooltip-content="hello world"
+            data-tooltip-position='bottom'>bottom</a>
+        </p>
+    </div>
+    <div style='background-color:#ccc;width:250px;height:200px;padding:10px;' ms-widget='tooltip,$,$opts'>
+        <button ms-widget='tooltip' data-tooltip-content='删除后，同时删除动态生成的dom tip' 
+        onclick="this.parentNode.parentNode.removeChild(this.parentNode)">remove me</button>
+    </div>
+    <script>
+        require(["tooltip/avalon.tooltip"], function() {
+            var vmodel = avalon.define("demo",function(vm){
+                vm.$opts = {
+                    content : "<p>sdsdsdsdsd</p><p>sdsdsdsdsd</p><p>sdsdsdsdsd</p>",
+                    position : 'top'
+                };
+            });
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

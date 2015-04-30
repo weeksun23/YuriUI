@@ -1,0 +1,19 @@
+<div ms-repeat='data' class='accordion-panel'>
+    <div class='panel-title accordion-title clearfix' ms-class='accordion-title-selected:el.selected' 
+        ms-click='$toggleSelect()' ms-data-index='$index' data-prop-type='title'>
+        <div ms-if='el.tools && el.tools.length' class='panel-title-bar'>
+            <span ms-repeat-item='el.tools' class='panel-title-icon'
+             ms-data-item='item' ms-data-index='$index'
+             data-prop-type='toolItem'>
+                <i ms-class='{{item.iconCls}}'></i> 
+            </span>
+        </div>
+        <span class='panel-title-content'>
+            <i ms-if='el.iconCls' ms-class='{{el.iconCls}}'></i><span>{{el.title}}</span>
+        </span>
+        <div class='panel-title-tool'>
+            <div class='arrow' ms-class='arrow-top:el.selected' ms-class-1='arrow-bottom:!el.selected'></div>
+        </div>
+    </div>
+    <div ms-visible='el.selected' class='ofa' ms-css-height='height'>{{el.content | html}}</div>
+</div>

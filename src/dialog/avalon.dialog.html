@@ -1,0 +1,20 @@
+<div class='dialog-title panel-title clearfix' data-drag-handle ms-click="$titleClick()">
+    <div ms-if="tools && tools.length > 0" class='panel-title-bar'>
+        <span ms-repeat='tools' class='panel-title-icon' data-prop-type='tools'>
+            <i ms-class='{{el.iconCls}}'></i>
+        </span>
+    </div>
+    <span class='panel-title-content'>
+        <i ms-if='iconCls' ms-class='{{iconCls}}'></i><span>{{title | html}}</span>
+    </span>
+    <div ms-if='closeable' class='panel-title-tool' data-prop-type='close'>
+        <div class='tool tool-close'></div>
+    </div>
+</div>
+<div class='dialog-content ball ofa' ms-attr-style='{{contentStyle}}' ms-css-height='height'>{{content | html}}</div>
+<div ms-if='buttons && buttons.length > 0' class='dialog-button ball' ms-click='$buttonsClick()'>
+    <a ms-repeat='buttons' class="btn btn-default" href='javascript:void(0)' 
+        data-prop-type='button' ms-data-index='$index'>
+        <i ms-if='el.iconCls' class="btn-icon" ms-class='{{el.iconCls}}'></i><span class="btn-text">{{el.text}}</span>
+    </a>
+</div>

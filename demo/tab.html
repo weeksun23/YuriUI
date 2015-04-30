@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+	<script src="../src/avalon.js"></script>
+    <link rel="stylesheet" type="text/css" href="../src/base.css">
+    <link rel="stylesheet" type="text/css" href="../src/tab/avalon.tab.css">
+    <link rel="stylesheet" type="text/css" href="../src/menu/avalon.menu.css">
+</head>
+<body ms-controller='tab'>
+    <div ms-class-1='demo:!max' ms-class='abfit:max' style='z-index:10;background-color:#fff'>
+        <div class='demo-title'>avalon.tab</div>
+        <div class='demo-content' id='demo1'>
+            <div ms-widget="tab,testtab,$taboptions">
+                <ul>
+                    <li data-closeable='true'>1111</li>
+                    <li data-selected='true'>2222</li>
+                    <li data-icon-cls='icon-save'>3333</li>
+                    <li>4444</li>
+                </ul>
+                <div>
+                    <div>
+                        <h1>22222222222222222222222222222222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                        <h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1><h1>2222</h1>
+                    </div>
+                    <div>5555</div>
+                    <div>cccc</div>
+                    <div data-iframe-src='tree.html'></div>
+                </div>
+            </div>
+        </div>
+        <div class='demo-oper'>
+            <button ms-click='$removeByTitle()'>remove by title</button>
+            <button ms-click='$removeByIndex()'>remove by index</button>
+            <button ms-click='$addTab()'>add tab</button>
+            <button ms-click="$toggleHover()">toggleHover</button>
+        </div>
+    </div>
+    <div class='demo'>
+        <div class='demo-title'>avalon.tab</div>
+        <div class='demo-content'>
+            <div ms-widget="tab,mytab,$mytaboptions">
+                <div>
+                    <div data-height='100'><div class='wh100'>dsfdfsdfsdf</div><div class='wh100'>dsfdfsdfsdf</div></div>
+                    <div data-height='200'>bbbb</div>
+                    <div data-height='300'>eewrwer</div>
+                    <div data-height='400'>dddd</div>
+                </div>
+            </div>
+        </div>
+        <div class='demo-oper'>
+        </div>
+    </div>
+    <div class='demo'>
+        <div class='demo-title'>avalon.tab</div>
+        <div class='demo-content'>
+            <div ms-widget="tab,mytab1,$mytaboptions1">
+                <div>
+                    <div><div class='wh100'>dsfdfsdfsdf</div><div class='wh100'>dsfdfsdfsdf</div></div>
+                    <div>bbbb</div>
+                    <div>eewrwer</div>
+                    <div>dddd</div>
+                </div>
+            </div>
+        </div>
+        <div class='demo-oper'>
+            <button ms-click='$addTab1()'>add tab</button>
+        </div>
+    </div>
+    <div ms-widget="menu,testmenu,$testmenuOpts"></div>
+    <script>
+        require(["tab/avalon.tab","menu/avalon.menu"],function(){
+            avalon.define("tab",function(vm){
+                vm.max = false;
+                vm.$removeByTitle = function(){
+                    avalon.vmodels.testtab.removeTab('1111');
+                    document.getElementById("demo1").innerHTML = "";
+                };
+                vm.$removeByIndex = function(){
+                    avalon.vmodels.testtab.removeTab(0);
+                };
+                vm.$addTab = function(){
+                    avalon.vmodels.testtab.addTab({
+                        tabData : [{
+                            title : "测试测试",
+                            selected : true,
+                            closeable : true
+                        }],
+                        panelData : [{
+                            content : "测试测试"
+                        }]
+                    });
+                };
+                vm.$toggleHover = function(){
+                    var model = avalon.vmodels.testtab;
+                    model.isTriggerOnHover = !model.isTriggerOnHover;
+                };
+                vm.$taboptions = {
+                    border : false,
+                    fit:true,
+                    position : "top",
+                    onContextMenu : function(e){
+                        avalon.vmodels.testmenu.show(e.pageX,e.pageY);
+                    },
+                    tools : [{
+                        iconCls : "icon-reload",
+                        click : function(el){
+                            vm.max = !vm.max;
+                            this.resize();
+                        }
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
+                    },{
+                        iconCls : "icon-reload"
+                    }]
+                };
+                vm.$mytaboptions = {
+                    fit : false,
+                    border : true,
+                    tabData : [{
+                        title : "11111",
+                        iconCls : "icon-save",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-reload",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-ok",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-cancel",
+                        closeable : true
+                    }],
+                    onSelect : function(isInit,el){
+                        
+                    },
+                    onClick : function(){
+
+                    }
+                };
+                vm.$mytaboptions1 = {
+                    fit : true,
+                    position : "left",
+                    border : false,
+                    tabData : [{
+                        title : "11111",
+                        iconCls : "icon-save",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-reload",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-ok",
+                        closeable : true
+                    },{
+                        title : "11111",
+                        iconCls : "icon-cancel",
+                        closeable : true
+                    }]
+                };
+                vm.$addTab1 = function(){
+                    avalon.vmodels.mytab1.addTab({
+                        tabData : [{
+                            title : "测试测试",
+                            selected : true,
+                            closeable : true
+                        }],
+                        panelData : [{
+                            content : "测试测试"
+                        }]
+                    });
+                };
+                vm.$testmenuOpts = {
+                    menuList : [{
+                        iconCls : "icon-ok",
+                        text : "test1111",
+                        isHide : false,
+                        click : function(item){
+                            avalon.vmodels.testmenu.updateAttr("zone2btn1",{text : "wwwwwwwwwwwwwwwwwwwwwwwwwwww"});
+                        },
+                        subMenu : [{
+                            iconCls : "icon-ok",
+                            text : "test1",
+                            subMenu : [{
+                                iconCls : "icon-ok",
+                                text : "test123323",
+                                subMenu : [{
+                                    iconCls : "icon-ok",
+                                    text : "test23231",
+                                    click : function(item){
+                                        alert(item.text);
+                                    }
+                                }]
+                            }]
+                        }]
+                    },{
+                        iconCls : "icon-ok",
+                        text : "test"
+                    },{
+                        iconCls : "icon-edit",
+                        isHide : false,
+                        text : "只在区域1显示",
+                        id : "zone1btn"
+                    },{
+                        iconCls : "icon-edit",
+                        isHide : false,
+                        text : "只在区域2显示",
+                        id : "zone2btn"
+                    },{
+                        iconCls : "icon-edit",
+                        text : "只在区域1启用",
+                        disabled : false,
+                        id : "zone1btn1"
+                    },{
+                        iconCls : "icon-edit",
+                        text : "只在区域2启用",
+                        disabled : false,
+                        id : "zone2btn1"
+                    }]
+                };
+            });
+            avalon.scan();
+        });
+        
+    </script>
+</body>
+</html>
